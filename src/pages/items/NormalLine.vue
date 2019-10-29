@@ -24,19 +24,22 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.name" label="用户名"></v-text-field>
+                      <v-text-field v-model="editedItem.productNum" label="线路编号"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                      <v-text-field v-model="editedItem.productName" label="线路名称"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
+                      <v-text-field v-model="editedItem.cityName" label="城市"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
+                      <v-text-field v-model="editedItem.departureTime" label="出发时间"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                      <v-text-field v-model="editedItem.productPrice" label="价格(元)"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="editedItem.productDesc" label="线路描述"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -100,30 +103,30 @@
         pageCount: 0,
         itemsPerPage: 10,
         headers: [{
-            text: '姓名',
+            text: '线路编号',
             align: 'left',
             sortable: false,
-            value: 'name',
+            value: 'productNum',
           },
           {
-            text: '卡路里',
-            value: 'calories'
+            text: '线路名字',
+            value: 'productName'
           },
           {
-            text: '脂肪(g)',
-            value: 'fat'
+            text: '城市',
+            value: 'cityName'
           },
           {
-            text: '碳水化合物 (g)',
-            value: 'carbs'
+            text: '时间',
+            value: 'departureTime'
           },
           {
-            text: '蛋白质 (g)',
-            value: 'protein'
+            text: '价格 (元)',
+            value: 'productPrice'
           },
           {
-            text: '铁 (%)',
-            value: 'iron'
+            text: '线路描述',
+            value: 'productDesc'
           },
           {
             text: 'Actions',
@@ -132,92 +135,23 @@
           },
         ],
         desserts: [{
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-            iron: '1%',
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-            iron: '1%',
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-            iron: '7%',
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-            iron: '8%',
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-            iron: '16%',
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            iron: '0%',
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            iron: '2%',
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            iron: '45%',
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            iron: '22%',
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            iron: '6%',
+            id: '1',
+            productNum: '159',
+            productName: 'Frozen Yogurt',
+            cityName: '成都',
+            departureTime: '2018-12-12',
+            productPrice: 1124,
+            productDesc: '没什么好说的',
+            productStatus: 1,
           },
         ],
         editedItem: {
-          name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          protein: 0,
+          productNum: '',
+          productName: 0,
+          cityName: 0,
+          departureTime: '',
+          productPrice: 0,
+          productDesc: 0,
         },
         dialog: false,
         editedIndex: -1,
@@ -245,6 +179,15 @@
         this.deleteDialog = true;
         console.log("点击", e);
       },
+
+      async getProducts(){
+        console.log("$http  ",this.$http)
+        let response = await this.$http.get("/product");
+        console.log("product : ",response);
+      },
+    },
+    created() {
+      this.getProducts();
     },
   }
 </script>
