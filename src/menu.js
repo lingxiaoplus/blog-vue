@@ -6,21 +6,26 @@ var drawers = [
 	  items: [{ title: "统计", path: "/dashboard" }]
 	},
   {
-    action: "apps",
-    title: "线路管理",
+    action: "food-variant",
+    title: "商品管理",
     path:"/items",
     items: [
       {
-        title: "普通线路",
+        title: "线路管理",
         path: "/normalLine" ,
-      }
+      },
+      { title: "订单管理", path: "/order" },
     ]
   },
 	{
-	  action: "apps",
+	  action: "comment-account-outline ",
 	  title: "人员管理",
 	  path:"/items",
-    items: []
+    items: [
+      { title: "权限管理", path: "/list" },
+      { title: "角色管理", path: "/role" },
+      { title: "人员管理", path: "/member" }
+    ]
 	},
 ];
 

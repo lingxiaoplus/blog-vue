@@ -45,10 +45,9 @@
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title>后台管理系统</v-toolbar-title>
       <v-spacer/>
-
-
-
-
+      
+      
+      <!-- 换肤 -->
       <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <!-- <v-btn icon dark v-on="on">
@@ -56,7 +55,7 @@
             </v-btn> -->
             <!-- 调色板 -->
             <v-btn icon dark  v-on="on">
-              <v-icon>mdi-voicemail</v-icon>
+              <v-icon>mdi-weather-fog </v-icon>
             </v-btn>
           </template>
           <v-list>

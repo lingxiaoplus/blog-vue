@@ -24,6 +24,7 @@ export default new Router({
       children:[
         route("/index/dashboard","/Dashboard","Dashboard"),
         route("/items/normalLine","/items/NormalLine","NormalLine"),
+        route("/items/member","/items/Member","member"),
       ]
     }
   ]

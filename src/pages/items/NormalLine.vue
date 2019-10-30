@@ -1,9 +1,9 @@
 <template>
   <div>
 
-    <v-snackbar v-model="snackbar" color="primary" :timeout="2000" :top="true">
+    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
       {{ snackbarText }}
-      <!-- <v-btn dark text @click="snackbar = false">确认</v-btn> -->
+      <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
 
     <v-data-table :headers="headers" :items="desserts" :page.sync="page" :items-per-page="itemsPerPage"
@@ -200,6 +200,8 @@
       editItem(e) {
         this.editedIndex = 1;
         this.editedItem = e;
+        this.editedItem.departureTime = e.dateFormat; //这里要注意一下
+        this.dialog = true;
         console.log("点击", e);
       },
       deleteItem(e) {
@@ -238,15 +240,24 @@
           let departureTime = this.getUnixTime(this.editedItem.departureTime) * 1000;
           let editData = Object.assign({}, this.editedItem);
           editData.departureTime = departureTime;
-          let response = await this.$http.post("/product",editData);
-          this.snackbar = true;
-          this.snackbarText = "添加线路成功";
-          console.log("添加线路",response.data);
+          if(this.editedIndex > 0){
+            //更新
+            let response = await this.$http.put("/product",editData);
+            this.snackbar = true;
+            this.snackbarText = "更新线路成功";
+            console.log("更新线路",response.data);
+          }else{
+            //新增
+            let response = await this.$http.post("/product",editData);
+            this.snackbar = true;
+            this.snackbarText = "添加线路成功";
+            console.log("添加线路",response.data);
+          }
           this.getProducts();
         }catch(e){
-          console.log("添加线路失败",e);
+          console.log("添加/更新线路失败",e);
           this.snackbar = true;
-          this.snackbarText = "添加线路失败";
+          this.snackbarText = "添加/更新线路失败";
         }finally{
           this.loading = false;
         }
