@@ -45,8 +45,8 @@
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title>后台管理系统</v-toolbar-title>
       <v-spacer/>
-      
-      
+
+
       <!-- 换肤 -->
       <v-menu offset-y>
           <template v-slot:activator="{ on }">
@@ -89,11 +89,6 @@
         <router-view/>
       </div>
     </v-content>
-
-    <v-btn absolute dark fab bottom right color="pink">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-
 		<!-- <v-footer color="primary" app>
 			<span class="white--text">&copy; 2019</span>
 		</v-footer> -->

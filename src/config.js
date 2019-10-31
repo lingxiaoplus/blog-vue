@@ -1,4 +1,6 @@
 const baseUrl = 'http://api.lingxiaosuse.cn'
+const product = "/product";
+const member = "/member";
 const config = {
   locale: 'zh-CN', // en-US, zh-CN
   url: baseUrl,

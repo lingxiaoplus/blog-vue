@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 //import HelloWorld from '@/components/HelloWorld'
 import HomePage from '@/pages/Home'
+import NotFound from '@/pages/NotFound'
 Vue.use(Router)
 
 function route (path, file, name, children) {
@@ -26,6 +27,15 @@ export default new Router({
         route("/items/normalLine","/items/NormalLine","NormalLine"),
         route("/items/member","/items/Member","member"),
       ]
-    }
+    },
+    {
+      path:'*',
+      name: 'HomePage',
+      component: HomePage,
+      redirect: "/index/notFound",
+      children:[
+        route("/index/notFound","/NotFound","NotFound"),
+      ]
+    },  //全不匹配的情况下，返回404，路由按顺序从上到下，依次匹配
   ]
 })

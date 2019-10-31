@@ -1,52 +1,39 @@
 <template>
   <v-container fluid>
+
     <v-data-iterator :items="items" :items-per-page.sync="itemsPerPage" :footer-props="{ itemsPerPageOptions }">
       <template v-slot:default="props">
         <v-row>
-          <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
+          <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4" lg="3">
             <v-card>
-              <v-row>
-                <v-col cols="8" sm="4" md="4">
-                  <v-avatar>
-                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                  </v-avatar>
-                </v-col>
-                <v-row cols="8" sm="4" md="4">
-                  <v-card-title>
-                    <h4>{{ item.name }}</h4>
-                  </v-card-title>
+              <v-card-actions>
+                <v-row>
+                  <v-col cols="6" sm="4" md="4">
+                    <v-avatar style="margin-left: 10px;">
+                      <img :src="item.headPortrait" alt="John">
+                    </v-avatar>
+                  </v-col>
+                  <v-row cols="6" sm="4" md="8">
+                    <v-card-title>
+                      <h5>{{ item.name }}</h5>
+                    </v-card-title>
+                  </v-row>
                 </v-row>
+              </v-card-actions>
 
-              </v-row>
               <v-divider></v-divider>
               <v-list dense>
                 <v-list-item>
-                  <v-list-item-content>Calories:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.calories }}</v-list-item-content>
+                  <v-list-item-content>昵称:</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ item.nickname }}</v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content>Fat:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.fat }}</v-list-item-content>
+                  <v-list-item-content>电话:</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ item.phoneNum }}</v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content>Carbs:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.carbs }}</v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>Protein:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.protein }}</v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>Sodium:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.sodium }}</v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>Calcium:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.calcium }}</v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>Iron:</v-list-item-content>
-                  <v-list-item-content class="align-end">{{ item.iron }}</v-list-item-content>
+                  <v-list-item-content>邮箱:</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ item.email }}</v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -54,6 +41,53 @@
         </v-row>
       </template>
     </v-data-iterator>
+
+    <!-- 添加人员 -->
+    <v-dialog v-model="openAddDialog" persistent max-width="600px">
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" @click="addMember"  absolute dark fab bottom right color="primary" style="bottom: 20px;">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">添加人员</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field label="用户名" required></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field label="昵称" hint="这是一个昵称"></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="电话号码" hint="请输入11位手机号码" required></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Email" type="email" required></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="密码" type="password" required></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-avatar color="primary">
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-avatar>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>这个世界太奇妙</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="openAddDialog = false">关闭</v-btn>
+          <v-btn color="blue darken-1" text @click="openAddDialog = false">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-container>
 </template>
 
@@ -62,108 +96,48 @@
     data: () => ({
       itemsPerPageOptions: [4, 8, 12],
       itemsPerPage: 4,
-      items: [{
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: '14%',
-          iron: '1%',
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          sodium: 129,
-          calcium: '8%',
-          iron: '1%',
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          sodium: 337,
-          calcium: '6%',
-          iron: '7%',
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          sodium: 413,
-          calcium: '3%',
-          iron: '8%',
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          sodium: 327,
-          calcium: '7%',
-          iron: '16%',
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          sodium: 50,
-          calcium: '0%',
-          iron: '0%',
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          sodium: 38,
-          calcium: '0%',
-          iron: '2%',
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          sodium: 562,
-          calcium: '0%',
-          iron: '45%',
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          sodium: 326,
-          calcium: '2%',
-          iron: '22%',
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          sodium: 54,
-          calcium: '12%',
-          iron: '6%',
-        },
-      ],
+      items: [],
+      member: {
+        email: "zs@163.com",
+        headPortrait: "https://cdn.vuetifyjs.com/images/john.jpg",
+        id: "E61D65F673D54F68B0861025C69773DB",
+        name: "张三",
+        phoneNum: "18888888888"
+      },
+      loading: false,
+      openAddDialog: false,
     }),
+    methods: {
+      async getMembers() {
+        this.loading = true;
+        try {
+          let response = await this.$http.get("/member/all", {
+            pageNum: 1,
+            pageSize: 5
+          });
+          console.log("获取人员列表", response.data);
+          this.items = response.data.data;
+        } catch (e) {
+          console.log("获取人员列表失败", e);
+        } finally {
+          //this.loading = false;
+        }
+      },
+      async addMember() {
+        this.loading = true;
+        try {
+          let response = await this.$http.post("member", this.member);
+          console.log("添加人员", response.data);
+        } catch (e) {
+          console.log("添加人员失败", e);
+        } finally {
+          this.loading = false;
+        }
+      },
+    },
+    created() {
+      this.getMembers();
+    }
   }
 </script>
 
