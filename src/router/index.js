@@ -26,6 +26,7 @@ export default new Router({
         route("/index/dashboard","/Dashboard","Dashboard"),
         route("/items/normalLine","/items/NormalLine","NormalLine"),
         route("/items/member","/items/Member","member"),
+        route("/items/order","/items/Order","order"),
       ]
     },
     {

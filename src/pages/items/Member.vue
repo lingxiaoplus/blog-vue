@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
-
+    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
+      {{ snackbarText }}
+      <v-btn dark text @click="snackbar = false">确认</v-btn>
+    </v-snackbar>
     <v-data-iterator :items="items" :items-per-page.sync="itemsPerPage" :footer-props="{ itemsPerPageOptions }">
       <template v-slot:default="props">
         <v-row>
@@ -45,7 +48,7 @@
     <!-- 添加人员 -->
     <v-dialog v-model="openAddDialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="addMember"  absolute dark fab bottom right color="primary" style="bottom: 20px;">
+        <v-btn v-on="on" absolute dark fab bottom right color="primary" style="bottom: 20px;">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
@@ -57,24 +60,32 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field label="用户名" required></v-text-field>
+                <v-text-field label="用户名" required v-model="editMember.name"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field label="昵称" hint="这是一个昵称"></v-text-field>
+                <v-text-field label="昵称" hint="这是一个昵称" v-model="editMember.nickname"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field label="电话号码" hint="请输入11位手机号码" required></v-text-field>
+                <v-text-field label="电话号码" hint="请输入11位手机号码" required v-model="editMember.phoneNum"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field label="Email" type="email" required></v-text-field>
+                <v-text-field label="Email" type="email" required v-model="editMember.email"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field label="密码" type="password" required></v-text-field>
+                <v-text-field label="密码" type="password" required v-model="editMember.password"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-avatar color="primary">
-                  <v-icon dark>mdi-plus</v-icon>
-                </v-avatar>
+                <div class="el-upload__text">点击上传头像</em></div>
+                <el-upload
+                  action="https://api.lingxiaosuse.cn/upload/head/"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
               </v-col>
             </v-row>
           </v-container>
@@ -83,7 +94,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="openAddDialog = false">关闭</v-btn>
-          <v-btn color="blue darken-1" text @click="openAddDialog = false">保存</v-btn>
+          <v-btn color="blue darken-1" text @click="addMember">保存</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -97,15 +108,21 @@
       itemsPerPageOptions: [4, 8, 12],
       itemsPerPage: 4,
       items: [],
-      member: {
+      editMember: {
         email: "zs@163.com",
         headPortrait: "https://cdn.vuetifyjs.com/images/john.jpg",
         id: "E61D65F673D54F68B0861025C69773DB",
         name: "张三",
-        phoneNum: "18888888888"
+        nickname: '',
+        phoneNum: "18888888888",
+        password: '',
       },
       loading: false,
       openAddDialog: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      snackbar: false,
+      snackbarText: '',
     }),
     methods: {
       async getMembers() {
@@ -125,15 +142,32 @@
       },
       async addMember() {
         this.loading = true;
+        this.openAddDialog = false;
         try {
-          let response = await this.$http.post("member", this.member);
+          let response = await this.$http.post("/member", this.editMember);
           console.log("添加人员", response.data);
+          this.snackbar = true;
+          this.snackbarText = "添加人员成功";
+          this.getMembers();
         } catch (e) {
           console.log("添加人员失败", e);
+          this.snackbar = true;
+          this.snackbarText = "添加人员失败";
         } finally {
           this.loading = false;
         }
       },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      /**
+       * 图片预览
+       * @param {Object} file
+       */
+      handlePictureCardPreview(file) {
+              this.dialogImageUrl = file.url;
+              this.dialogVisible = true;
+      }
     },
     created() {
       this.getMembers();

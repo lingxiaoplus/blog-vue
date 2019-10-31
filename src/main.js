@@ -16,9 +16,16 @@ axios.loadData = async function (url) {
   return resp.data;
 }
 Vue.prototype.$http = axios;// 将axios添加到 Vue的原型，这样一切vue实例都可以使用该对象
-
 Vue.config.productionTip = false
 
+
+import { Upload, Dialog ,Table,
+  TableColumn,Button} from 'element-ui'
+Vue.use(Upload)
+Vue.use(Dialog)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Button)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
