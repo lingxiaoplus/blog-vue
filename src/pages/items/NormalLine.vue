@@ -6,7 +6,7 @@
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
 
-    <v-data-table :headers="headers" :items="desserts" :page.sync="page" :items-per-page="itemsPerPage"
+    <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
       hide-default-footer class="elevation-1" @page-count="pageCount = $event">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -19,7 +19,7 @@
 
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on" @click="editedIndex = -1">添加</v-btn>
+              <v-btn color="primary" dark tile  class="mb-2" v-on="on" @click="editedIndex = -1">添加</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -91,7 +91,7 @@
 
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination v-model="page" :length="pageCount"></v-pagination>
+      <v-pagination v-model="pageNum" :length="pageCount"></v-pagination>
       <v-text-field :value="itemsPerPage" label="Items per page" type="number" min="-1" max="15" @input="itemsPerPage = parseInt($event, 10)">
       </v-text-field>
     </div>
@@ -117,7 +117,7 @@
   export default {
     data() {
       return {
-        page: 1,
+        pageNum: 1,
         pageCount: 0,
         itemsPerPage: 10,
         headers: [{
@@ -192,6 +192,11 @@
       /* dialog(val) {
         val || this.close()
       }, */
+      pageNum(val){
+        this.pageNum = val;
+        this.getProducts();
+        console.log("监听到页数发生变化",val);
+      },
     },
     methods: {
       itemClick(e) {
@@ -217,12 +222,12 @@
       async getProducts() {
         try{
           this.loading = true;
-          let response = await this.$http.get("/product?pageNum=" + 1 + "&pageSize=" + 5);
+          let response = await this.$http.get("/product?pageNum=" + this.pageNum + "&pageSize=" + 5);
           console.log("product : ", response.data);
           this.desserts = response.data.data;
-          let page = parseInt(response.data.total / this.itemsPerPage) + 1;
-          console.log("page:", page)
-          this.pageCount = page;
+          //let page = parseInt(response.data.total / this.itemsPerPage) + 1;
+          //console.log("page:", page)
+          this.pageCount =  response.data.totalPage;
         }catch(e){
          console.log("获取线路失败",e);
          this.snackbar = true;

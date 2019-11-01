@@ -23,7 +23,7 @@ var drawers = [
 	  path:"/items",
     items: [
       { title: "权限管理", path: "/list" },
-      { title: "角色管理", path: "/role" },
+      { title: "角色管理", path: "/roleManage" },
       { title: "人员管理", path: "/member" }
     ]
 	},

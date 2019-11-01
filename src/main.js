@@ -20,12 +20,13 @@ Vue.config.productionTip = false
 
 
 import { Upload, Dialog ,Table,
-  TableColumn,Button} from 'element-ui'
+  TableColumn,Button,Pagination} from 'element-ui'
 Vue.use(Upload)
 Vue.use(Dialog)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Button)
+Vue.use(Pagination)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

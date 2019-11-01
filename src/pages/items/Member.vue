@@ -129,15 +129,17 @@
         this.loading = true;
         try {
           let response = await this.$http.get("/member/all", {
-            pageNum: 1,
-            pageSize: 5
+            params:{
+              pageNum: 1,
+              pageSize: 5
+            }
           });
           console.log("获取人员列表", response.data);
           this.items = response.data.data;
         } catch (e) {
           console.log("获取人员列表失败", e);
         } finally {
-          //this.loading = false;
+          this.loading = false;
         }
       },
       async addMember() {

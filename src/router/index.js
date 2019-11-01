@@ -27,6 +27,7 @@ export default new Router({
         route("/items/normalLine","/items/NormalLine","NormalLine"),
         route("/items/member","/items/Member","member"),
         route("/items/order","/items/Order","order"),
+        route("/items/roleManage","/items/RoleManage","roleManage"),
       ]
     },
     {
