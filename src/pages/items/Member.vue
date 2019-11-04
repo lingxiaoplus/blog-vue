@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
+    <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="3000" :bottom="true">
       {{ snackbarText }}
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
@@ -77,9 +77,11 @@
               <v-col cols="12">
                 <div class="el-upload__text">点击上传头像</em></div>
                 <el-upload
-                  action="https://api.lingxiaosuse.cn/upload/head/"
+                  action="http://api.lingxiaosuse.cn/upload/"
                   list-type="picture-card"
                   :on-preview="handlePictureCardPreview"
+                  :on-success="handleSuccess"
+                  :on-error="handleError"
                   :on-remove="handleRemove">
                   <i class="el-icon-plus"></i>
                 </el-upload>
@@ -110,7 +112,7 @@
       items: [],
       editMember: {
         email: "zs@163.com",
-        headPortrait: "https://cdn.vuetifyjs.com/images/john.jpg",
+        headPortrait: "",
         id: "E61D65F673D54F68B0861025C69773DB",
         name: "张三",
         nickname: '',
@@ -123,6 +125,7 @@
       dialogVisible: false,
       snackbar: false,
       snackbarText: '',
+      snackbarColor: 'primary',
     }),
     methods: {
       async getMembers() {
@@ -148,13 +151,11 @@
         try {
           let response = await this.$http.post("/member", this.editMember);
           console.log("添加人员", response.data);
-          this.snackbar = true;
-          this.snackbarText = "添加人员成功";
+          this.showSnackBar("添加人员成功",true);
           this.getMembers();
         } catch (e) {
           console.log("添加人员失败", e);
-          this.snackbar = true;
-          this.snackbarText = "添加人员失败";
+          this.showSnackBar("添加人员失败",false);
         } finally {
           this.loading = false;
         }
@@ -167,9 +168,24 @@
        * @param {Object} file
        */
       handlePictureCardPreview(file) {
-              this.dialogImageUrl = file.url;
-              this.dialogVisible = true;
-      }
+        console.log("返回文件上传结果",file.response);
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+      handleSuccess(response, file, fileList){
+        //文件上传成功时的钩子
+        console.log("文件上传成功时的钩子",response);
+        this.editMember.headPortrait = response;
+      },
+      handleError(err, file, fileList){
+        console.log("文件上传失败时的钩子",err);
+        this.showSnackBar("文件上传失败",false);
+      },
+      showSnackBar(text,success){
+        this.snackbar = true;
+        this.snackbarText = text;
+        this.snackbarColor = success?"green":"red";
+      },
     },
     created() {
       this.getMembers();
