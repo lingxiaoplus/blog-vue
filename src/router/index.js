@@ -17,6 +17,7 @@ function route (path, file, name, children) {
 
 export default new Router({
   routes: [
+    route("/user/login",'/user/login',"Login"),
     {
       path: '/',
       name: 'HomePage',
