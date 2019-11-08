@@ -168,7 +168,13 @@
           disabled: false,
           href: menu.items[0].path,
         };
-
+        this.$http.get("/user/verify")
+        .then(res=>{
+          console.log("登录有效",res.data);
+        }).catch(e=>{
+          console.log("登录失败",e);
+          this.$router.push("/user/login");
+        })
         /* menus.drawers.forEach(m => {
           const p1 = m.path.slice(1);
           this.menuMap[p1] = {name:m.title};
