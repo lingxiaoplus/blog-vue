@@ -98,8 +98,8 @@
           this.showSnackBar("登录成功", true);
           this.$router.push("/");
         }).catch(e=>{
-          console.log("登录失败",e);
-          this.showSnackBar("登录失败", false);
+          console.log("登录失败，失败详情",e.response.data);
+          this.showSnackBar("登录失败，请检查用户名密码是否正确", false);
         })
 
       },

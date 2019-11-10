@@ -18,7 +18,7 @@ var drawers = [
     ]
   },
 	{
-	  action: "comment-account-outline ",
+	  action: "comment-account-outline",
 	  title: "人员管理",
 	  path:"/items",
     items: [
@@ -27,6 +27,15 @@ var drawers = [
       { title: "人员管理", path: "/member" }
     ]
 	},
+  {
+    action: "settings",
+    title: "系统管理",
+    path:"/settings",
+    items: [
+      { title: "主题管理", path: "/theme" },
+      { title: "系统日志", path: "/SystemLog" }
+    ]
+  },
 ];
 
 var themes = [
@@ -34,26 +43,31 @@ var themes = [
     name: "知乎蓝",
     color: "#42A5F5",
     dark: false,
+    checked: false,
   },
   {
     name: "依提篮",
     color: "#29B6F6",
     dark: false,
+    checked: false,
   },
   {
     name: "水鸭青",
     color: "#4DB6AC",
     dark: false,
+    checked: false,
   },
   {
     name: "重力橘",
     color: "#FFF176",
     dark: true,
+    checked: false,
   },
   {
     name: "少女粉",
     color: "#F06292",
     dark: false,
+    checked: false,
   },
 ];
 export default {drawers,themes};

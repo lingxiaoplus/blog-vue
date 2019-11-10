@@ -2,15 +2,13 @@
 	<v-app id="inspire">
 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
 		<v-navigation-drawer v-model="drawer" app>
-
-
         <v-list dense>
           <v-list-item avatar>
             <v-avatar size="40">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
             </v-avatar>
             <v-list-item-content>
-              <v-list-item-title style="margin-left: 20px;">admin</v-list-item-title>
+              <v-list-item-title style="margin-left: 20px;">{{user_name}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -70,6 +68,7 @@
                 </v-avatar>
               </v-list-item-action>
               <v-list-item-title>{{ item.name }}</v-list-item-title>
+              <v-checkbox v-model="item.checked" :color="item.color"></v-checkbox>
             </v-list-item>
 
           </v-list>
@@ -100,7 +99,7 @@
 	export default {
 	    props: {
 	      source: String,
-
+        
 	    },
 	    data: () => ({
 	      drawer: null,
@@ -110,7 +109,9 @@
             disabled: false,
             href: 'breadcrumbs_link_1',
           },
-        ]
+          
+        ],
+        user_name: 'admin'
 	    }),
       computed:{
         items(){
@@ -136,6 +137,7 @@
           }else{
             this.$vuetify.theme.themes.light.primary = item.color
           } */
+          item.checked = true;
           this.$vuetify.theme.themes.light.primary = item.color
         },
         onPathChanged(item,subItem){
@@ -171,6 +173,7 @@
         this.$http.get("/user/verify")
         .then(res=>{
           console.log("登录有效",res.data);
+          this.user_name = res.data.username;
         }).catch(e=>{
           console.log("登录失败",e);
           this.$router.push("/user/login");

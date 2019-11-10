@@ -154,7 +154,7 @@
           this.showSnackBar("添加人员成功",true);
           this.getMembers();
         } catch (e) {
-          console.log("添加人员失败", e);
+          console.log("添加人员失败", e.response.data);
           this.showSnackBar("添加人员失败",false);
         } finally {
           this.loading = false;

@@ -29,6 +29,8 @@ export default new Router({
         route("/items/member","/items/Member","member"),
         route("/items/order","/items/Order","order"),
         route("/items/roleManage","/items/RoleManage","roleManage"),
+        route("/settings/theme","/settings/theme","theme"),
+        route("/settings/systemLog","/settings/SystemLog","systemLog"),
       ]
     },
     {
