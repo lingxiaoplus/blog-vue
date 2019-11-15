@@ -31,6 +31,13 @@
                  </v-list>
                </v-menu>
        </v-app-bar> -->
+       <v-progress-linear
+               :active="loading"
+               absolute
+               top
+               indeterminate
+               color="primary"
+             ></v-progress-linear>
        <v-content>
          <v-container fluid fill-height>
            <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="1500" :top="true">
@@ -48,8 +55,8 @@
                    <v-form>
                      <v-text-field prepend-icon="mdi-account-arrow-right-outline" v-model="username" label="用户名" type="text" />
                      <v-text-field prepend-icon="mdi-lock-outline " v-model="password" label="密码" id="password"
-                       :append-icon="e1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" :append-icon-cb="() => (e1 = !e1)"
-                       :type="e1 ? 'text' : 'password'"></v-text-field>
+                       :append-icon="e1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"  @click:append="() => (e1 = !e1)"
+                       :type="e1 ? 'text' : 'password'" hint="至少6位密码"></v-text-field>
                    </v-form>
                  </v-card-text>
                  <v-card-actions>
@@ -78,6 +85,7 @@
       snackbar: false,
       snackbarText: '',
       snackbarColor: 'primary',
+      loading: false
     }),
     methods: {
       doLogin() {
@@ -86,6 +94,7 @@
           return false;
         }
         console.log(this.username + " ... " + this.password);
+        this.loading = true;
         this.$http.post("/user/login",Qs.stringify({
           'username': this.username,
           'password': this.password
@@ -97,9 +106,13 @@
           console.log("登录成功",res.data);
           this.showSnackBar("登录成功", true);
           this.$router.push("/");
+          this.loading = false;
         }).catch(e=>{
-          console.log("登录失败，失败详情",e.response.data);
           this.showSnackBar("登录失败，请检查用户名密码是否正确", false);
+          this.loading = false;
+          if(e.response){
+            console.log("登录失败，失败详情",e.response.data);
+          }
         })
 
       },
