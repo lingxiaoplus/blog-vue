@@ -5,12 +5,22 @@
       {{ snackbarText }}
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
+
     <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
-      hide-default-footer class="elevation-1" @page-count="pageCount = $event">
+      hide-default-footer class="elevation-1" @page-count="pageCount = $event" >
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>角色管理</v-toolbar-title>
+
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
           <v-spacer></v-spacer>
           <!-- loading条 -->
           <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
@@ -53,14 +63,17 @@
         </v-toolbar>
       </template>
       <template v-slot:item.action="{ item }">
-        <v-btn class="ma-2" tile outlined color="teal" large icon @click="editItem(item)">
-              <v-icon >
+        <v-btn class="ma-2 white--text" text color="primary"  @click="editItem(item)">
+              编辑<v-icon right dark small>
                 mdi-pencil
-              </v-icon>编辑
+              </v-icon>
         </v-btn>
-        <v-icon small @click="deleteItem(item)">
-          mdi-delete
-        </v-icon>
+        <v-btn class="ma-2 white--text" text color="primary"  @click="deleteItem(item)">
+              删除<v-icon right dark small>
+                  mdi-delete
+                 </v-icon>
+        </v-btn>
+
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -68,8 +81,7 @@
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination v-model="pageNum" :length="pageCount"></v-pagination>
-      <v-text-field :value="itemsPerPage" label="Items per page" type="number" min="-1" max="15" @input="itemsPerPage = parseInt($event, 10)">
-      </v-text-field>
+
     </div>
 
     <v-row justify="center">
@@ -150,9 +162,9 @@
 	  },
 	  watch: {
 	    pageNum(val){
+        console.log("监听到页数发生变化",val);
 	      this.pageNum = val;
 	      this.getRoles();
-	      console.log("监听到页数发生变化",val);
 	    },
 	  },
 	  methods: {
@@ -186,9 +198,9 @@
 	        //console.log("page:", page)
 	        this.pageCount =  response.data.totalPage;
 	      }catch(e){
-	       console.log("获取线路失败",e.response.data);
+	       console.log("获取角色列表失败",e.response.data);
 	       this.snackbar = true;
-	       this.snackbarText = "获取线路失败";
+	       this.snackbarText = e.response.data.msg?e.response.data.msg:"获取角色列表失败";
 	      }finally{
 	        this.loading = false;
 	      }
@@ -202,7 +214,7 @@
 	        let editData = Object.assign({}, this.editedItem);
 	        if(this.editedIndex > 0){
 	          //更新
-	          let response = await this.$http.put("/product",editData);
+	          let response = await this.$http.put("/role",editData);
 	          this.snackbar = true;
 	          this.snackbarText = "更新角色成功";
 	          console.log("更新角色",response.data);
@@ -226,7 +238,7 @@
 	      this.deleteDialog = false;
 	      this.loading = true;
 	      try{
-	        let response = await this.$http.delete("/product/"+this.productId);
+	        let response = await this.$http.delete("/role/"+this.productId);
 	        console.log("删除线路",response.data);
 	        this.getRoles();
 	      }catch(e){
