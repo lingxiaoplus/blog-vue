@@ -99,7 +99,7 @@
 	export default {
 	    props: {
 	      source: String,
-        
+
 	    },
 	    data: () => ({
 	      drawer: null,
@@ -109,7 +109,7 @@
             disabled: false,
             href: 'breadcrumbs_link_1',
           },
-          
+
         ],
         user_name: 'admin'
 	    }),
@@ -155,6 +155,10 @@
           this.menuMap = map;
           console.log("menuMap: ",this.menuMap);
         },
+          async getMenuData(){
+            let resp = await this.$http.get("/menu");
+            console.log("菜单",resp.data.data);
+          },
       },
 
       created() {
@@ -173,11 +177,12 @@
         this.$http.get("/user/verify")
         .then(res=>{
           console.log("登录有效",res.data);
-          this.user_name = res.data.username;
+          this.user_name = res.data.data.nickname;
         }).catch(e=>{
           console.log("登录失败",e);
           this.$router.push("/user/login");
         })
+          this.getMenuData();
         /* menus.drawers.forEach(m => {
           const p1 = m.path.slice(1);
           this.menuMap[p1] = {name:m.title};

@@ -7,14 +7,14 @@ var drawers = [
 	},
   {
     action: "food-variant",
-    title: "商品管理",
-    path:"/items",
+    title: "文章管理",
+    path:"/article",
     items: [
       {
-        title: "线路管理",
-        path: "/normalLine" ,
+        title: "文章列表",
+        path: "/article_list" ,
       },
-      { title: "订单管理", path: "/order" },
+      { title: "编辑文章", path: "/edit_article" },
     ]
   },
 	{

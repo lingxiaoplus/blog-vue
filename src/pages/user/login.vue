@@ -48,7 +48,7 @@
              <v-flex xs12 sm8 md4>
                <v-card class="elevation-12">
                  <v-toolbar dark color="primary">
-                   <v-toolbar-title>后台管理登录</v-toolbar-title>
+                   <v-toolbar-title>个人博客登录</v-toolbar-title>
                    <v-spacer></v-spacer>
                  </v-toolbar>
                  <v-card-text>
@@ -79,8 +79,8 @@
   import Qs from 'qs'
   export default {
     data: () => ({
-      username: "",
-      password: "",
+      username: "lingxiao",
+      password: "123456",
       e1: false,
       snackbar: false,
       snackbarText: '',
@@ -96,12 +96,13 @@
         console.log(this.username + " ... " + this.password);
         this.loading = true;
         this.$http.post("/user/login",Qs.stringify({
-          'username': this.username,
-          'password': this.password
+          'account': this.username,
+          'password': this.password,
+            'loginType': 1
         }),{
-          headers:{
+          /*headers:{
               'Content-Type': 'application/x-www-form-urlencoded'
-          }
+          }*/
         }).then(res=>{
           console.log("登录成功",res.data);
           this.showSnackBar("登录成功", true);

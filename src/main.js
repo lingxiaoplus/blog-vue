@@ -32,6 +32,13 @@ Vue.use(TableColumn)
 Vue.use(Button)
 Vue.use(Pagination)
 /* eslint-disable no-new */
+
+import marked from 'marked'
+import scroll from 'vue-scroll'
+Vue.use(scroll)
+import hljs from '../static/js/highlight.min.js'
+import range from '../static/js/rangeFn.js'
+
 new Vue({
   el: '#app',
   router,
