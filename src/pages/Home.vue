@@ -40,6 +40,9 @@
 		</v-navigation-drawer>
 
 		<v-app-bar app color="primary" dark >
+      <!-- loading条 -->
+      <v-progress-linear @setLoading="setLoadingState" :active="loading" :indeterminate="loading" absolute bottom background-color="white" color="error">
+      </v-progress-linear>
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title>后台管理系统</v-toolbar-title>
       <v-spacer/>
@@ -85,7 +88,9 @@
       </v-breadcrumbs>
       <!-- 界面内容显示区域 -->
       <div>
-        <router-view/>
+        <transition name="slide-right">
+          <router-view/>
+        </transition>
       </div>
     </v-content>
 		<!-- <v-footer color="primary" app>
@@ -111,7 +116,8 @@
           },
 
         ],
-        user_name: 'admin'
+        user_name: 'admin',
+        loading: false,
 	    }),
       computed:{
         items(){
@@ -159,6 +165,9 @@
             let resp = await this.$http.get("/menu");
             console.log("菜单",resp.data.data);
           },
+          setLoadingState(){
+            console.log("设置状态>>>>>>>>>")
+          }
       },
 
       created() {

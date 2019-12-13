@@ -25,40 +25,6 @@
           <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
           </v-progress-linear>
 
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark tile class="mb-2" v-on="on" @click="editedIndex = -1">添加</v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" >
-                      <v-text-field v-model="editedItem.roleName" label="角色名称"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" >
-                      <v-text-field v-model="editedItem.roleDesc" label="角色描述"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" >
-                      <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
-                    </v-col>
-
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
-                <v-btn color="blue darken-1" text @click="saveRole">保存</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
         </v-toolbar>
       </template>
       <template v-slot:item.action="{ item }">
@@ -156,6 +122,7 @@
                 snackbarText: '',
                 article_id: '',
                 on: false,
+                search:""
             }
         },
         methods: {
@@ -178,18 +145,10 @@
             console.log("点击", e);
             this.article_id = e.id;
           },
-          async editItem(e){
-            this.loading = true;
-            try{
-              let response = await this.$http.get("/article/"+e.id);
-              console.log("查询文章",response.data);
-            }catch(e){
-              console.log("查询文章失败",e.response.data);
-              this.snackbar = true;
-              this.snackbarText = e.response.data.message;
-            }finally{
-              this.loading = false;
-            }
+          editItem(e){
+            //let article = JSON.stringify(response.data.data)
+            this.$router.push({ path: '/article/edit_article?articleId='+e.id });
+
           },
           async deleteArticle(){
             this.deleteDialog = false;

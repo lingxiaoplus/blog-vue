@@ -25,7 +25,7 @@
                     <li class="markListItem" @click="previewFn" title="preview"><i class="fa fa-eye-slash" aria-hidden="true"></i></li>
                     <li class="markListItem" @click="previewAllFn" title="previewAll"><i class="fa fa-eye" aria-hidden="true"></i></li>
                 </ul>
-    
+
             </div>
         </div>
         <div class="mdBodyContainer" :class="{ noMenu: !navStatus }">
@@ -58,7 +58,7 @@
             return hljs.highlightAuto(code).value
         }
     });
-    
+
     function insertContent(val, that) {
         let textareaDom = document.querySelector('.mdEditor');
         let value = textareaDom.value;
@@ -274,6 +274,14 @@
                 let maxPreviewScrollHeight=document.querySelector('.previewContainer').scrollHeight-document.querySelector('.previewContainer').clientHeight;
                 this.maxEditScrollHeight = maxEditScrollHeight
                 this.maxPreviewScrollHeight = maxPreviewScrollHeight
+            },
+            mdValuesP: function(val) {
+              console.log("mdValuesP变化了",val)
+              if(val.mdValue){
+                this.input = val.mdValue
+              }else{
+                this.input = val
+              }
             }
         }
     }
@@ -281,15 +289,15 @@
 
 <style lang="scss">
     /*引入reset文件*/
-    
+
     @import "../../static/css/reset";
-    
+
     /*引入github的markdown样式文件*/
-    
+
     @import "../../static/css/github-markdown.css";
-    
+
     /*引入atom的代码高亮样式文件*/
-    
+
     @import "../../static/css/atom-one-dark.min.css";
     .mdContainer {
         width: 100%;
@@ -357,7 +365,7 @@
             }
         }
     }
-    
+
     // 编辑区域
     .editContainer {
         height: 100%;
@@ -376,7 +384,7 @@
             resize: none;
         }
     }
-    
+
     // 预览区
     .previewContainer {
         width: 100%;
