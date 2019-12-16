@@ -165,8 +165,8 @@
             let resp = await this.$http.get("/menu");
             console.log("菜单",resp.data.data);
           },
-          setLoadingState(){
-            console.log("设置状态>>>>>>>>>")
+          setLoadingState(loading){
+            console.log("设置状态>>>>>>>>>",loading);
           }
       },
 

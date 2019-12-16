@@ -21,6 +21,7 @@
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
+          <v-btn class="ma-2 white--text" color="primary" @click="$emit('setLoading',true)"> 确认</v-btn>
           <!-- loading条 -->
           <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
           </v-progress-linear>
@@ -72,6 +73,7 @@
                 pageNum: 1,
                 pageCount: 0,
                 itemsPerPage: 10,
+                keyword: '这是',
                 headers: [
                     {
                       text: '标题',
@@ -125,13 +127,20 @@
                 search:""
             }
         },
+        watch: {
+          pageNum(val){
+            this.pageNum = val;
+            this.getArticles();
+          },
+        },
         methods: {
           async getArticles() {
             this.loading = true;
             try{
-              let resp = await this.$http.get("/article?pageNum=" + this.pageNum + "&pageSize=" + 5);
+              let resp = await this.$http.get("/article?pageNum="+ this.pageNum + "&pageSize=5"+ "&keyword=" + this.keyword);
               console.log("文章列表", resp.data);
               this.desserts = resp.data.data;
+			        this.pageCount =  resp.data.totalPage;
             }catch(e){
               console.log("文章列表失败", e.response);
               this.snackbar = true;
@@ -168,6 +177,8 @@
         },
         created() {
           this.getArticles();
+          this.$router
+          console.log("router: ",this.$router,"route: ",this.$route);
         }
     }
 </script>
