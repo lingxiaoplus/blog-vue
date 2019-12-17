@@ -10,6 +10,7 @@ var drawers = [
     title: "文章管理",
     path:"/article",
     items: [
+      { title: "文章分类", path: "/category" },
       {
         title: "文章列表",
         path: "/article_list" ,

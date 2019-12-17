@@ -86,36 +86,35 @@
         headers: [
           {
             text: '#',
-            value: 'index',
+            value: 'id',
           },
           {
             text: '日志内容',
-            value: 'title',
+            value: 'operationContent',
           },
           {
             text: '操作人ID',
-            value: 'author'
+            value: 'username'
           },
           {
             text: '操作人名字',
-            value: 'categoryName'
+            value: 'nickname'
           },
           {
             text: 'IP',
-            value: 'tables'
+            value: 'userIp'
           },
           {
             text: '耗时(毫秒)',
-            value: 'tables'
+            value: 'runTakes'
           },
           {
             text: '日志类型',
-            value: 'updateTime'
+            value: 'operationType'
           },
           {
             text: '操作时间',
-            value: 'action',
-            sortable: false,
+            value: 'createAt',
           },
         ],
         desserts: [{
@@ -147,19 +146,28 @@
         tablemodel: 0,
       }
     },
+    watch: {
+      pageNum(val){
+        this.pageNum = val;
+        this.getLogList();
+      },
+    },
     methods: {
-      async getArticles() {
+      async getLogList() {
         this.loading = true;
         try {
-          let resp = await this.$http.get("/article?pageNum=" + this.pageNum + "&pageSize=" + 5);
-          console.log("文章列表", resp.data);
+          this.$store.commit('setLoading', true);
+          let resp = await this.$http.get("/log?pageNum=" + this.pageNum + "&pageSize=" + 5);
+          console.log("log列表", resp.data);
           this.desserts = resp.data.data;
+          this.pageCount =  resp.data.totalPage;
         } catch (e) {
-          console.log("文章列表失败", e.response);
+          console.log("log列表失败", e.response);
           this.snackbar = true;
-          this.snackbarText = "获取文章列表失败";
+          this.snackbarText = "获取log列表失败";
         } finally {
           this.loading = false;
+          this.$store.commit('setLoading', false);
         }
       },
       deleteItem(e) {
@@ -180,7 +188,7 @@
         try {
           let response = await this.$http.delete("/article/" + this.article_id);
           console.log("删除文章", response.data);
-          this.getArticles();
+          this.getLogList();
         } catch (e) {
           console.log("删除文章失败", e.response.data);
           this.snackbar = true;
@@ -191,7 +199,7 @@
       },
     },
     created() {
-      this.getArticles();
+      this.getLogList();
     }
   }
 </script>

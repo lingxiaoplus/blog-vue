@@ -14,11 +14,12 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
-            v-model="search"
+            v-model="keyword"
             append-icon="mdi-magnify"
             label="Search"
             single-line
             hide-details
+            @input="onSearchChanged"
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn class="ma-2 white--text" color="primary" @click="$emit('setLoading',true)"> 确认</v-btn>
@@ -73,7 +74,7 @@
                 pageNum: 1,
                 pageCount: 0,
                 itemsPerPage: 10,
-                keyword: '这是',
+                keyword: '',
                 headers: [
                     {
                       text: '标题',
@@ -124,7 +125,7 @@
                 snackbarText: '',
                 article_id: '',
                 on: false,
-                search:""
+
             }
         },
         watch: {
@@ -134,6 +135,11 @@
           },
         },
         methods: {
+          onSearchChanged(e){
+            console.log("搜索",e);
+            this.keyword = e;
+            this.getArticles();
+          },
           async getArticles() {
             this.loading = true;
             try{
@@ -177,8 +183,7 @@
         },
         created() {
           this.getArticles();
-          this.$router
-          console.log("router: ",this.$router,"route: ",this.$route);
+          this.$store.commit('setLoading', true);
         }
     }
 </script>

@@ -88,7 +88,7 @@
       </v-breadcrumbs>
       <!-- 界面内容显示区域 -->
       <div>
-        <transition name="slide-right">
+        <transition name="fade-enter-active">
           <router-view/>
         </transition>
       </div>
@@ -192,6 +192,8 @@
           this.$router.push("/user/login");
         })
           this.getMenuData();
+          //this.loading = this.$store.getters.getLoadingState;
+          //console.log("获取到状态>>>>>>>>> ",this.$store.getters.getLoadingState)
         /* menus.drawers.forEach(m => {
           const p1 = m.path.slice(1);
           this.menuMap[p1] = {name:m.title};
@@ -204,4 +206,17 @@
 </script>
 
 <style>
+  .fade-enter {
+    opacity:0;
+  }
+  .fade-leave{
+    opacity:1;
+  }
+  .fade-enter-active{
+    transition:opacity .5s;
+  }
+  .fade-leave-active{
+    opacity:0;
+    transition:opacity .5s;
+  }
 </style>
