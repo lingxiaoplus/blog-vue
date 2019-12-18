@@ -40,18 +40,18 @@
         // 指定图表的配置项和数据
         var option = {
           title: {
-            text: '销售统计'
+            text: '文章统计'
           },
           tooltip: {},
           legend: {
-            data:['销量']
+            data:['新增文章']
           },
           xAxis: {
             data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
           },
           yAxis: {},
           series: [{
-            name: '销量',
+            name: '新增文章',
             type: 'bar',
             data: [5, 20, 36, 10, 10, 20],
             //color:  this.$vuetify.theme.themes.light.primary

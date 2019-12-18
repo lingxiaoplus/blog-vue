@@ -187,6 +187,7 @@
         .then(res=>{
           console.log("登录有效",res.data);
           this.user_name = res.data.data.nickname;
+          localStorage.setItem("user_info",JSON.stringify(res.data.data));
         }).catch(e=>{
           console.log("登录失败",e);
           this.$router.push("/user/login");

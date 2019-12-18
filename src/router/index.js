@@ -33,7 +33,8 @@ export default new Router({
         route("/settings/systemLog","/settings/SystemLog","systemLog"),
         route("/article/article_list","/article/articleList","article_list"),
         route("/article/edit_article","/article/editArticle","edit_article"),
-		route("/article/category","/article/category","category"),
+		    route("/article/category","/article/category","category"),
+        route("/user/personal_info","/user/personal_info","personal_info"),
       ]
     },
     {

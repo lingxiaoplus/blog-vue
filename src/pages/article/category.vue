@@ -32,15 +32,14 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" >
-                      <v-text-field v-model="editedItem.roleName" label="角色名称"></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="分类名称"></v-text-field>
                     </v-col>
                     <v-col cols="12" >
-                      <v-text-field v-model="editedItem.roleDesc" label="角色描述"></v-text-field>
+                      <v-text-field v-model="editedItem.description" label="分类描述"></v-text-field>
                     </v-col>
-                    <v-col cols="12" >
+                    <!-- <v-col cols="12" >
                       <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
-                    </v-col>
-
+                    </v-col> -->
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -102,7 +101,7 @@
 	      pageCount: 0,
 	      itemsPerPage: 10,
 	      headers: [{
-	          text: '#',
+	          text: '编号',
 	          align: 'left',
 	          sortable: false,
 	          value: 'id',
@@ -116,6 +115,10 @@
 	          value: 'description'
 	        },
           {
+            text: '启用时间',
+            value: 'createAt'
+          },
+          {
             text: '操作',
             value: 'action',
             sortable: false,
@@ -128,9 +131,8 @@
 	        rolePermession: '',
 	      }, ],
 	      editedItem: {
-	        roleName: '',
-	        roleDesc: '',
-	        rolePermession: '',
+	        name: '',
+	        description: '',
 	      },
 	      dialog: false,
 	      editedIndex: -1,
@@ -146,7 +148,7 @@
 	  },
 	  computed: {
 	    formTitle() {
-	      return this.editedIndex === -1 ? '添加线路' : '编辑线路'
+	      return this.editedIndex === -1 ? '添加分类' : '编辑分类'
 	    },
 	  },
 	  watch: {
@@ -198,27 +200,27 @@
 	    async saveRole() {
 	      this.dialog = false;
 	      this.loading = true;
-	      console.log("角色", this.editedItem);
+	      console.log("分类", this.editedItem);
 	      try{
 	        let editData = Object.assign({}, this.editedItem);
 	        if(this.editedIndex > 0){
 	          //更新
-	          let response = await this.$http.put("/role",editData);
+	          let response = await this.$http.put("/category",editData);
 	          this.snackbar = true;
-	          this.snackbarText = "更新角色成功";
-	          console.log("更新角色",response.data);
+	          this.snackbarText = "更新分类成功";
+	          console.log("更新分类",response.data);
 	        }else{
 	          //新增
-	          let response = await this.$http.post("/role",editData);
+	          let response = await this.$http.post("/category",editData);
 	          this.snackbar = true;
-	          this.snackbarText = "添加角色成功";
-	          console.log("添加角色",response.data);
+	          this.snackbarText = "添加分类成功";
+	          console.log("添加分类",response.data);
 	        }
 	        this.getRoles();
 	      }catch(e){
-	        console.log("添加/更新角色失败",e);
+	        console.log("添加/更新分类失败",e);
 	        this.snackbar = true;
-	        this.snackbarText = "添加/更新角色失败";
+	        this.snackbarText = "添加/更新分类失败";
 	      }finally{
 	        this.loading = false;
 	      }
@@ -227,13 +229,13 @@
 	      this.deleteDialog = false;
 	      this.loading = true;
 	      try{
-	        let response = await this.$http.delete("/role/"+this.productId);
-	        console.log("删除线路",response.data);
+	        let response = await this.$http.delete("/category/"+this.productId);
+	        console.log("删除分类",response.data);
 	        this.getRoles();
 	      }catch(e){
-	        console.log("删除线路失败",e);
+	        console.log("删除分类失败",e);
 	        this.snackbar = true;
-	        this.snackbarText = "删除线路失败";
+	        this.snackbarText = "删除分类失败";
 	      }finally{
 	        this.loading = false;
 	      }

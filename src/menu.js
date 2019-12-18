@@ -21,11 +21,12 @@ var drawers = [
 	{
 	  action: "comment-account-outline",
 	  title: "人员管理",
-	  path:"/items",
+	  path:"/user",
     items: [
       { title: "权限管理", path: "/list" },
       { title: "角色管理", path: "/roleManage" },
-      { title: "人员管理", path: "/member" }
+      { title: "人员管理", path: "/member" },
+	    { title: "个人资料", path: "/personal_info" }
     ]
 	},
   {
