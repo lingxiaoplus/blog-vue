@@ -11,6 +11,7 @@ var drawers = [
     path:"/article",
     items: [
       { title: "文章分类", path: "/category" },
+      { title: "标签管理", path: "/table" },
       {
         title: "文章列表",
         path: "/article_list" ,

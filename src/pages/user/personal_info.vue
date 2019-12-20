@@ -10,7 +10,7 @@
                   <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
                 </v-avatar>
                 <v-list-item-title class="headline">{{user_info.username}}</v-list-item-title>
-                <v-list-item-subtitle>by Kurt Wagner</v-list-item-subtitle>
+                <v-list-item-subtitle>{{user_info.username}}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-img>

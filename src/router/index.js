@@ -16,6 +16,7 @@ function route (path, file, name, children) {
 }
 
 export default new Router({
+  mode:"history",
   routes: [
     route("/user/login",'/user/login',"Login"),
     {
@@ -34,6 +35,7 @@ export default new Router({
         route("/article/article_list","/article/articleList","article_list"),
         route("/article/edit_article","/article/editArticle","edit_article"),
 		    route("/article/category","/article/category","category"),
+        route("/article/table","/article/table","table"),
         route("/user/personal_info","/user/personal_info","personal_info"),
       ]
     },

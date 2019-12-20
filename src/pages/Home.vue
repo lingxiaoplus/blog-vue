@@ -89,7 +89,7 @@
       <!-- 界面内容显示区域 -->
       <div>
         <transition name="fade-enter-active">
-          <router-view/>
+          <router-view />
         </transition>
       </div>
     </v-content>
@@ -193,8 +193,8 @@
           this.$router.push("/user/login");
         })
           this.getMenuData();
-          //this.loading = this.$store.getters.getLoadingState;
-          //console.log("获取到状态>>>>>>>>> ",this.$store.getters.getLoadingState)
+          this.loading = this.$store.getters.getLoadingState;
+          console.log("获取到状态>>>>>>>>> ",this.$store.getters.getLoadingState)
         /* menus.drawers.forEach(m => {
           const p1 = m.path.slice(1);
           this.menuMap[p1] = {name:m.title};

@@ -46,11 +46,19 @@
                 公开度：公开
               </v-card-subtitle>
               <v-card-actions>
-                <v-col cols="6">
+                <v-col >
                   <v-select v-model="select" :items="selectList" item-text="name" item-value="id"
                     label="请选择分类" persistent-hint return-object single-line ></v-select>
                 </v-col>
               </v-card-actions>
+
+              <v-card-actions>
+                <v-col cols="12">
+                  <v-select v-model="label" :items="labelList" item-text="name" item-value="id"
+                    label="请选择标签" attach chips multiple></v-select>
+                </v-col>
+              </v-card-actions>
+
               <v-card-actions>
                 <v-btn
                   class="ma-2"
@@ -125,6 +133,8 @@
                 loader: null,
                 loadingDraft:false,
                 select: { name: '请选择分类', id: '' },
+                label: '',
+                labelList: [],
                 selectList: [],
                 dialogImageUrl: '',
                 dialogVisible: false,

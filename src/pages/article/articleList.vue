@@ -150,7 +150,7 @@
             }catch(e){
               console.log("文章列表失败", e.response);
               this.snackbar = true;
-              this.snackbarText = "获取文章列表失败";
+              this.snackbarText = e.response.data.message?e.response.data.message:"获取文章列表失败";
             }finally{
               this.loading = false;
             }

@@ -10,7 +10,7 @@
       hide-default-footer class="elevation-1" @page-count="pageCount = $event" >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>文章分类</v-toolbar-title>
+          <v-toolbar-title>标签管理</v-toolbar-title>
 
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
@@ -21,7 +21,9 @@
 
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark tile class="mb-2" v-on="on" @click="editedIndex = -1">添加</v-btn>
+              <v-btn class="ma-2" fab dark color="primary" v-on="on" @click="editedIndex = -1">
+                    <v-icon dark>mdi-plus</v-icon>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -32,10 +34,10 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" >
-                      <v-text-field v-model="editedItem.name" label="分类名称"></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="标签名称"></v-text-field>
                     </v-col>
                     <v-col cols="12" >
-                      <v-text-field v-model="editedItem.description" label="分类描述"></v-text-field>
+                      <v-text-field v-model="editedItem.description" label="标签描述"></v-text-field>
                     </v-col>
                     <!-- <v-col cols="12" >
                       <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
@@ -107,11 +109,11 @@
 	          value: 'id',
 	        },
 	        {
-	          text: '分类名称',
+	          text: '标签名称',
 	          value: 'name'
 	        },
 	        {
-	          text: '分类描述',
+	          text: '标签描述',
 	          value: 'description'
 	        },
           {
@@ -148,14 +150,14 @@
 	  },
 	  computed: {
 	    formTitle() {
-	      return this.editedIndex === -1 ? '添加分类' : '编辑分类'
+	      return this.editedIndex === -1 ? '添加标签' : '编辑标签'
 	    },
 	  },
 	  watch: {
 	    pageNum(val){
         console.log("监听到页数发生变化",val);
 	      this.pageNum = val;
-	      this.getRoles();
+	      this.getLabels();
 	    },
 	  },
 	  methods: {
@@ -179,19 +181,19 @@
 	      this.editedItem.departureTime = date;
 	      console.log("选择时间", date);
 	    },
-	    async getRoles() {
+	    async getLabels() {
 	      try{
 	        this.loading = true;
-	        let response = await this.$http.get("/category");
+	        let response = await this.$http.get("/label");
 	        console.log("response : ", response.data);
 	        this.desserts = response.data.data;
 	        //let page = parseInt(response.data.total / this.itemsPerPage) + 1;
 	        //console.log("page:", page)
 	        this.pageCount =  response.data.totalPage;
 	      }catch(e){
-	       console.log("获取分类列表失败",e.response.data);
+	       console.log("获取标签列表失败",e.response.data);
 	       this.snackbar = true;
-	       this.snackbarText = e.response.data.message?e.response.data.message:"获取分类列表失败";
+	       this.snackbarText = e.response.data.message?e.response.data.message:"获取标签列表失败";
 	      }finally{
 	        this.loading = false;
 	      }
@@ -200,27 +202,27 @@
 	    async saveRole() {
 	      this.dialog = false;
 	      this.loading = true;
-	      console.log("分类", this.editedItem);
+	      console.log("标签", this.editedItem);
 	      try{
 	        let editData = Object.assign({}, this.editedItem);
 	        if(this.editedIndex > 0){
 	          //更新
-	          let response = await this.$http.put("/category",editData);
+	          let response = await this.$http.put("/label",editData);
 	          this.snackbar = true;
-	          this.snackbarText = "更新分类成功";
-	          console.log("更新分类",response.data);
+	          this.snackbarText = "更新标签成功";
+	          console.log("更新标签",response.data);
 	        }else{
 	          //新增
-	          let response = await this.$http.post("/category",editData);
+	          let response = await this.$http.post("/label",editData);
 	          this.snackbar = true;
-	          this.snackbarText = "添加分类成功";
-	          console.log("添加分类",response.data);
+	          this.snackbarText = "添加标签成功";
+	          console.log("添加标签",response.data);
 	        }
-	        this.getRoles();
+	        this.getLabels();
 	      }catch(e){
-	        console.log("添加/更新分类失败",e);
+	        console.log("添加/更新标签失败",e.response.data);
 	        this.snackbar = true;
-	        this.snackbarText = "添加/更新分类失败";
+	        this.snackbarText = "添加/更新标签失败";
 	      }finally{
 	        this.loading = false;
 	      }
@@ -229,13 +231,13 @@
 	      this.deleteDialog = false;
 	      this.loading = true;
 	      try{
-	        let response = await this.$http.delete("/category/"+this.productId);
-	        console.log("删除分类",response.data);
-	        this.getRoles();
+	        let response = await this.$http.delete("/label/"+this.productId);
+	        console.log("删除标签",response.data);
+	        this.getLabels();
 	      }catch(e){
-	        console.log("删除分类失败",e);
+	        console.log("删除标签失败",e);
 	        this.snackbar = true;
-	        this.snackbarText = "删除分类失败";
+	        this.snackbarText = "删除标签失败";
 	      }finally{
 	        this.loading = false;
 	      }
@@ -249,8 +251,7 @@
 	    }
 	  },
 	  created() {
-      this.$store.commit('setLoading', true);
-	    this.getRoles();
+	    this.getLabels();
 	  },
 	}
 </script>
