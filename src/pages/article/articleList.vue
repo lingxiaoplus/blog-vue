@@ -143,6 +143,7 @@
           async getArticles() {
             this.loading = true;
             try{
+                this.$store.commit('setLoading', true);
               let resp = await this.$http.get("/article?pageNum="+ this.pageNum + "&pageSize=5"+ "&keyword=" + this.keyword);
               console.log("文章列表", resp.data);
               this.desserts = resp.data.data;
@@ -153,6 +154,7 @@
               this.snackbarText = e.response.data.message?e.response.data.message:"获取文章列表失败";
             }finally{
               this.loading = false;
+                this.$store.commit('setLoading', false);
             }
           },
           deleteItem(e) {
@@ -183,7 +185,7 @@
         },
         created() {
           this.getArticles();
-          this.$store.commit('setLoading', true);
+
         }
     }
 </script>

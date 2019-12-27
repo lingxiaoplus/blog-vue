@@ -19,6 +19,7 @@ export default new Router({
   mode:"history",
   routes: [
     route("/user/login",'/user/login',"Login"),
+    route("/front/index",'/front/index',"index"),
     {
       path: '/',
       name: 'HomePage',

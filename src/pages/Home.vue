@@ -41,7 +41,7 @@
 
 		<v-app-bar app color="primary" dark >
       <!-- loading条 -->
-      <v-progress-linear @setLoading="setLoadingState" :active="loading" :indeterminate="loading" absolute bottom background-color="white" color="error">
+      <v-progress-linear @setLoading="setLoadingState" :active="this.$store.getters.getLoadingState" :indeterminate="this.$store.getters.getLoadingState" absolute bottom background-color="white" color="error">
       </v-progress-linear>
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title>后台管理系统</v-toolbar-title>
@@ -193,7 +193,7 @@
           this.$router.push("/user/login");
         })
           this.getMenuData();
-          this.loading = this.$store.getters.getLoadingState;
+          //this.loading = this.$store.getters.getLoadingState;
           console.log("获取到状态>>>>>>>>> ",this.$store.getters.getLoadingState)
         /* menus.drawers.forEach(m => {
           const p1 = m.path.slice(1);

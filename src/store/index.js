@@ -15,7 +15,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    //这里是get方法 
+    //这里是get方法  
     getLoadingState:state => state.loading
   },
 

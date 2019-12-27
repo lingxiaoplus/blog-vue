@@ -1,48 +1,82 @@
-var drawers = [
-	{
-	  action: "home",
-	  title: "首页",
-	  path:"/index",
-	  items: [{ title: "统计", path: "/dashboard" }]
-	},
+var drawers = [{
+    action: "home",
+    title: "首页",
+    path: "/index",
+    items: [{
+      title: "统计",
+      path: "/dashboard"
+    }]
+  },
   {
     action: "food-variant",
     title: "文章管理",
-    path:"/article",
-    items: [
-      { title: "文章分类", path: "/category" },
-      { title: "标签管理", path: "/table" },
+    path: "/article",
+    items: [{
+        title: "文章分类",
+        path: "/category"
+      },
+      {
+        title: "标签管理",
+        path: "/table"
+      },
+	  {
+	    title: "评论管理",
+	    path: "/comment"
+	  },
       {
         title: "文章列表",
-        path: "/article_list" ,
+        path: "/article_list",
       },
-      { title: "编辑文章", path: "/edit_article" },
+      {
+        title: "编辑文章",
+        path: "/edit_article"
+      },
     ]
   },
-	{
-	  action: "comment-account-outline",
-	  title: "人员管理",
-	  path:"/user",
-    items: [
-      { title: "权限管理", path: "/list" },
-      { title: "角色管理", path: "/roleManage" },
-      { title: "人员管理", path: "/member" },
-	    { title: "个人资料", path: "/personal_info" }
+  {
+    action: "comment-account-outline",
+    title: "人员管理",
+    path: "/user",
+    items: [{
+        title: "权限管理",
+        path: "/list"
+      },
+      {
+        title: "角色管理",
+        path: "/roleManage"
+      },
+      {
+        title: "人员管理",
+        path: "/member"
+      },
+      {
+        title: "个人资料",
+        path: "/personal_info"
+      }
     ]
-	},
+  },
   {
     action: "settings",
     title: "系统管理",
-    path:"/settings",
+    path: "/settings",
     items: [
-      { title: "主题管理", path: "/theme" },
-      { title: "系统日志", path: "/SystemLog" }
+		{
+        title: "主题管理",
+        path: "/theme"
+      },
+	  {
+	    title: "友情链接",
+	    path: "/friend_link"
+	  },
+      {
+        title: "系统日志",
+        path: "/SystemLog"
+      }
     ]
   },
 ];
 
-var themes = [
-  {
+var themes = [{
     name: "知乎蓝",
     color: "#42A5F5",
     dark: false,
@@ -73,4 +107,7 @@ var themes = [
     checked: false,
   },
 ];
-export default {drawers,themes};
+export default {
+  drawers,
+  themes
+};

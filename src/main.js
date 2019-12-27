@@ -24,7 +24,7 @@ Vue.config.productionTip = false
 
 
 import { Upload, Dialog ,Table,
-  TableColumn,Button,Pagination,Input,Message } from 'element-ui'
+  TableColumn,Button,Pagination,Input,Message,Link } from 'element-ui'
 Vue.use(Upload)
 Vue.use(Dialog)
 Vue.use(Table)
@@ -32,6 +32,7 @@ Vue.use(TableColumn)
 Vue.use(Button)
 Vue.use(Pagination)
 Vue.use(Input)
+Vue.use(Link)
 
 // 在调用 Vue.use 前，给 Message 添加 install 方法
 Message.install = function (Vue, options) {
