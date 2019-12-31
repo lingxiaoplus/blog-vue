@@ -38,6 +38,7 @@ export default new Router({
 		    route("/article/category","/article/category","category"),
         route("/article/table","/article/table","table"),
         route("/user/personal_info","/user/personal_info","personal_info"),
+        route("/article/comments","/article/comments","comments"),
       ]
     },
     {

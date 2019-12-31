@@ -21,7 +21,7 @@ var drawers = [{
       },
 	  {
 	    title: "评论管理",
-	    path: "/comment"
+	    path: "/comments"
 	  },
       {
         title: "文章列表",
