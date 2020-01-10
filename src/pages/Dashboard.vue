@@ -5,13 +5,16 @@
       <v-flex xs10 md12>
         <v-layout row wrap>
           <v-col class="pa-6" cols="4" v-for="item in cardList" :key="item.name">
-            <v-card elevation="12" ripple="true">
-              <v-img :src="item.color" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                height="160px">
-                <v-card-title>{{item.name}}</v-card-title>
-                <v-card-subtitle class="white--text">{{item.number}}</v-card-subtitle>
-              </v-img>
-            </v-card>
+            <v-hover v-slot:default="{ hover }">
+              <v-card :elevation="hover?12:6">
+                <v-img :src="item.color" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                  height="160px">
+                  <v-card-title>{{item.name}}</v-card-title>
+                  <v-card-subtitle class="white--text">{{item.number}}</v-card-subtitle>
+                </v-img>
+              </v-card>
+            </v-hover>
+
           </v-col>
 
 

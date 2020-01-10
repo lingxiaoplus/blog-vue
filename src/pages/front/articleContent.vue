@@ -1,0 +1,351 @@
+<template>
+  <v-app id="inspire">
+    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
+      {{ snackbarText }}
+      <v-btn dark text @click="snackbar = false">确认</v-btn>
+    </v-snackbar>
+    <v-progress-linear :active="loading" indeterminate absolute top color="pink" height="5">
+    </v-progress-linear>
+    <v-card class="overflow-hidden">
+      <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+      <v-app-bar color="primary" dark flat elevate-on-scroll elevation="12" shrink-on-scroll prominent
+                 :src="article.headImage"
+                 extension-height="100" extended fade-img-on-scroll scroll-target="#scrolling-techniques-2">
+        <template v-slot:img="{ props }">
+          <v-img v-bind="props" gradient="to top right, rgba(19,84,122,.1), rgba(128,208,199,.4)"></v-img>
+        </template>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-toolbar-title>{{article.title}}</v-toolbar-title>
+        <v-spacer/>
+
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-app-bar>
+
+      <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" max-height="800">
+        <v-container class="pa-6">
+          <!--文章内容-->
+          <v-layout row wrap>
+            <v-hover v-slot:default="{ hover }">
+              <v-card :elevation="hover?12:2">
+                <!-- <v-img :src="article.headImage" >
+                <v-card-title style="position: absolute;bottom: 0px;color: white">{{article.title}}</v-card-title>
+              </v-img> -->
+                <v-card-text>
+                  <!--编辑器组件，嵌入到任意父组件中-->
+                  <markdown :mdValuesP="editContent" :fullPageStatusP="false" :editStatusP="false"
+                            :previewStatusP="true"
+                            :navStatusP="false" :icoStatusP="false" @childevent="childEventHandler">
+                  </markdown>
+                </v-card-text>
+                <v-card-actions class="d-flex ">
+                  <el-link class="pa-2" style="color: #909399"><i class="el-icon-time el-icon--left">
+                    {{article.updateTime}}</i></el-link>
+                  <el-link class="pa-2" style="color: #909399"><i class="el-icon-view el-icon--left"> 阅读(0)</i>
+                  </el-link>
+                  <v-btn icon>
+                    <v-icon>mdi-heart</v-icon>
+                  </v-btn>
+
+                  <v-menu bottom origin="center center" transition="scale-transition">
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on">
+                        <v-icon>mdi-share-variant</v-icon>
+                      </v-btn>
+                    </template>
+
+                    <v-list>
+                      <v-list-item v-for="(item, i) in shareList" :key="i" @click="onShareItem(item)">
+                        <v-list-item-icon>
+                          <v-icon v-text="item.icon"></v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+
+                </v-card-actions>
+              </v-card>
+            </v-hover>
+
+            <v-flex class="py-4" xs12 md12>
+              <v-card elevation="0">
+                <v-card-title>发表评论</v-card-title>
+                <v-card-actions>
+                  <v-text-field
+                    label="说点什么..."
+                    v-model="commentContent"
+                    prepend-icon="mdi-android-messages"
+                    :rules="[rules.base,rules.content]"
+                  ></v-text-field>
+                </v-card-actions>
+
+                <v-card-actions>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field
+                        label="昵称"
+                        v-model="nickname"
+                        :rules="[rules.base]"
+                        prepend-icon="mdi-account-alert-outline "
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field
+                        label="邮箱"
+                        v-model="email"
+                        :rules="[rules.base,rules.email]"
+                        prepend-icon="mdi-email-check-outline"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-actions>
+
+                <v-card-actions>
+                  <v-text-field
+                    label="网站(如果有)http(s)://"
+                    prepend-icon="mdi-link"
+                    v-model="link"
+                    :rules="[rules.base]"
+                  ></v-text-field>
+                </v-card-actions>
+
+                <v-card-actions class="d-flex">
+                  <v-btn color="primary" tile min-width="86px" class="ml-auto" @click="readArticle(item.id)">
+                    发射
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-flex>
+
+            <v-flex class="py-4" xs12 md12>
+              <v-card elevation="2">
+                <v-card-title>当前评论</v-card-title>
+
+                <v-list>
+                  <v-list-group
+                    v-for="item in items"
+                    :key="item.title"
+                    v-model="item.active"
+                    no-action
+                  >
+
+                    <template v-slot:activator>
+                      <v-list-item-icon>
+                        <v-avatar color="indigo" size="36">
+                          <v-img src="https://cdn.vuetifyjs.com/images/lists/4.jpg"></v-img>
+                        </v-avatar>
+                      </v-list-item-icon>
+
+                      <v-list-item-content>
+                        <v-list-item-title v-text="item.title"></v-list-item-title>
+                        <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action>
+                        <v-btn text>
+                          回复
+                        </v-btn>
+                      </v-list-item-action>
+                    </template>
+
+                    <v-list-item
+                      v-for="subItem in item.items"
+                      :key="subItem.title"
+                      @click=""
+                    >
+                      <v-list-item-content>
+                        <v-list-item-title v-text="subItem.title"></v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-group>
+                </v-list>
+
+              </v-card>
+
+            </v-flex>
+
+          </v-layout>
+
+        </v-container>
+      </v-sheet>
+
+      <v-fab-transition>
+        <v-btn key="keyboard_arrow_up" color="green" flat absolute fab large dark bottom right>
+          <v-icon>mdi-chevron-up</v-icon>
+        </v-btn>
+      </v-fab-transition>
+
+    </v-card>
+
+
+  </v-app>
+</template>
+
+<script>
+    // 引入markdown组件
+    import markdown from '../../components/markdown'
+
+    export default {
+        data() {
+            return {
+                currentItem: 0,
+                snackbar: false,
+                snackbarText: '',
+                loading: true,
+                article: {
+                    id: '',
+                    title: '',
+                    content: '',
+                    headImage: '',
+                    editContent: '',
+                },
+                shareList: [
+                    {
+                        icon: 'mdi-clock',
+                        title: '生成分享图',
+                    },
+                    {
+                        icon: 'mdi-clock',
+                        title: '分享到 微博',
+                    },
+                    {
+                        icon: 'mdi-clock',
+                        title: '分享到 qq',
+                    },
+                ],
+                rules:{
+                    base: value => value.length > 0 || '请填写内容',
+                    content: value => value.length < 500 || '评论内容长度不符合规范',
+                    email: value => {
+                        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        return pattern.test(value) || 'e-mail格式不正确'
+                    },
+                },
+                commentContent: '',
+                nickname: '',
+                email: '',
+                link: '',
+
+
+                items: [
+                    {
+                        action: 'local_activity',
+                        title: 'Attractions',
+                        subtitle: '这是评论内容1',
+                        items: [
+                            { title: 'List Item' },
+                        ],
+                    },
+                    {
+                        action: 'restaurant',
+                        title: 'Dining',
+                        subtitle: '这是评论内容2',
+                        active: true,
+                        items: [
+                            { title: 'Breakfast & brunch' },
+                            { title: 'New American' },
+                            { title: 'Sushi' },
+                        ],
+                    },
+                    {
+                        action: 'school',
+                        title: 'Education',
+                        subtitle: '这是评论内容3',
+                        items: [
+                            { title: 'List Item' },
+                        ],
+                    },
+                    {
+                        action: 'directions_run',
+                        title: 'Family',
+                        items: [
+                            { title: 'List Item' },
+                        ],
+                    },
+                    {
+                        action: 'healing',
+                        title: 'Health',
+                        items: [
+                            { title: 'List Item' },
+                        ],
+                    },
+                    {
+                        action: 'content_cut',
+                        title: 'Office',
+                        items: [
+                            { title: 'List Item' },
+                        ],
+                    },
+                    {
+                        action: 'local_offer',
+                        title: 'Promotions',
+                    },
+                ],
+            }
+        },
+        components: {
+            markdown // 声明mardown组件
+        },
+        watch: {
+            currentItem(oldVal, newVal) {
+
+            }
+        },
+        methods: {
+            childEventHandler: function (res) {
+                // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
+                this.editContent = res;
+            },
+            async getArticleContent(id) {
+                try {
+                    this.loading = true;
+                    let response = await this.$http.get("/front/article/" + id);
+                    console.log("结果", response.data.data);
+                    this.article = response.data.data;
+                    this.editContent = response.data.data.content;
+                } catch (e) {
+                    console.log("查询文章失败", e.response.data);
+                    this.snackbar = true;
+                    this.snackbarText = e.response.data.message ? e.response.data.message : "网络异常，请稍后再试";
+                } finally {
+                    this.loading = false;
+                }
+            },
+            onShareItem(item) {
+
+            }
+        },
+        created() {
+            let tmpUrlSearch = window.location.search;
+            let tmpParas = GetRequestParameters(tmpUrlSearch);
+            let id = tmpParas["id"]; //提取code参数, 用于获取openid
+            this.getArticleContent(id);
+        }
+    }
+
+    export const GetRequestParameters = (locationsearch) => {
+        let url = locationsearch;
+        let theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            let str = url.substr(1);
+            let strs = str.split("&");
+            for (let i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+</script>
+
+<style>
+  /*引入reset文件*/
+  @import "../../../static/css/reset.scss";
+  /*引入github的markdown样式文件*/
+  @import "../../../static/css/github-markdown.css";
+  /*引入atom的代码高亮样式文件*/
+  @import "../../../static/css/atom-one-dark.min.css";
+</style>

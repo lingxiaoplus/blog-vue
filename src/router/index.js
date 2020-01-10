@@ -20,6 +20,7 @@ export default new Router({
   routes: [
     route("/user/login",'/user/login',"Login"),
     route("/front/index",'/front/index',"index"),
+    route("/front/articleContent",'/front/articleContent',"articleContent"),
     {
       path: '/',
       name: 'HomePage',
