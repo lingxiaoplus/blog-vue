@@ -15,15 +15,15 @@
       <el-table-column type="selection" width="55">
       </el-table-column>
 
-      <el-table-column prop="username" label="用户名" width="180">
+      <el-table-column prop="member.username" label="用户名" width="180">
       </el-table-column>
-      <el-table-column prop="nickname" label="昵称" width="180">
+      <el-table-column prop="member.nickname" label="昵称" width="180">
       </el-table-column>
 
 
-      <el-table-column prop="articleTitle" label="文章标题">
+      <el-table-column prop="article.title" label="文章标题">
         <template slot-scope="scope">
-          <el-link type="primary" @click="linkToArticle(scope.row)">{{ scope.row.articleTitle }}</el-link>
+          <el-link type="primary" @click="linkToArticle(scope.row.article)">{{ scope.row.article.title }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="content" label="评论内容">
@@ -109,13 +109,13 @@
                 this.getComments();
             },
             linkToArticle(item) {
-                console.log(`当前对象: ${item.articleId}`);
+                console.log(`当前对象: ${item.id}`);
                 const {
                     href
                 } = this.$router.resolve({
                     name: "articleContent",
                     query: {
-                        id: item.articleId
+                        id: item.id
                     }
                 });
                 window.open(href, '_blank');

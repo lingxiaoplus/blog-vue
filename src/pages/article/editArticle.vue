@@ -214,6 +214,23 @@
                 }
             },
 
+            async getLabels(){
+                try {
+                    let resp = await this.$http.get("/label");
+                    console.log("获取分类成功",resp.data.data)
+                    this.labelList = resp.data.data;
+
+                    this.labelList.forEach((item)=>{
+                      if(item.id == this.label.id){
+                        this.label = item;
+                      }
+                    });
+
+                }catch (e) {
+                    console.log("获取分类失败",e.response.data)
+                }
+            },
+
             handleRemove(file, fileList) {
                 //删除文件
                 console.log(file, fileList);
@@ -248,12 +265,12 @@
                         "status": this.articleStatus,  //草稿箱 0  发布 1
                         "title": this.title,
                         "id": this.articleId,
-                        "labels": this.label
-                    })
+                        "labelIds": this.label,
+                    });
                     this.$message({
                         message: '文章保存成功',
                         type: 'success'
-                    })
+                    });
                     /* Message.success({
                       showClose: true,
                       message: '文章保存成功'
