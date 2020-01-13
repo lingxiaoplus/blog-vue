@@ -182,6 +182,7 @@
 	    async getRoles() {
 	      try{
 	        this.loading = true;
+	        this.$store.commit('setLoading', true);
 	        let response = await this.$http.get("/category");
 	        console.log("response : ", response.data);
 	        this.desserts = response.data.data;
@@ -194,6 +195,7 @@
 	       this.snackbarText = e.response.data.message?e.response.data.message:"获取分类列表失败";
 	      }finally{
 	        this.loading = false;
+            this.$store.commit('setLoading', false);
 	      }
 
 	    },

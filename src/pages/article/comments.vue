@@ -12,8 +12,56 @@
       </v-toolbar>
     </template>
 
+
+    <v-dialog
+      v-model="deleteDialog"
+      max-width="290"
+    >
+      <v-card tile>
+        <v-card-title class="headline">提示</v-card-title>
+        <v-card-text>确认要删除这些评论吗?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="deleteDialog = false"
+          >取消</v-btn>
+          <v-btn
+            color="primary"
+            text
+            @click="onDelete"
+          >
+            确认
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="replyDialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">回复用户：{{replyRow?replyRow.member.username:""}}的评论</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field label="请输入回复内容" required v-model="commentContent"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="replyDialog = false">关闭</v-btn>
+          <v-btn color="blue darken-1" text @click="replyComment()">回复</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-row class="pa-4" style="background: white" >
-      <v-btn @click="onDelete" class="ma-2 white--text" small tile color="error" :loading="loading" :disabled="loading">
+      <v-btn @click="deleteDialog = true" class="ma-2 white--text" small tile color="error" :loading="loading" :disabled="loading">
         <v-icon left>mdi-delete</v-icon> 删除
       </v-btn>
 
@@ -26,7 +74,7 @@
       </v-btn>
     </v-row>
 
-    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange" row-key="id" :tree-props="{children: 'replies', hasChildren: 'hasChildren'}">
       <el-table-column type="selection" width="55">
       </el-table-column>
 
@@ -54,9 +102,7 @@
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
 <!--          <el-button @click="commentClick(scope.row,true)" type="text" size="small">驳回</el-button>-->
-          <el-button @click="replyComment(scope.row)" type="text" size="small">回复</el-button>
-          <!--<el-button type="text" size="small">垃圾评论</el-button>
-          <el-button type="text" size="small">删除</el-button>-->
+          <el-button @click="()=>{replyRow=scope.row; replyDialog = true}" type="text" size="small">回复</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,6 +138,10 @@
                 snackbarText: '',
                 loading: false,
                 selectList: [],
+                deleteDialog: false,
+                replyDialog: false,
+                replyRow: '',  //回复的当前列
+                commentContent: '',
             }
         },
         methods: {
@@ -103,6 +153,11 @@
                     this.tableData = resp.data.data;
                     this.tableData.forEach((item) => {
                         item.status = this.getCommentStatus(item.status);
+                        if(item.replies){
+                            item.replies.forEach((replie) => {
+                                replie.status = this.getCommentStatus(replie.status);
+                            })
+                        }
                     });
                     this.total = resp.data.total;
                     this.totalPage = resp.data.totalPage;
@@ -182,6 +237,7 @@
                     this.$message.error("删除评论失败，请稍后再试")
                 }finally {
                     this.loading = false;
+                    this.deleteDialog = false;
                 }
             },
             async onPassOrReject(type){
@@ -205,11 +261,12 @@
                     this.loading = false;
                 }
             },
-            async replyComment(row){
+            async replyComment(){
                 try {
                     let resp = await this.$http.post("/comment", {
-                        userId: row.member.uid,
-                        articleId: row.article.id,
+                        userId: this.replyRow.member.uid,
+                        articleId: this.replyRow.article.id,
+                        parentId: this.replyRow.id,
                         content: this.commentContent,
                     });
                     console.log(resp.data);
@@ -217,10 +274,13 @@
                         message: '评论提交成功',
                         type: 'success'
                     });
+                    this.getComments();
                 } catch (e) {
                     console.log("评论失败", e);
                     this.snackbar = true;
                     this.snackbarText = e.response.data.message ? e.response.data.message : "网络异常，请稍后再试";
+                }finally {
+                    this.replyDialog = false;
                 }
             }
         },

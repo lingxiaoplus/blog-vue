@@ -46,24 +46,39 @@
            </v-snackbar>
            <v-layout align-center justify-center>
              <v-flex xs12 sm8 md4>
-               <v-card class="elevation-12">
-                 <v-toolbar dark color="primary">
+               <v-card elevation="6" tile>
+                 <v-toolbar dark color="primary" elevation="0" >
                    <v-toolbar-title>个人博客登录</v-toolbar-title>
                    <v-spacer></v-spacer>
                  </v-toolbar>
                  <v-card-text>
                    <v-form>
-                     <v-text-field prepend-icon="mdi-account-arrow-right-outline" v-model="username" label="用户名" type="text" />
-                     <v-text-field prepend-icon="mdi-lock-outline " v-model="password" label="密码" id="password"
+                     <v-text-field prepend-inner-icon="mdi-account-arrow-right-outline" outlined v-model="username" label="用户名" type="text" />
+                     <v-text-field prepend-inner-icon="mdi-lock-outline " outlined v-model="password" label="密码" id="password"
                        :append-icon="e1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"  @click:append="() => (e1 = !e1)"
                        :type="e1 ? 'text' : 'password'" hint="至少6位密码"></v-text-field>
                    </v-form>
                  </v-card-text>
                  <v-card-actions>
-                   <v-btn text color="primary" @click="doForget">忘记密码</v-btn>
-                   <v-spacer></v-spacer>
-                   <v-btn tile color="primary" @click="doLogin">登录</v-btn>
+                   <v-col cols="12" class="px-8">
+                     <v-btn width="100%" tile large color="primary" @click="doLogin">登录</v-btn>
+                   </v-col>
                  </v-card-actions>
+
+                 <v-card-text>
+                   <v-row>
+                     <v-col cols="12" align="center">
+                       <small>
+                         没有账号？注册一个
+                       </small>
+                     </v-col>
+                     <v-col cols="12" align="center">
+                       <small @click="doForget">
+                         忘记用户名/密码
+                       </small>
+                     </v-col>
+                   </v-row>
+                 </v-card-text>
                </v-card>
              </v-flex>
            </v-layout>
