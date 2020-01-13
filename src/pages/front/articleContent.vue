@@ -229,7 +229,7 @@
                         title: '分享到 微信',
                     }
                 ],
-                rules:{
+                rules: {
                     base: value => value.length > 0 || '请填写内容',
                     content: value => value.length < 500 || '评论内容长度不符合规范',
                     email: value => {
@@ -245,6 +245,7 @@
                 pageSize: 5,
                 articleId: '',
                 comments: [],
+                userInfo: '',
             }
         },
         components: {
@@ -278,43 +279,61 @@
             onShareItem(item) {
 
             },
-            async getComments(id){
+            async getComments(id) {
                 try {
                     this.loading = true;
                     let resp = await this.$http.get(`/front/comments/${id}
                 ?pageNum=${this.pageNum}&pageSize=${this.pageSize}`);
                     this.comments = resp.data.data;
-                }catch (e) {
+                } catch (e) {
                     this.snackbar = true;
                     this.snackbarText = e.response.data.message ? e.response.data.message : "网络异常，请稍后再试";
-                }finally {
+                } finally {
                     this.loading = false;
                 }
             },
-            async addComment(){
-                if(!this.commentContent){
+            async addComment() {
+                if (!this.commentContent) {
                     this.snackbar = true;
                     this.snackbarText = "请输入评论内容";
                     return;
                 }
-                if(!this.nickname){
+                if (!this.nickname) {
                     this.snackbar = true;
                     this.snackbarText = "请输入你的昵称";
                     return;
                 }
                 try {
-                    let resp = await this.$http.post("/comment",{
-                        userId: '',
+                    let resp = await this.$http.post("/comment", {
+                        userId: this.userInfo.uid,
                         articleId: this.articleId,
-                        content: '',
+                        content: this.commentContent,
                     });
                     console.log(resp.data);
-                }catch (e) {
-                    console.log("评论失败",e);
+                    this.$message({
+                        message: '评论提交成功',
+                        type: 'success'
+                    });
+                    this.commentContent = "";
+                    this.getComments(this.articleId);
+                } catch (e) {
+                    console.log("评论失败", e);
                     this.snackbar = true;
                     this.snackbarText = e.response.data.message ? e.response.data.message : "网络异常，请稍后再试";
                 }
 
+            },
+            async getUserInfo() {
+                let user_info = JSON.parse(localStorage.getItem("user_info"));
+                console.log("用户信息", user_info);
+                if (!user_info) {
+                    let res = await this.$http.get("/user/verify")
+                    user_info = res.data.data;
+                    localStorage.setItem("user_info", JSON.stringify(res.data.data));
+                }
+                this.userInfo = user_info;
+                this.nickname = user_info.nickname;
+                this.email = user_info.email;
             }
         },
         created() {
@@ -324,6 +343,7 @@
             this.articleId = id;
             this.getArticleContent(id);
             this.getComments(id);
+            this.getUserInfo();
         }
     }
 
