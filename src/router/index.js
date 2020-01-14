@@ -19,6 +19,7 @@ export default new Router({
   mode:"history",
   routes: [
     route("/user/login",'/user/login',"Login"),
+    route("/user/register",'/user/register',"register"),
     route("/front/index",'/front/index',"index"),
     route("/front/articleContent",'/front/articleContent',"articleContent"),
     {
@@ -34,6 +35,7 @@ export default new Router({
         route("/items/roleManage","/items/RoleManage","roleManage"),
         route("/settings/theme","/settings/theme","theme"),
         route("/settings/systemLog","/settings/SystemLog","systemLog"),
+        route("/settings/EmailConfig","/settings/EmailConfig","emailConfig"),
         route("/article/article_list","/article/articleList","article_list"),
         route("/article/edit_article","/article/editArticle","edit_article"),
 		    route("/article/category","/article/category","category"),

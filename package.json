@@ -18,6 +18,7 @@
     "marked": "^0.7.0",
     "qs": "^6.9.1",
     "vue": "^2.5.2",
+    "vue-particles": "^1.0.9",
     "vue-router": "^3.0.1",
     "vue-scroll": "^2.1.13",
     "vuetify": "^2.1.7",

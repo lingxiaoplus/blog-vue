@@ -64,6 +64,10 @@ var drawers = [{
         title: "主题管理",
         path: "/theme"
       },
+      {
+        title: "邮箱管理",
+        path: "/emailConfig"
+      },
 	  {
 	    title: "友情链接",
 	    path: "/friend_link"

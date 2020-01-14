@@ -9,11 +9,11 @@ import store from '@/store/index'
 import axios from 'axios'
 import config from './config'
 axios.defaults.baseURL = config.api; // 设置axios的基础请求路径
-axios.defaults.timeout = 2000; // 设置axios的请求时间
+axios.defaults.timeout = 8000; // 设置axios的请求时间
 axios.defaults.withCredentials = true;
 //在main.js设置全局的请求次数，请求的间隙
 axios.defaults.retry = 4;
-axios.defaults.retryDelay = 1000;
+axios.defaults.retryDelay = 2000;
 
 axios.loadData = async function (url) {
   const resp = await axios.get(url);
@@ -49,6 +49,10 @@ import scroll from 'vue-scroll'
 Vue.use(scroll)
 import hljs from '../static/js/highlight.min.js'
 import range from '../static/js/rangeFn.js'
+
+//背景效果
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
 
 new Vue({
   el: '#app',
