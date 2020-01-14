@@ -53,6 +53,9 @@
 
         </v-toolbar>
       </template>
+      <template v-slot:item.enabled="{ item }">
+        <v-switch v-model="item.enabled" color="primary"></v-switch>
+      </template>
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary"  @click="editItem(item)">
           编辑<v-icon right dark small>
@@ -67,10 +70,10 @@
 
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
+        <v-btn color="primary" @click="getEmails">刷新</v-btn>
       </template>
     </v-data-table>
-    <div class="text-center pt-2" v-if="pageCount>0">
+    <div class="text-center pt-2" v-if="pageCount>1">
       <v-pagination v-model="pageNum" :length="pageCount"></v-pagination>
 
     </div>
@@ -111,6 +114,11 @@
                     {
                         text: '邮箱授权码',
                         value: 'authCode'
+                    },
+                    {
+                        text: '是否启用',
+                        value: 'enabled',
+                        sortable: false,
                     },
                     {
                         text: '操作',

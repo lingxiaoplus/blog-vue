@@ -68,10 +68,10 @@
 
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
+        <v-btn color="primary" @click="getRoles">刷新</v-btn>
       </template>
     </v-data-table>
-    <div class="text-center pt-2">
+    <div class="text-center pt-2" v-if="pageCount>1">
       <v-pagination v-model="pageNum" :length="pageCount"></v-pagination>
 
     </div>
