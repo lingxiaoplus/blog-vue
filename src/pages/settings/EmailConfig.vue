@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
+    <v-snackbar v-model="snackbar" color="error" :timeout="2000" :top="true">
       {{ snackbarText }}
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
@@ -54,7 +54,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.enabled="{ item }">
-        <v-switch v-model="item.enabled" color="primary"></v-switch>
+        <v-switch v-model="item.enabled" @change="enableEmail(item)" color="primary"></v-switch>
       </template>
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary"  @click="editItem(item)">
@@ -126,12 +126,7 @@
                         sortable: false,
                     },
                 ],
-                desserts: [{
-                    id: 1,
-                    roleName: '159',
-                    roleDesc: 'Frozen Yogurt',
-                    rolePermession: '',
-                }, ],
+                desserts: [],
                 editedItem: {
                     email: '',
                     authCode: '',
@@ -157,7 +152,7 @@
             pageNum(val){
                 console.log("监听到页数发生变化",val);
                 this.pageNum = val;
-                this.getRoles();
+                this.getEmails();
             },
         },
         methods: {
@@ -220,7 +215,7 @@
                         this.snackbarText = "添加邮箱成功";
                         console.log("添加邮箱",response.data);
                     }
-                    this.getRoles();
+                    this.getEmails();
                 }catch(e){
                     console.log("添加/更新分类失败",e);
                     this.snackbar = true;
@@ -235,7 +230,7 @@
                 try{
                     let response = await this.$http.delete("/email/"+this.productId);
                     console.log("删除邮箱",response.data);
-                    this.getRoles();
+                    this.getEmails();
                 }catch(e){
                     console.log("删除邮箱失败",e);
                     this.snackbar = true;
@@ -250,7 +245,27 @@
                 var date =  new Date(newstr);
                 var time_str = date.getTime().toString();
                 return time_str.substr(0, 10);
-            }
+            },
+            async enableEmail(item){
+                console.log("启用邮箱",item);
+                //item.enabled?(item.enabled=1):(item.enabled=0);
+                try{
+                    let emailData = Object.assign({}, item);
+                    emailData.enabled?(emailData.enabled=1):(emailData.enabled=0);
+                    //更新
+                    let response = await this.$http.put("/email",emailData);
+                    this.snackbar = true;
+                    this.snackbarText = item.enabled?"启用邮箱成功":"禁用邮箱成功";
+                    console.log("更新邮箱",response.data);
+                    this.getEmails();
+                }catch(e){
+                    this.snackbar = true;
+                    this.snackbarText = e.response.data.message;
+                    item.enabled = !item.enabled;
+                }finally{
+                    this.loading = false;
+                }
+            },
         },
         created() {
             this.$store.commit('setLoading', true);

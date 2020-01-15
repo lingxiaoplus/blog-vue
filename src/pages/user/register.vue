@@ -35,37 +35,37 @@
 
                 <v-row>
                   <v-col cols="6">
-                    <v-text-field prepend-inner-icon="mdi-account-arrow-right-outline" v-model="username"
+                    <v-text-field prepend-inner-icon="mdi-account-arrow-right-outline" v-model="username" :rules="[rule.base,rule.username]"
                                   label="请填写用户名" type="text"/>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field prepend-inner-icon="mdi-account-search-outline" v-model="nickname"
+                    <v-text-field prepend-inner-icon="mdi-account-search-outline" v-model="nickname" :rules="[rule.base,rule.nickname]"
                                   label="请填写昵称" type="text"/>
                   </v-col>
                 </v-row>
 
                 <v-row>
                   <v-col cols="6">
-                    <v-text-field prepend-inner-icon="mdi-lock-outline" v-model="password"
+                    <v-text-field prepend-inner-icon="mdi-lock-outline" v-model="password" :rules="[rule.base,rule.password]"
                                   label="请填写密码" type="password"/>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field prepend-inner-icon="mdi-repeat-once " v-model="repeatPassword"
+                    <v-text-field prepend-inner-icon="mdi-repeat-once " v-model="repeatPassword" :rules="[rule.base,rule.password]"
                                   label="请重复填写密码" type="password"/>
                   </v-col>
                 </v-row>
                 <v-row align="center">
                   <v-col cols="8">
                     <v-text-field prepend-inner-icon="mdi-email-check-outline" v-model="email"
-                                  label="请填写邮箱" type="text" :rules="emailRules">
+                                  label="请填写邮箱" type="text" :rules="[rule.base,rule.email]">
                       <template v-slot:append>
-                        <v-btn text @click="sendCode">发送验证码</v-btn>
+                        <v-btn text @click="sendCode" :loading="loading" :disabled="disable">{{buttonText}}</v-btn>
                       </template>
                     </v-text-field>
                   </v-col>
                   <v-col cols="4">
-                    <v-text-field v-model="repeatPassword"
-                                  label="请填写验证码" type="text"/>
+                    <v-text-field v-model="verifyCode"
+                                  label="请填写验证码" type="number" :rules="[rule.base]"/>
                   </v-col>
                 </v-row>
 
@@ -120,21 +120,50 @@
                 nickname: '',
                 imageUrl: '',
                 email: '',
-                emailRules: [
-                    v => !!v || 'E-mail is required',
-                    v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-                ],
+                verifyCode: '',
+                rule: {
+                    base: v => v.length > 0 || '请填写内容',
+                    email: v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                    username: v => /^[a-zA-Z0-9_-]{4,16}$/.test(v) || '用户名为4到16位（字母，数字，下划线，减号）',
+                    nickname: v => v.length > 1 && v.length < 12 || '',
+                    password: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(v) || '至少8个字符，至少1个大写字母，1个小写字母和1个数字',
+                },
                 valid: true,
-
+                loading: false,
+                disable: false,
+                buttonText: '发送验证码',
             }
         },
         methods:{
-            doRegister(){
-                if (this.$refs.form.validate()) {
-                    this.$message.success("验证通过")
-                }else {
-                    this.$message.error("请完善用户信息")
+            async doRegister(){
+                if (!this.$refs.form.validate()) {
+                    this.$message.error("请完善用户信息");
+                    //this.$refs.form.resetValidation()
+                    return;
                 }
+                if (this.password !== this.repeatPassword){
+                    this.$message.error("两次输入的密码不一致");
+                    return ;
+                }
+
+                try {
+                    let resp = await this.$http.post("/user/register",{
+                        username: this.username,
+                        password: this.password,
+                        email: this.email,
+                        headPortrait: this.imageUrl,
+                        nickname: this.nickname,
+                        verifyCode: this.verifyCode
+                    });
+                    console.log("注册成功",resp.data);
+                    this.$router.push("/")
+                }catch (e) {
+                    console.log("注册失败",e);
+                    this.$message.error(e.response.data.message);
+                }finally {
+
+                }
+
             },
             doLogin(){
                 this.$router.push("/user/login");
@@ -147,11 +176,32 @@
             },
             async sendCode(){
                 try {
+                    this.loading = true;
+                    this.disable = true;
                     let resp = await this.$http.post(`/user/email/${this.email}`);
+                    console.log("发送邮件成功",resp.data);
+                    this.countDown();
                 }catch (e) {
                     console.log("发送邮件验证码失败",e);
                     this.$message.error("发送邮件验证码失败")
+                    this.disable = false;
+                }finally {
+                    this.loading = false;
                 }
+            },
+            countDown(){
+                var count = 60;
+                var that = this;
+                var timer = setInterval(function () {
+                    if (count > 0) {
+                        count = count - 1;
+                        that.buttonText = `${count}秒`;
+                    } else {
+                        clearInterval(timer);
+                        that.buttonText = `发送验证码`;
+                        that.disable = false;
+                    }
+                }, 1000);
             }
         },
     }

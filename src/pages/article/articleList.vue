@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
+    <v-snackbar v-model="snackbar" color="error" :timeout="3000" :top="true">
       {{ snackbarText }}
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
@@ -22,7 +22,7 @@
             @input="onSearchChanged"
           ></v-text-field>
           <v-spacer></v-spacer>
-          <v-btn class="ma-2 white--text" color="primary" @click="$emit('setLoading',true)"> 确认</v-btn>
+          <!--<v-btn class="ma-2 white&#45;&#45;text" color="primary" @click="$emit('setLoading',true)"> 确认</v-btn>-->
           <!-- loading条 -->
           <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
           </v-progress-linear>
@@ -43,12 +43,11 @@
 
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
+        <v-btn color="primary">刷新试试</v-btn>
       </template>
     </v-data-table>
-    <div class="text-center pt-2">
+    <div class="text-center pt-2" v-if="pageCount>1">
       <v-pagination v-model="pageNum" :length="pageCount"></v-pagination>
-
     </div>
 
     <v-row justify="center">
@@ -102,14 +101,7 @@
                         sortable: false,
                     },
                 ],
-                desserts: [{
-                    id: 1,
-                    title: '159',
-                    author: 'Frozen Yogurt',
-                    categoryName: '',
-                    tables:'',
-                    updateTime: '2019-12-12'
-                }, ],
+                desserts: [],
                 editedItem: {
                     roleName: '',
                     roleDesc: '',

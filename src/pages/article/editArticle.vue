@@ -32,7 +32,7 @@
         <v-col cols="2" class="px-md-2">
           <v-flex>
             <v-hover v-slot:default="{ hover }">
-              <v-card class="pa-md-2" :elevation="hover?12:2">
+              <v-card class="pa-md-2" tile :elevation="hover?12:2">
                 <!--          <v-img-->
                 <!--            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"-->
                 <!--            height="200px"-->
@@ -81,27 +81,30 @@
 
             <v-flex class="pt-4">
               <v-hover v-slot:default="{ hover }">
-                <v-card class="pa-md-2" :elevation="hover?12:2">
+                <v-card class="pa-md-2" tile :elevation="hover?12:2">
                   <v-card-title style="padding-bottom: 10px">
                     封面图片
                   </v-card-title>
-                  <v-flex align-center justify-center>
-                    <el-upload
-                      action="http://api.lingxiaomz.top/upload/"
-                      list-type="picture-card"
-                      :on-preview="handlePictureCardPreview"
-                      :on-success="handleSuccess"
-                      :on-error="handleError"
-                      :on-remove="handleRemove"
-                      :file-list="image_list"
-                      :limit="1"
-                    >
-                      <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <el-dialog :visible.sync="dialogVisible" size="tiny">
-                      <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog>
-                  </v-flex>
+                  <v-card-actions>
+                    <v-col cols="12" align="center">
+                      <el-upload
+                        action="http://api.lingxiaomz.top/upload/"
+                        list-type="picture-card"
+                        :on-preview="handlePictureCardPreview"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :on-remove="handleRemove"
+                        :file-list="image_list"
+                        :limit="1"
+                      >
+                        <i class="el-icon-plus"></i>
+                      </el-upload>
+                      <el-dialog :visible.sync="dialogVisible" size="tiny">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                      </el-dialog>
+                    </v-col>
+                  </v-card-actions>
+
                 </v-card>
               </v-hover>
 

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <v-snackbar v-model="snackbar" color="primary" :timeout="3000" :bottom="true">
+    <v-snackbar v-model="snackbar" color="error" :timeout="3000" :top="true">
       {{ snackbarText }}
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
@@ -68,7 +68,7 @@
 
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="getRoles">刷新</v-btn>
+        <v-btn color="primary" @click="getRoles">刷新试试</v-btn>
       </template>
     </v-data-table>
     <div class="text-center pt-2" v-if="pageCount>1">
@@ -124,12 +124,7 @@
             sortable: false,
           },
 	      ],
-	      desserts: [{
-	        id: 1,
-	        roleName: '159',
-	        roleDesc: 'Frozen Yogurt',
-	        rolePermession: '',
-	      }, ],
+	      desserts: [],
 	      editedItem: {
 	        name: '',
 	        description: '',

@@ -95,7 +95,7 @@
     },
     watch: {
       currentItem(oldVal, newVal) {
-
+          console.log("oldVal:     ",oldVal,"newVal:     ",newVal)
       }
     },
     methods: {
@@ -107,9 +107,9 @@
           this.items.splice(0, 0, {
             id: -1,
             name: '首页'
-          })
+          });
+          this.currentItem = `tab-${this.items[0]}`;
         } catch (e) {
-          debugger;
           console.log("异常", e);
         } finally {
 
