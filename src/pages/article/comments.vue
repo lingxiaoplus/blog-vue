@@ -150,15 +150,16 @@
                     this.$store.commit('setLoading', true);
                     let resp = await this.$http.get(`/comment?pageNum=${this.pageNum}&pageSize=${this.pageSize}&keyword=${this.keyword}`);
                     console.log("评论", resp.data);
-                    this.tableData = resp.data.data;
-                    this.tableData.forEach((item) => {
+                    //this.tableData = resp.data.data;
+                    /*this.tableData.forEach((item) => {
                         item.status = this.getCommentStatus(item.status);
                         if(item.replies){
                             item.replies.forEach((replie) => {
                                 replie.status = this.getCommentStatus(replie.status);
                             })
                         }
-                    });
+                    });*/
+                    this.tableData = this.reSetReplie(resp.data.data);
                     this.total = resp.data.total;
                     this.totalPage = resp.data.totalPage;
                     this.hidePagination = this.totalPage <= 1; //当页数小于等于1页的时候，就隐藏分页
@@ -169,6 +170,18 @@
                 } finally {
                     this.$store.commit('setLoading', false);
                 }
+            },
+            reSetReplie(list){
+                if(!list || list.length < 1){
+                    return list;
+                }
+                list.forEach((item) => {
+                    item.status = this.getCommentStatus(item.status);
+                    if (item.replies){
+                        this.reSetReplie(item.replies);
+                    }
+                });
+                return list;
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);

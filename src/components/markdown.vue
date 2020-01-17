@@ -276,7 +276,7 @@
                 this.maxPreviewScrollHeight = maxPreviewScrollHeight
             },
             mdValuesP: function(val) {
-              console.log("mdValuesP变化了",val)
+              //console.log("mdValuesP变化了",val)
               if(val.mdValue){
                 this.input = val.mdValue
               }else{

@@ -2,12 +2,12 @@
   <v-container>
     <v-layout row wrap>
 
-      <v-flex xs10 md12>
+      <v-flex xs10 md12 v-if="false">
         <v-layout row wrap>
-          <v-col class="pa-6" cols="4" v-for="item in cardList" :key="item.name">
+          <v-col class="pa-6" cols="4" v-for="(item,index) in cardList" :key="item.name">
             <v-hover v-slot:default="{ hover }">
               <v-card :elevation="hover?12:6">
-                <v-img :src="item.color" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                <v-img :src="'https://source.unsplash.com/random/600x400?random='+index" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="160px">
                   <v-card-title>{{item.name}}</v-card-title>
                   <v-card-subtitle class="white--text">{{item.number}}</v-card-subtitle>
@@ -106,13 +106,13 @@
             data: ['新增文章']
           },
           xAxis: {
-            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            data: ["技术", "娱乐", "福利", "羊毛", "其他"]
           },
           yAxis: {},
           series: [{
             name: '新增文章',
             type: 'bar',
-            data: [5, 20, 36, 10, 10, 20],
+            data: [5, 20, 36, 10, 20],
             //color:  this.$vuetify.theme.themes.light.primary
           }]
         };

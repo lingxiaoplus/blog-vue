@@ -1,25 +1,21 @@
 <template>
   <v-container>
-    <v-layout row>
-      <v-col clos="2">
-        <v-card elevation="12" >
-          <v-img src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg" height="194">
-            <v-list-item>
+    <v-row>
+      <v-col clos="2" >
+        <v-card elevation="6" max-width="600">
+          <v-img src="https://source.unsplash.com/random/600x400" height="194" class="header">
+            <v-list-item align="center">
               <v-list-item-content>
                 <v-avatar size="60">
-                  <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                  <img :src="user_info.headPortrait?user_info.headPortrait:'https://cdn.vuetifyjs.com/images/john.jpg'" alt="John">
                 </v-avatar>
-                <v-list-item-title class="headline">{{user_info.username}}</v-list-item-title>
-                <v-list-item-subtitle>{{user_info.username}}</v-list-item-subtitle>
+                <v-list-item-title class="headline white--text">{{user_info.nickname}}</v-list-item-title>
+                <v-list-item-subtitle class="white--text">习惯沉默而不停止思考，无力表达却不曾失去态度</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-img>
           <v-card-text>
             蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED
-          </v-card-text>
-
-          <v-card-text>
-            浙江省杭州市
           </v-card-text>
           <v-card-text>
             昵称：{{user_info.nickname}}
@@ -31,14 +27,14 @@
             邮箱：{{user_info.email}}
           </v-card-text>
           <v-card-actions>
-            <v-btn text color="deep-purple accent-4">
+            <v-btn text color="primary">
               更新个人信息
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
-      <v-col cols="8" >
-        <v-card elevation="12" >
+      <v-col cols="7" >
+        <v-card elevation="6" max-width="800">
           <v-tabs v-model="tablemodel">
             <v-tab v-for="item in tables" :key="item.name">
               {{ item.name }}
@@ -87,7 +83,7 @@
         </v-card>
       </v-col>
 
-    </v-layout>
+    </v-row>
   </v-container>
 
 </template>
@@ -121,4 +117,8 @@
 </script>
 
 <style>
+  .header{
+    justify-content: center;
+    align-items: center;
+  }
 </style>

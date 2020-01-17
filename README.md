@@ -1,21 +1,67 @@
-# my-app
+# 个人博客系统前端
 
-> A Vue.js project
+> A Vue.js project for blog
 
-## Build Setup
+## 技术栈
 
-``` bash
-# install dependencies
+主要采用了：
+
+1. Vue
+2. axios
+3. ElementUI
+4. vue-echarts
+5. vue-mdEditor
+6. vue-router
+
+还有其他一些琐碎的技术，就不在这里列举了。 
+
+## 项目效果
+
+### 登录界面
+
+![](.\screenshots\0.png)
+
+
+
+### 统计界面
+
+![](.\screenshots\1.png)
+
+
+
+### 文章分类
+
+![](.\screenshots\2.png)
+
+
+
+### 文章编辑
+
+
+
+![](.\screenshots\3.png)
+
+
+
+### 系统日志
+
+
+
+![](.\screenshots\4.png)
+
+
+
+## 快速运行
+
+
+
+克隆项目到本地，进入根目录中运行下面的命令：
+
+```shell
+# 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# 在 localhost:9090 启动项目
 npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

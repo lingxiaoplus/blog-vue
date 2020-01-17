@@ -18,9 +18,31 @@
         <v-toolbar-title>{{article.title}}</v-toolbar-title>
         <v-spacer/>
 
-        <v-btn icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
+
+        <v-menu>
+          <template v-slot:activator="{ on: menu }">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on: tooltip }">
+                <v-btn icon v-on="{ ...tooltip, ...menu }" @click="createQrImage">
+                  <v-icon>mdi-desktop-classic</v-icon>
+                </v-btn>
+              </template>
+              <span>在其他设备上继续阅读</span>
+            </v-tooltip>
+          </template>
+          <v-list>
+            <v-list-item>
+              <!--:logoSrc="imageUrl"-->
+              <vue-qr
+                :text="qr_content" :gifBgSrc="bgGifUrl" :dotScale="0.4" :callback="test" :size="200"></vue-qr>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <!--<v-btn icon @click="createQrImage">
+          <v-icon>mdi-desktop-classic</v-icon>
+        </v-btn>-->
+
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
@@ -37,7 +59,7 @@
               </v-img> -->
                 <v-card-text>
                   <!--编辑器组件，嵌入到任意父组件中-->
-                  <markdown :mdValuesP="editContent" :fullPageStatusP="false" :editStatusP="false"
+                  <markdown :mdValuesP="article.content" :fullPageStatusP="false" :editStatusP="false"
                             :previewStatusP="true"
                             :navStatusP="false" :icoStatusP="false" @childevent="childEventHandler">
                   </markdown>
@@ -182,7 +204,7 @@
       </v-sheet>
 
       <v-fab-transition>
-        <v-btn key="keyboard_arrow_up" color="green" flat absolute fab large dark bottom right>
+        <v-btn key="keyboard_arrow_up" color="green" absolute fab large dark bottom right>
           <v-icon>mdi-chevron-up</v-icon>
         </v-btn>
       </v-fab-transition>
@@ -195,8 +217,8 @@
 
 <script>
     // 引入markdown组件
-    import markdown from '../../components/markdown'
-
+    import markdown from '../../components/markdown';
+    import vueQr from 'vue-qr';
     export default {
         data() {
             return {
@@ -209,7 +231,6 @@
                     title: '',
                     content: '',
                     headImage: '',
-                    editContent: '',
                 },
                 shareList: [
                     {
@@ -246,10 +267,14 @@
                 articleId: '',
                 comments: [],
                 userInfo: '',
+                imageUrl: require("../../assets/website_logo.png"),
+                bgGifUrl: require("../../assets/dog.gif"),
+                qr_content: '',
             }
         },
         components: {
-            markdown // 声明mardown组件
+            markdown, // 声明mardown组件
+            vueQr
         },
         watch: {
             currentItem(oldVal, newVal) {
@@ -257,9 +282,12 @@
             }
         },
         methods: {
+            test(dataUrl){
+                console.log("二维码",dataUrl)
+            },
             childEventHandler: function (res) {
-                // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
-                this.editContent = res;
+                // res会传回一个data, 包含属性mdValue和htmlValue，具体含义请自行翻译
+                this.article.content = res;
             },
             async getArticleContent(id) {
                 try {
@@ -267,7 +295,7 @@
                     let response = await this.$http.get("/front/article/" + id);
                     //console.log("结果", response.data.data);
                     this.article = response.data.data;
-                    this.editContent = response.data.data.content;
+                    //this.article.editContent = response.data.data.content;
                 } catch (e) {
                     console.log("查询文章失败", e.response.data);
                     this.snackbar = true;
@@ -334,9 +362,15 @@
                 this.userInfo = user_info;
                 this.nickname = user_info.nickname;
                 this.email = user_info.email;
+            },
+            createQrImage(){
+
             }
         },
         created() {
+            let href = window.location.href;
+            console.log("链接",href);
+            this.qr_content = href;
             let tmpUrlSearch = window.location.search;
             let tmpParas = GetRequestParameters(tmpUrlSearch);
             let id = tmpParas["id"]; //提取code参数, 用于获取openid

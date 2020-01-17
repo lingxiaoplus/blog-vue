@@ -8,7 +8,7 @@
         </template>
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
         <v-toolbar-title>凌霄的博客</v-toolbar-title>
-        <v-spacer />
+        <v-spacer/>
         <template v-slot:extension>
           <v-tabs v-model="currentItem" background-color="transparent" slider-color="white">
             <v-tab v-for="item in items" :key="item.name" :href="'#tab-' + item.name" class="mx-8">
@@ -27,14 +27,32 @@
         /> -->
         <v-row align="center" style="max-width: 400px" v-if="showSearch">
           <v-text-field :autofocus="showSearch" :append-icon-cb="() => {}" placeholder="搜索文章" single-line color="white"
-            hide-details />
+                        hide-details/>
         </v-row>
         <v-btn icon @click="showSearch = !showSearch">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <v-btn icon>
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+
+
+        <!-- 换肤 -->
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn icon dark v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in menuList"
+              :key="index"
+              @click="menuClick(item)"
+            >
+              <v-list-item-title class="px-4">{{ item.name }}</v-list-item-title>
+            </v-list-item>
+
+          </v-list>
+        </v-menu>
+
       </v-toolbar>
     </v-card>
     <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" min-height="600">
@@ -53,7 +71,7 @@
 
                       <v-card-actions class="d-flex ">
                         <el-link class="pa-2" style="color: #909399"><i class="el-icon-time el-icon--left">
-                            {{item.updateTime}}</i> </el-link>
+                          {{item.updateTime}}</i></el-link>
                         <el-link class="pa-2" style="color: #909399"><i class="el-icon-view el-icon--left"> 阅读(0)</i>
                         </el-link>
                         <v-btn text color="deep-purple accent-4" class="ml-auto" @click="readArticle(item.id)">
@@ -84,66 +102,70 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        currentItem: 0,
-        items: [],
-        articleList: [],
-        showSearch: false,
-      }
-    },
-    watch: {
-      currentItem(oldVal, newVal) {
-          console.log("oldVal:     ",oldVal,"newVal:     ",newVal)
-      }
-    },
-    methods: {
-      async getCategory() {
-        try {
-          let resp = await this.$http.get("/front/category");
-          console.log("结果", resp.data.data);
-          this.items = resp.data.data;
-          this.items.splice(0, 0, {
-            id: -1,
-            name: '首页'
-          });
-          this.currentItem = `tab-${this.items[0]}`;
-        } catch (e) {
-          console.log("异常", e);
-        } finally {
+    export default {
+        data() {
+            return {
+                currentItem: 0,
+                items: [],
+                articleList: [],
+                showSearch: false,
+                menuList: [{name: "友情链接"},{name: "关于"}],
+            }
+        },
+        watch: {
+            currentItem(oldVal, newVal) {
+                console.log("oldVal:     ", oldVal, "newVal:     ", newVal)
+            }
+        },
+        methods: {
+            async getCategory() {
+                try {
+                    let resp = await this.$http.get("/front/category");
+                    console.log("结果", resp.data.data);
+                    this.items = resp.data.data;
+                    this.items.splice(0, 0, {
+                        id: -1,
+                        name: '首页'
+                    });
+                    this.currentItem = `tab-${this.items[0]}`;
+                } catch (e) {
+                    console.log("异常", e);
+                } finally {
 
-        }
-      },
-      async getArticleList() {
-        try {
-          let resp = await this.$http.get("/front/article");
-          console.log("文章列表", resp.data.data);
-          this.articleList = resp.data.data;
-        } catch (e) {
-          debugger;
-          console.log("异常", e);
-        } finally {
+                }
+            },
+            async getArticleList() {
+                try {
+                    let resp = await this.$http.get("/front/article");
+                    console.log("文章列表", resp.data.data);
+                    this.articleList = resp.data.data;
+                } catch (e) {
+                    debugger;
+                    console.log("异常", e);
+                } finally {
 
+                }
+            },
+            readArticle(id) {
+                const {
+                    href
+                } = this.$router.resolve({
+                    name: "articleContent",
+                    query: {
+                        id: id
+                    }
+                });
+                window.open(href, '_blank');
+            },
+            menuClick(item) {
+
+            },
+        },
+        created() {
+            this.getCategory();
+            this.getArticleList();
         }
-      },
-      readArticle(id) {
-        const {
-          href
-        } = this.$router.resolve({
-          name: "articleContent",
-          query: {
-            id: id
-          }
-        });
-        window.open(href, '_blank');
-      }
-    },
-    created() {
-      this.getCategory();
-      this.getArticleList();
     }
-  }
 </script>
 
 <style>
