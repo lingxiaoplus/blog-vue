@@ -1,13 +1,14 @@
 <template>
   <v-container>
     <v-row>
-      <v-col clos="2" >
-        <v-card elevation="6" max-width="600">
+      <v-col clos="2">
+        <v-card tile elevation="6" max-width="600">
           <v-img src="https://source.unsplash.com/random/600x400" height="194" class="header">
             <v-list-item align="center">
               <v-list-item-content>
                 <v-avatar size="60">
-                  <img :src="user_info.headPortrait?user_info.headPortrait:'https://cdn.vuetifyjs.com/images/john.jpg'" alt="John">
+                  <img :src="user_info.headPortrait?user_info.headPortrait:'https://cdn.vuetifyjs.com/images/john.jpg'"
+                       alt="John">
                 </v-avatar>
                 <v-list-item-title class="headline white--text">{{user_info.nickname}}</v-list-item-title>
                 <v-list-item-subtitle class="white--text">习惯沉默而不停止思考，无力表达却不曾失去态度</v-list-item-subtitle>
@@ -27,14 +28,71 @@
             邮箱：{{user_info.email}}
           </v-card-text>
           <v-card-actions>
-            <v-btn text color="primary">
-              更新个人信息
-            </v-btn>
+            <v-dialog v-model="updateInfoDialog" persistent max-width="600px">
+              <template v-slot:activator="{ on }">
+                <v-btn text color="primary" dark v-on="on">更新个人信息</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">更新个人信息</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field label="昵称" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          label="Legal last name*"
+                          hint="example of persistent helper text"
+                          persistent-hint
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field label="邮箱" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field label="密码" type="password" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6">
+                        <v-select
+                          :items="['0-17', '18-29', '30-54', '54+']"
+                          label="Age*"
+                          required
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6">
+                        <v-autocomplete
+                          :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+                          label="Interests"
+                          multiple
+                        ></v-autocomplete>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <small>*indicates required field</small>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="updateInfoDialog = false">取消</v-btn>
+                  <v-btn color="blue darken-1" text @click="updateInfoDialog = false">确认</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
         </v-card>
+
+
+
+
       </v-col>
-      <v-col cols="7" >
-        <v-card elevation="6" max-width="800">
+      <v-col cols="7">
+        <v-card tile elevation="6" max-width="800">
           <v-tabs v-model="tablemodel">
             <v-tab v-for="item in tables" :key="item.name">
               {{ item.name }}
@@ -89,35 +147,34 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tablemodel: 0,
-        tables: [{
-          name: '文章'
-        }, {
-          name: '应用'
-        }, {
-          name: '项目'
-        }],
-        userInfo: '',
-      }
-    },
-    methods: {
+    export default {
+        data() {
+            return {
+                tablemodel: 0,
+                tables: [{
+                    name: '文章'
+                }, {
+                    name: '应用'
+                }, {
+                    name: '项目'
+                }],
+                userInfo: '',
+                updateInfoDialog: false
+            }
+        },
+        methods: {},
+        created() {
 
-    },
-    created() {
+            let user_info = JSON.parse(localStorage.getItem("user_info"));
 
-      let user_info = JSON.parse(localStorage.getItem("user_info"));
-
-      console.log("用户信息",user_info);
-      this.user_info = user_info;
+            console.log("用户信息", user_info);
+            this.user_info = user_info;
+        }
     }
-  }
 </script>
 
 <style>
-  .header{
+  .header {
     justify-content: center;
     align-items: center;
   }

@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <v-card class="overflow-hidden" tile>
-      <v-toolbar color="primary" dark flat src="https://picsum.photos/1920/1080?random" shrink-on-scroll>
+      <v-toolbar color="primary" dark  src="https://picsum.photos/1920/1080?random" shrink-on-scroll>
         <template v-slot:img="{ props }">
           <v-img v-bind="props" gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"></v-img>
         </template>
@@ -109,7 +109,16 @@
                 items: [],
                 articleList: [],
                 showSearch: false,
-                menuList: [{name: "友情链接"},{name: "关于"}],
+                menuList: [
+                    {
+                        name: "友情链接",
+                        url: "",
+                    },
+                    {
+                        name: "关于",
+                        url: "about",
+                    }
+                    ],
             }
         },
         watch: {
@@ -158,7 +167,7 @@
                 window.open(href, '_blank');
             },
             menuClick(item) {
-
+                this.$router.push(item.url);
             },
         },
         created() {

@@ -22,6 +22,7 @@ export default new Router({
     route("/user/register",'/user/register',"register"),
     route("/front/index",'/front/index',"index"),
     route("/front/articleContent",'/front/articleContent',"articleContent"),
+    route("/front/about",'/front/about',"about"),
     {
       path: '/',
       name: 'HomePage',

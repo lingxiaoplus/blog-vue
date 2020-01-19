@@ -19,19 +19,19 @@
 
 ### 登录界面
 
-![](.\screenshots\0.png)
+![](https://blog-1252348761.cos.ap-chengdu.myqcloud.com/spring/0.png)
 
 
 
 ### 统计界面
 
-![](.\screenshots\1.png)
+![](https://blog-1252348761.cos.ap-chengdu.myqcloud.com/spring/1.png)
 
 
 
 ### 文章分类
 
-![](.\screenshots\2.png)
+![](https://blog-1252348761.cos.ap-chengdu.myqcloud.com/spring/2.png)
 
 
 
@@ -39,7 +39,7 @@
 
 
 
-![](.\screenshots\3.png)
+![](https://blog-1252348761.cos.ap-chengdu.myqcloud.com/spring/3.png)
 
 
 
@@ -47,7 +47,7 @@
 
 
 
-![](.\screenshots\4.png)
+![](https://blog-1252348761.cos.ap-chengdu.myqcloud.com/spring/4.png)
 
 
 
