@@ -56,6 +56,21 @@ var drawers = [{
     ]
   },
   {
+    action: "laptop",
+    title: "运维管理",
+    path: "/operations",
+    items:[
+      {
+        title: "存储管理",
+        path: "/storageManage"
+      },
+      {
+        title: "定时任务",
+        path: "/task"
+      },
+    ]
+  },
+  {
     action: "settings",
     title: "系统管理",
     path: "/settings",
