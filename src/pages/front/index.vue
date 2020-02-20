@@ -1,12 +1,48 @@
 <template>
   <v-app id="inspire">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+
+    <v-navigation-drawer v-model="drawer" app temporary>
+      <v-row>
+        <v-card tile elevation="4">
+          <v-img src="https://source.unsplash.com/random/600x400" height="194" class="header">
+            <v-list-item align="center">
+              <v-list-item-content>
+                <v-avatar size="60">
+                  <img src="https://cdn.vuetifyjs.com/images/john.jpg"
+                       alt="John">
+                </v-avatar>
+                <v-list-item-title class="headline white--text">haha</v-list-item-title>
+                <v-list-item-subtitle class="white--text">习惯沉默而不停止思考，无力表达却不曾失去态度</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-img>
+
+        </v-card>
+
+        <v-col cols="12" >
+          <v-list dense>
+            <v-list-item v-for="item in drawerList" :key="item.name" no-action :prepend-icon="'mdi-'+item.icon" @click="onDrawerClick()">
+              <v-list-item-icon>
+                <v-icon v-text="'mdi-'+item.icon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{item.name}}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-col>
+
+
+      </v-row>
+
+    </v-navigation-drawer>
     <v-card class="overflow-hidden" tile>
       <v-toolbar color="primary" dark  src="https://picsum.photos/1920/1080?random" shrink-on-scroll>
         <template v-slot:img="{ props }">
           <v-img v-bind="props" gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"></v-img>
         </template>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title>凌霄的博客</v-toolbar-title>
         <v-spacer/>
         <template v-slot:extension>
@@ -107,6 +143,16 @@
             return {
                 currentItem: 0,
                 items: [],
+                drawerList: [
+                    {
+                        name: "友情链接",
+                        icon: "link-variant",
+                    },
+                    {
+                        name: "关于",
+                        icon: "information-variant",
+                    }
+                ],
                 articleList: [],
                 showSearch: false,
                 menuList: [
@@ -119,6 +165,7 @@
                         url: "about",
                     }
                     ],
+                drawer: null,
             }
         },
         watch: {
@@ -169,6 +216,9 @@
             menuClick(item) {
                 this.$router.push(item.url);
             },
+            onDrawerClick(){
+
+            }
         },
         created() {
             this.getCategory();
