@@ -61,15 +61,18 @@
     </v-dialog>
 
     <v-row class="pa-4" style="background: white" >
-      <v-btn @click="deleteDialog = true" class="ma-2 white--text" small tile color="error" :loading="loading" :disabled="loading">
+      <v-btn @click="deleteDialog = true" class="ma-2 white--text" small tile color="error" :loading="loading"
+             :disabled="loading || (selectList.length < 1)">
         <v-icon left>mdi-delete</v-icon> 删除
       </v-btn>
 
-      <v-btn @click="onPassOrReject(0)" class="ma-2 white--text" small tile color="warning" :loading="loading" :disabled="loading">
+      <v-btn @click="onPassOrReject(0)" class="ma-2 white--text" small tile color="warning" :loading="loading"
+             :disabled="loading || (selectList.length < 1)">
         <v-icon left>mdi-cancel</v-icon> 驳回
       </v-btn>
 
-      <v-btn @click="onPassOrReject(1)" class="ma-2 white--text" small tile color="primary" :loading="loading" :disabled="loading">
+      <v-btn @click="onPassOrReject(1)" class="ma-2 white--text" small tile color="primary" :loading="loading"
+             :disabled="loading || (selectList.length < 1)">
         <v-icon left>mdi-hand-right</v-icon> 通过审核
       </v-btn>
     </v-row>
