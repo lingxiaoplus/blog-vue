@@ -170,14 +170,14 @@
     </el-table>
 
 
-    <!--<div style="width: 100%;display: flex;justify-content: center;margin: 10px;">
+    <div style="width: 100%;display: flex;justify-content: center;margin: 10px;">
       <el-pagination :hide-on-single-page="hidePagination" @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
                      :current-page="currentPage" :page-sizes="[5, 10, 20, 30]" :page-size="pageSize"
                      layout="prev, pager, next, jumper,sizes, total"
                      :total="total">
       </el-pagination>
-    </div>-->
+    </div>
 
 
 
@@ -251,6 +251,14 @@
                 accessKey: '',
 
 
+                hidePagination: false,
+                currentPage: 1,
+                total: 0,
+                pageNum: 1,
+                pageSize: 5,
+
+
+
                 //导出表格字段及formatter信息
                 exportExcelArry: [{
                     prop: 'name',
@@ -294,10 +302,13 @@
             async getFileList(){
                 try {
                     this.$store.commit('setLoading', true);
-                    let resp = await this.$http.get("/upload/list");
+                    let resp = await this.$http.get(`/upload/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`);
                     console.log("", resp.data);
                     this.fileList = resp.data.data;
                     this.tableAllData = resp.data.data;
+
+                    this.total = resp.data.total;
+                    this.totalPage = resp.data.totalPage;
                 } catch (e) {
                     console.log("异常",e);
                     this.snackbar = true;
@@ -362,6 +373,16 @@
                 this.showSnackBar("文件上传失败", false);
             },
 
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                this.pageSize = val;
+                this.getFileList();
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.pageNum = val;
+                this.getFileList();
+            },
 
             exportExcelSelect () {
                 if(this.selectList.length === 0){

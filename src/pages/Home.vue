@@ -202,6 +202,10 @@
             this.menuMap[p1][i.path.slice(1)] = i.title;
           })
         }) */
+          let theme_style = JSON.parse(localStorage.getItem("theme_style"));
+          if (theme_style){
+              this.$vuetify.theme.themes.light.primary = theme_style.color;
+          }
       }
 	  }
 </script>

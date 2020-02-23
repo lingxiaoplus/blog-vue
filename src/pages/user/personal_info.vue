@@ -152,12 +152,10 @@
             return {
                 tablemodel: 0,
                 tables: [{
-                    name: '文章'
+                    name: '用户资料'
                 }, {
-                    name: '应用'
-                }, {
-                    name: '项目'
-                }],
+                    name: '操作日志'
+                },],
                 userInfo: '',
                 updateInfoDialog: false
             }
