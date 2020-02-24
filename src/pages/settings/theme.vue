@@ -89,7 +89,7 @@
         <v-card-text class="font-weight-bold">页脚内容：</v-card-text>
       </v-col>
       <v-col cols="10">
-       <v-textarea clearable label="请输入页脚内容" :value="themeStyle.fotter"></v-textarea>
+       <v-textarea clearable label="请输入页脚内容" :value="themeStyle.footer"></v-textarea>
       </v-col>
 
       <v-col cols="2">
@@ -109,7 +109,7 @@
       </v-col>
       <v-col cols="10">
         <v-text-field
-          :value="themeStyle.seo"
+          :value="themeStyle.seoKeyword"
           label="当前图片"
         ></v-text-field>
         <p class="text--disabled">用半角逗号分割关键词，数量在5个以内最佳。留空代表不开启此功能。</p>
@@ -117,7 +117,7 @@
       </v-col>
 
       <v-col cols="12" flat class="d-flex justify-end">
-        <v-btn color="primary" tile class="mr-4" @click="saveChanged()">保存更改</v-btn>
+        <v-btn color="primary" tile class="mr-4" @click="saveTheme()" :loading="loading">保存更改</v-btn>
       </v-col>
     </v-row>
   </div>
@@ -134,21 +134,18 @@
                 autoNight: true,
                 themeStyle:{
                     color: '',
-                    articleStyle:'网格',
+                    articleStyle:'',
                     homeImage: 'https://cn.bing.com/th?id=OHR.LakeGullMN_ZH-CN5281494536_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp',
                     slideImage: 'https://s1.ax1x.com/2018/05/13/CD6QFH.jpg',
                     motto: '一言API https://v1.hitokoto.cn',
-                    fotter: '蜀ICP备12858号',
+                    footer: '',
                     autoNight: true,
-                    seo: 'android,安卓,java,凌霄'
-                }
+                    seoKeyword: ''
+                },
+                loading: false
             }
         },
-        watch: {
-            color(value) {
-                console.log("color changed: ", value);
-            }
-        },
+
         computed: {
             color: {
                 get() {
@@ -159,6 +156,7 @@
                     console.log("set color: ", v);
                     this.$vuetify.theme.themes.light.primary = v.hex;
                     this.$vuetify.theme.themes.dark.primary = v.hex;
+                    this.themeStyle.color = v.hex;
                     // Light theme
                     //this.$vuetify.theme.themes.light.primary = '#4caf50'
                     // Dark theme
@@ -170,6 +168,10 @@
         mounted() {
             this.color = this.$vuetify.theme.themes.light.primary;
         },
+        created(){
+            let theme_style = JSON.parse(localStorage.getItem("theme_style"));
+            this.themeStyle = theme_style;
+        },
         methods: {
             showColor() {
                 if (typeof this.color === 'string') return this.color;
@@ -178,25 +180,22 @@
                     return color
                 }, {}), null, 2);
             },
-            saveChanged(){
-
-                /*themeStyle:{
-                    color: '',
-                        articleStyle:'',
-                        homeImage: '',
-                        slideImage: '',
-                        motto: '',
-                        fotter: '',
-                        autoNight: '',
-                        seo: ''
-                }*/
-                this.themeStyle.color = this.$vuetify.theme.themes.light.primary;
-                //this.themeStyle.articleStyle = this.articleStyle;
-                //this.themeStyle.homeImage = "";
-                //this.themeStyle.slideImage = "";
-                console.log("当前的style",this.themeStyle);
-                localStorage.setItem("theme_style",JSON.stringify(this.themeStyle));
-            },
+            async saveTheme(){
+                try {
+                    this.$store.commit('setLoading', true);
+                    this.loading = true;
+                    let resp = await this.$http.post("/theme", this.themeStyle);
+                    this.$message.success("保存成功");
+                    //this.themeStyle.color = this.$vuetify.theme.themes.light.primary;
+                    localStorage.setItem("theme_style",JSON.stringify(this.themeStyle));
+                } catch (e) {
+                   console.log("保存主题失败",e);
+                   this.$message.error(e.response.data.message ? e.response.data.message : "保存失败，请稍后再试");
+                } finally {
+                    this.$store.commit('setLoading', false);
+                    this.loading = false;
+                }
+            }
         }
     }
 

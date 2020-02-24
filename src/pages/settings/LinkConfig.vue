@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-snackbar v-model="snackbar" color="error" :timeout="2000" :top="true">
+    <v-snackbar v-model="snackbar" :color="snackbarState" :timeout="2000" :top="true">
       {{ snackbarText }}
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
@@ -31,10 +31,10 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" >
-                      <v-text-field v-model="editedItem.email" label="邮箱地址"></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="友链名称"></v-text-field>
                     </v-col>
                     <v-col cols="12" >
-                      <v-text-field v-model="editedItem.authCode" label="邮箱授权码"></v-text-field>
+                      <v-text-field v-model="editedItem.link" label="友链地址"></v-text-field>
                     </v-col>
                     <!-- <v-col cols="12" >
                       <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
@@ -109,11 +109,11 @@
                 },
                     {
                         text: '友链名字',
-                        value: 'email'
+                        value: 'name'
                     },
                     {
                         text: '友链地址',
-                        value: 'authCode'
+                        value: 'link'
                     },
                     {
                         text: '是否启用',
@@ -128,8 +128,8 @@
                 ],
                 desserts: [],
                 editedItem: {
-                    email: '',
-                    authCode: '',
+                    name: '',
+                    link: '',
                 },
                 dialog: false,
                 editedIndex: -1,
@@ -139,13 +139,14 @@
                 loading: false,
                 snackbar: false,
                 snackbarText: '',
+                snackbarState: 'error',
                 productId: '',  //当前线路的id
                 on: false,
             }
         },
         computed: {
             formTitle() {
-                return this.editedIndex === -1 ? '添加邮箱' : '编辑邮箱'
+                return this.editedIndex === -1 ? '添加友链' : '编辑友链'
             },
         },
         watch: {
@@ -180,16 +181,17 @@
                 try{
                     this.loading = true;
                     this.$store.commit('setLoading', true);
-                    let response = await this.$http.get("/email");
+                    let response = await this.$http.get("/friend_link");
                     console.log("response : ", response.data);
                     this.desserts = response.data.data;
                     //let page = parseInt(response.data.total / this.itemsPerPage) + 1;
                     //console.log("page:", page)
                     this.pageCount =  response.data.totalPage;
                 }catch(e){
-                    console.log("获取邮箱列表失败",e.response.data);
+                    console.log("获取友链失败",e.response.data);
                     this.snackbar = true;
-                    this.snackbarText = e.response.data.message?e.response.data.message:"获取邮箱列表失败";
+                    this.snackbarState = "error";
+                    this.snackbarText = e.response.data.message?e.response.data.message:"获取友链失败";
                 }finally{
                     this.loading = false;
                     this.$store.commit('setLoading', false);
@@ -199,25 +201,25 @@
             async saveEmail() {
                 this.dialog = false;
                 this.loading = true;
-                console.log("邮箱", this.editedItem);
+                console.log("友链", this.editedItem);
                 try{
                     let editData = Object.assign({}, this.editedItem);
                     if(this.editedIndex > 0){
                         //更新
-                        let response = await this.$http.put("/email",editData);
+                        let response = await this.$http.put("/friend_link",editData);
                         this.snackbar = true;
-                        this.snackbarText = "更新邮箱成功";
-                        console.log("更新邮箱",response.data);
+                        this.snackbarText = "更新友链成功";
+                        console.log("更新友链",response.data);
                     }else{
                         //新增
-                        let response = await this.$http.post("/email",editData);
+                        let response = await this.$http.post("/friend_link",editData);
                         this.snackbar = true;
-                        this.snackbarText = "添加邮箱成功";
-                        console.log("添加邮箱",response.data);
+                        this.snackbarText = "添加友链成功";
+                        console.log("添加友链",response.data);
                     }
                     this.getEmails();
                 }catch(e){
-                    console.log("添加/更新分类失败",e);
+                    console.log("添加/更新友链失败",e);
                     this.snackbar = true;
                     this.snackbarText = e.response.data.message;
                 }finally{
@@ -228,11 +230,11 @@
                 this.deleteDialog = false;
                 this.loading = true;
                 try{
-                    let response = await this.$http.delete("/email/"+this.productId);
-                    console.log("删除邮箱",response.data);
+                    let response = await this.$http.delete("/friend_link/"+this.productId);
+                    console.log("删除友链",response.data);
                     this.getEmails();
                 }catch(e){
-                    console.log("删除邮箱失败",e);
+                    console.log("删除友链失败",e);
                     this.snackbar = true;
                     this.snackbarText = e.response.data.message;
                 }finally{
@@ -247,16 +249,16 @@
                 return time_str.substr(0, 10);
             },
             async enableEmail(item){
-                console.log("启用邮箱",item);
+                console.log("启用友链",item);
                 //item.enabled?(item.enabled=1):(item.enabled=0);
                 try{
                     let emailData = Object.assign({}, item);
                     emailData.enabled?(emailData.enabled=1):(emailData.enabled=0);
                     //更新
-                    let response = await this.$http.put("/email",emailData);
+                    let response = await this.$http.put("/friend_link",emailData);
                     this.snackbar = true;
-                    this.snackbarText = item.enabled?"启用邮箱成功":"禁用邮箱成功";
-                    console.log("更新邮箱",response.data);
+                    this.snackbarText = item.enabled?"启用友链成功":"禁用友链成功";
+                    console.log("更新友链",response.data);
                     this.getEmails();
                 }catch(e){
                     this.snackbar = true;
@@ -269,7 +271,7 @@
         },
         created() {
             this.$store.commit('setLoading', true);
-            //this.getEmails();
+            this.getEmails();
         },
     }
 </script>

@@ -167,7 +167,21 @@
           },
           setLoadingState(loading){
             console.log("设置状态>>>>>>>>>",loading);
-          }
+          },
+          async getTheme(uid){
+              try {
+                  let resp = await this.$http.get(`/theme/${uid}`);
+                  let themeStyle = resp.data.data;
+                  themeStyle.id = uid;
+                  this.$vuetify.theme.themes.light.primary = themeStyle.color;
+                  localStorage.setItem("theme_style", JSON.stringify(themeStyle));
+                  console.log("获取主题信息",themeStyle);
+              } catch (e) {
+                  console.log("获取主题信息失败",e);
+              } finally {
+
+              }
+          },
       },
 
       created() {
@@ -188,6 +202,7 @@
           console.log("登录有效",res.data);
           this.user_name = res.data.data.nickname;
           localStorage.setItem("user_info",JSON.stringify(res.data.data));
+          this.getTheme(res.data.data.uid);
         }).catch(e=>{
           console.log("登录失败",e);
           this.$router.push("/user/login");
@@ -202,10 +217,10 @@
             this.menuMap[p1][i.path.slice(1)] = i.title;
           })
         }) */
-          let theme_style = JSON.parse(localStorage.getItem("theme_style"));
+          /*let theme_style = JSON.parse(localStorage.getItem("theme_style"));
           if (theme_style){
               this.$vuetify.theme.themes.light.primary = theme_style.color;
-          }
+          }*/
       }
 	  }
 </script>

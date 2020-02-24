@@ -99,7 +99,58 @@
             </v-tab>
 
             <v-tabs-items v-model="tablemodel">
-              <v-tab-item v-for="item in tables" :key="item.name">
+              <v-tab-item>
+                <v-flex class="d-flex flex-column mx-6">
+                  <v-text-field style="max-width: 260px" label="昵称 (不作为登录使用)"></v-text-field>
+                  <v-text-field style="max-width: 260px" label="手机号"></v-text-field>
+
+                  <v-flex class="d-flex flex-row" style="align-items: center">
+                    <v-list-item>性别: </v-list-item>
+                    <v-radio-group v-model="row" row style="max-width: 260px">
+                      <v-radio label="男" value="0" color="primary"></v-radio>
+                      <v-radio label="女" value="1" color="primary"></v-radio>
+                    </v-radio-group>
+                  </v-flex>
+                </v-flex>
+              </v-tab-item>
+              <v-tab-item>
+                <v-list two-line subheader>
+                  <v-subheader>General</v-subheader>
+
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>Profile photo</v-list-item-title>
+                      <v-list-item-subtitle>Change your Google+ profile photo</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>Show your status</v-list-item-title>
+                      <v-list-item-subtitle>Your status is visible to everyone</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>Show your status</v-list-item-title>
+                      <v-list-item-subtitle>Your status is visible to everyone</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>Show your status</v-list-item-title>
+                      <v-list-item-subtitle>Your status is visible to everyone</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>Show your status</v-list-item-title>
+                      <v-list-item-subtitle>Your status is visible to everyone</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-tab-item>
+              <v-tab-item v-if="false" v-for="item in tables" :key="item.name" >
                 <v-list two-line subheader>
                   <v-subheader>General</v-subheader>
 
