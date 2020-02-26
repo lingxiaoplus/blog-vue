@@ -24,8 +24,8 @@
 
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                              hide-details></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="搜索日志（根据账号）" single-line
+                              hide-details @input="onSearchChanged"></v-text-field>
                 <v-spacer></v-spacer>
                 <!-- loading条 -->
                 <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
@@ -70,7 +70,7 @@
                         value: 'operationContent',
                     },
                     {
-                        text: '操作人ID',
+                        text: '操作账号',
                         value: 'username'
                     },
                     {
@@ -111,6 +111,7 @@
                     }
                 ],
                 tablemodel: 0,
+                keyword: '',
             }
         },
         watch: {
@@ -125,11 +126,16 @@
             }
         },
         methods: {
+            onSearchChanged(e){
+                console.log("搜索",e);
+                this.keyword = e;
+                this.getLogList();
+            },
             async getLogList() {
                 this.loading = true;
                 try {
                     this.$store.commit('setLoading', true);
-                    let resp = await this.$http.get(`/log?pageNum=${this.pageNum}&pageSize=5&logType=${this.tablemodel===0?0:-1}`);
+                    let resp = await this.$http.get(`/log?pageNum=${this.pageNum}&pageSize=5&logType=${this.tablemodel===0?0:-1}&keyword=${this.keyword}`);
                     console.log("log列表", resp.data);
                     this.tables[this.tablemodel].data = resp.data.data;
                     //this.desserts = resp.data.data;

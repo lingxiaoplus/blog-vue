@@ -24,7 +24,7 @@
               <v-card-text>Access Key:</v-card-text>
             </v-col>
             <v-col cols="9">
-              <v-text-field label="请输入accessKey" required v-model="accessKey"></v-text-field>
+              <v-text-field disabled label="当前accessKey" required v-model="ossProperties.accessKey"></v-text-field>
             </v-col>
           </v-row>
 
@@ -33,7 +33,7 @@
               <v-card-text>Secret Key:</v-card-text>
             </v-col>
             <v-col cols="9">
-              <v-text-field label="请输入Secret Key" required v-model="accessKey"></v-text-field>
+              <v-text-field disabled label="当前Secret Key" required v-model="ossProperties.secretKey"></v-text-field>
             </v-col>
           </v-row>
 
@@ -42,7 +42,7 @@
               <v-card-text>空间名称:</v-card-text>
             </v-col>
             <v-col cols="9">
-              <v-text-field label="请输入Secret Key" required v-model="accessKey"></v-text-field>
+              <v-text-field label="请选择空间" required v-model="ossProperties.bucketName"></v-text-field>
             </v-col>
           </v-row>
 
@@ -51,7 +51,7 @@
               <v-card-text>外链域名:</v-card-text>
             </v-col>
             <v-col cols="9">
-              <v-text-field label="请输入Secret Key" required v-model="accessKey"></v-text-field>
+              <v-text-field label="当前外链域名" required v-model="ossProperties.prefixImg"></v-text-field>
             </v-col>
           </v-row>
         </v-card-text>
@@ -132,9 +132,9 @@
     </v-row>
 
     <export-excel ref="myChild"
-                         :exportExcelInfo="exportExcelInfo"
-                         :tableData="selectList"
-                         :exportExcelArry="exportExcelArry">
+                  :exportExcelInfo="exportExcelInfo"
+                  :tableData="selectList"
+                  :exportExcelArry="exportExcelArry">
 
     </export-excel>
     <el-table :data="fileList" style="width: 100%" @selection-change="handleSelectionChange" row-key="id">
@@ -180,8 +180,7 @@
     </div>
 
 
-
-    <v-dialog v-model="uploadDialog"  max-width="600px">
+    <v-dialog v-model="uploadDialog" max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">文件上传</span>
@@ -224,10 +223,11 @@
 
 <script>
     import exportExcel from '../../components/ExportExcel.vue';
+
     export default {
         name: "storageManage",
-        components:{
-            'export-excel':exportExcel
+        components: {
+            'export-excel': exportExcel
         },
         data() {
             return {
@@ -240,7 +240,7 @@
                 configDialog: false,
                 fileName: "",
                 selectList: [],
-                fileInfo:{
+                fileInfo: {
                     name: '',
                     path: '',
                     size: ''
@@ -258,19 +258,18 @@
                 pageSize: 5,
 
 
-
                 //导出表格字段及formatter信息
                 exportExcelArry: [{
                     prop: 'name',
                     label: '文件路径',
                     formatterFlag: false
-                },{
+                }, {
                     prop: 'mimeType',
                     label: '文件类型',
                     formatterFlag: false,
                     formatterType: 'common-type',
-                    formatterInfo: [{value: 0,label: '未完成'},{value: 1,label: '已完成'}]
-                },{
+                    formatterInfo: [{value: 0, label: '未完成'}, {value: 1, label: '已完成'}]
+                }, {
                     prop: 'bucket',
                     label: '空间名称',
                     formatterFlag: false
@@ -293,13 +292,19 @@
                 },
                 //需要导出的table数据
                 tableAllData: [],
+                ossProperties: {
+                    accessKey: '',
+                    secretKey: '',
+                    bucketName: '',
+                    prefixImg: '',
+                },
             }
         },
-        methods:{
+        methods: {
             handleSelectionChange(val) {
                 this.selectList = val;
             },
-            async getFileList(){
+            async getFileList() {
                 try {
                     this.$store.commit('setLoading', true);
                     let resp = await this.$http.get(`/upload/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`);
@@ -310,16 +315,16 @@
                     this.total = resp.data.total;
                     this.totalPage = resp.data.totalPage;
                 } catch (e) {
-                    console.log("异常",e);
+                    console.log("异常", e);
                     this.snackbar = true;
-                    this.snackbarText = e.response.data.message?e.response.data.message:"获取文件列表失败";
-                }finally {
+                    this.snackbarText = e.response.data.message ? e.response.data.message : "获取文件列表失败";
+                } finally {
                     this.$store.commit('setLoading', false);
                 }
             },
 
-            async uploadFile(){
-                if (!this.fileInfo.path){
+            async uploadFile() {
+                if (!this.fileInfo.path) {
                     this.$message.error("请上传图片，或等图片上传完成");
                     return
                 }
@@ -331,29 +336,38 @@
                 } catch (e) {
                     console.log(e)
                     this.snackbar = true;
-                    this.snackbarText = e.response.data.message?e.response.data.message:"上传文件失败";
+                    this.snackbarText = e.response.data.message ? e.response.data.message : "上传文件失败";
                 } finally {
 
                 }
 
             },
 
-            async onDeleteClick(){
-                if (this.selectList.length < 1){
+            async onDeleteClick() {
+                if (this.selectList.length < 1) {
                     this.snackbar = true;
                     this.snackbarText = "请选择要删除的评论";
-                    return ;
+                    return;
                 }
                 try {
                     this.loading = true;
                     let resp = await this.$http.delete(`/upload/${this.selectList[0].name}`);
-                    console.log("删除成功",resp.data);
+                    console.log("删除成功", resp.data);
                     this.getFileList();
-                }catch (e) {
+                } catch (e) {
                     console.log("删除评论失败", e);
                     this.$message.error("删除评论失败，请稍后再试")
-                }finally {
+                } finally {
                     this.loading = false;
+                }
+            },
+
+            async getOssProperties() {
+                try {
+                    let resp = await this.$http.get("/upload/oss_properties");
+                    this.ossProperties = resp.data.data
+                } catch (e) {
+                    console.log("获取配置失败", e)
                 }
             },
 
@@ -384,21 +398,22 @@
                 this.getFileList();
             },
 
-            exportExcelSelect () {
-                if(this.selectList.length === 0){
+            exportExcelSelect() {
+                if (this.selectList.length === 0) {
                     this.$message.info('请勾选导出项');
                     return;
                 }
                 //将选中项传给this. tableAllData
                 this.tableAllData = this.selectList;
                 //需要延时调导出方法，为了等待数据初始化到列表中
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.$refs.myChild.exportExcel();
-                },500)
+                }, 500)
             },
         },
         created() {
             this.getFileList();
+            this.getOssProperties();
         }
     }
 </script>

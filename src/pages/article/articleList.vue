@@ -16,7 +16,7 @@
           <v-text-field
             v-model="keyword"
             append-icon="mdi-magnify"
-            label="Search"
+            label="搜索文章(根据标题)"
             single-line
             hide-details
             @input="onSearchChanged"
