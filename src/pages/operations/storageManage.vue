@@ -151,7 +151,7 @@
 
       <el-table-column prop="path" label="文件预览">
         <template slot-scope="scope">
-          <v-img width="80" height="40" :src="scope.row.path+suffix" aspect-ratio="2">
+          <el-image style="width: 80px;height: 40px" :src="scope.row.path+suffix" aspect-ratio="2" :preview-src-list="[scope.row.path]">
             <template v-slot:placeholder>
               <v-row
                 class="fill-height ma-0"
@@ -161,7 +161,10 @@
                 <v-progress-circular indeterminate color="primary lighten-5"></v-progress-circular>
               </v-row>
             </template>
-          </v-img>
+          </el-image>
+          <!--<v-img width="80" height="40" :src="scope.row.path+suffix" aspect-ratio="2">
+
+          </v-img>-->
         </template>
       </el-table-column>
 

@@ -2,36 +2,48 @@
   <v-container>
     <v-layout row wrap>
 
-      <v-flex xs10 md12>
+      <v-flex xs10 md12 class="pa-4">
         <v-layout row wrap>
-          <v-col class="pa-6" cols="4" v-for="(item,index) in cardList" :key="item.name">
+          <v-col class="pa-2" cols="3" v-for="(item,index) in cardList" :key="item.name">
             <v-hover v-slot:default="{ hover }">
-              <v-card :elevation="hover?12:6">
-                <v-img :src="'https://source.unsplash.com/random/600x400?random='+index" class="white--text align-end"
-                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                       height="160px">
-                  <v-card-title>{{item.name}}</v-card-title>
-                  <v-card-subtitle class="white--text">{{item.number}}</v-card-subtitle>
-                </v-img>
+              <v-card :elevation="hover?6:2">
+                <v-row style="align-items: center">
+                  <v-col cols="6">
+                    <v-img class="mx-4" :src="item.src" width="40px" height="40px">
+                    </v-img>
+                  </v-col>
+                  <v-col cols="6" class="text--secondary">
+                    <v-card-title class="px-4">{{item.number}}</v-card-title>
+                    <v-card-subtitle class="px-4">{{item.name}}</v-card-subtitle>
+
+                  </v-col>
+                </v-row>
               </v-card>
             </v-hover>
-
           </v-col>
-
-
         </v-layout>
       </v-flex>
 
-      <v-flex xs10 md6>
-        <v-card>
+
+      <v-flex class="pa-4" xs12 md12 style="width: 100%">
+        <v-card tile>
+          <v-card-text class="px2">
+            <div ref="line" style="width: 100%;height:350px"></div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+
+
+      <v-flex xs10 md6 class="pa-4">
+        <v-card tile>
           <v-card-text class="px2">
             <div ref="sale" style="width: 100%;height:350px"></div>
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <v-flex xs10 md6>
-        <v-card>
+      <v-flex xs10 md6 class="pa-4">
+        <v-card tile>
           <v-card-text class="px2">
             <div ref="pie" style="width: 100%;height:350px"></div>
           </v-card-text>
@@ -46,6 +58,7 @@
     var echarts = require('echarts/lib/echarts');
     require('echarts/lib/chart/bar');
     require('echarts/lib/chart/pie');
+    require('echarts/lib/chart/line');
     require('echarts/theme/macarons');
     export default {
         name: "dashboard",
@@ -56,37 +69,37 @@
                     {
                         name: '新增用户',
                         number: 0,
-                        color: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+                        src: require("../assets/cycling leaves.png"),
                         url: ''
                     },
                     {
                         name: '文章总数',
                         number: 12,
-                        color: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+                        src: require("../assets/article_all.png"),
                         url: ''
                     },
                     {
                         name: '收到评论数',
                         number: 22,
-                        color: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+                        src: require("../assets/comment.png"),
                         url: ''
                     },
                     {
                         name: '分类数量',
                         number: 1,
-                        color: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+                        src: require("../assets/category.png"),
                         url: ''
                     },
                     {
                         name: '标签数量',
                         number: 1,
-                        color: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+                        src: require("../assets/label.png"),
                         url: ''
                     },
                     {
                         name: '友情链接',
                         number: 1,
-                        color: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+                        src: require("../assets/link.png"),
                         url: ''
                     },
 
@@ -94,7 +107,7 @@
 
                 option: {
                     title: {
-                        text: '文章统计'
+                        text: '文章统计/周'
                     },
                     tooltip: {},
                     legend: {
@@ -111,16 +124,39 @@
                         //color:  this.$vuetify.theme.themes.light.primary
                     }]
                 },
+
+
+                lineData: {
+                    title: {
+                        text: 'ip统计'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: [820, 932, 901, 934, 1290, 1330, 1320],
+                        type: 'line',
+                        smooth: true
+                    },{
+                        data: [820, 932, 901, 934, 120, 1220, 1120],
+                        type: 'line',
+                        smooth: true
+                    }]
+                }
             }
         },
         //html加载完成后执行
         mounted() {
 
             this.$nextTick(() => {
-
+                const line = echarts.init(this.$refs.line, this.theme);
+                line.setOption(this.lineData);
                 const pie = echarts.init(this.$refs.pie, this.theme);
                 pie.setOption({
-
                     title: {
                         text: '访问来源'
                     },
