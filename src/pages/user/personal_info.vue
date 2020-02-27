@@ -118,17 +118,18 @@
               <v-tab-item>
 
                 <v-data-table :headers="headers" :items="logList" :page.sync="pageNum" :items-per-page="itemsPerPage"
-                              hide-default-footer class="elevation-1" @page-count="pageCount = $event">
+                              hide-default-footer class="elevation-1">
                   <template v-slot:no-data>
                     <v-btn color="primary">没有数据</v-btn>
                   </template>
                 </v-data-table>
 
-
+                <div class="text-center pt-2" v-if="pageCount > 1">
+                  <v-pagination v-model="pageNum" :length="pageCount" :total-visible="7"></v-pagination>
+                </div>
               </v-tab-item>
-              <div class="text-center pt-2" v-if="pageCount > 1">
-                <v-pagination v-model="pageNum" :length="pageCount" :total-visible="7"></v-pagination>
-              </div>
+
+
             </v-tabs-items>
 
 
@@ -198,6 +199,14 @@
         watch:{
             pageCount(v){
                 console.log("pageCount 改变",v);
+            },
+            pageNum(){
+                this.getLogList();
+            },
+            tablemodel(v){
+                if (v===1){
+                    this.getLogList();
+                }
             }
         },
         methods: {
@@ -208,7 +217,7 @@
                     let resp = await this.$http.get(`/log?pageNum=${this.pageNum}&pageSize=5&logType=-1&keyword=${this.user_info.username}`);
                     this.logList = resp.data.data;
                     this.pageCount = resp.data.totalPage;
-                    console.log("log列表  totalPage  ", resp.data.totalPage,"  pageCount  ", this.pageCount);
+                    //console.log("log列表  totalPage  ", resp.data.totalPage,"  pageCount  ", this.pageCount);
                 } catch (e) {
                     console.log("log列表失败", e.response);
                     this.snackbar = true;
@@ -224,7 +233,7 @@
             let user_info = JSON.parse(localStorage.getItem("user_info"));
             console.log("用户信息", user_info);
             this.user_info = user_info;
-            this.getLogList();
+
         }
     }
 </script>

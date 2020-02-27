@@ -14,7 +14,7 @@
         </v-snackbar>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
-            <v-card elevation="6" tile>
+            <v-card elevation="2">
               <v-toolbar dark color="primary" elevation="0">
                 <v-toolbar-title>个人博客登录</v-toolbar-title>
                 <v-spacer></v-spacer>

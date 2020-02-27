@@ -268,10 +268,20 @@
                     this.loading = false;
                 }
             },
+            test(){
+                try {
+                    dddddddddddddddd = 1
+                } catch (e) {
+                    console.log(e)
+                } finally {
+                    console.log("finally...")
+                }
+            }
         },
         created() {
             this.$store.commit('setLoading', true);
             this.getEmails();
+            this.test();
         },
     }
 </script>
