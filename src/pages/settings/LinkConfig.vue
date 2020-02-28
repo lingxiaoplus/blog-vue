@@ -36,6 +36,10 @@
                     <v-col cols="12" >
                       <v-text-field v-model="editedItem.link" label="友链地址"></v-text-field>
                     </v-col>
+                    <v-col cols="12" >
+                      <v-text-field v-model="editedItem.description" label="友链描述"></v-text-field>
+                    </v-col>
+
                     <!-- <v-col cols="12" >
                       <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
                     </v-col> -->
@@ -121,6 +125,11 @@
                         sortable: false,
                     },
                     {
+                        text: '友链描述',
+                        value: 'description',
+                        sortable: false,
+                    },
+                    {
                         text: '操作',
                         value: 'action',
                         sortable: false,
@@ -130,6 +139,7 @@
                 editedItem: {
                     name: '',
                     link: '',
+                    description: ''
                 },
                 dialog: false,
                 editedIndex: -1,

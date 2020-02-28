@@ -1,24 +1,12 @@
 <template>
   <v-app  id="inspire">
     <v-card class="overflow-hidden" tile>
-      <v-app-bar
-        extension-height="100"
-        color="primary"
-        src="http://www.lingxiaomz.top/wp-content/themes/mdx/img/dpic.jpg"
-        dark shrink-on-scroll
-        extended fade-img-on-scroll scroll-target="#scrolling-techniques-2"
-      >
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        <v-toolbar-title>关于</v-toolbar-title>
-        <v-spacer/>
-
-        <v-btn icon @click="showSearch = !showSearch">
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-app-bar>
-
+      <v-card-actions >
+        <v-flex class="d-flex" style="align-items: center; justify-content: center">
+          <p class="font-weight-medium" style="font-size: 26px">关于</p>
+        </v-flex>
+      </v-card-actions>
       <v-card-text>
-        都是骄傲对数据帝
         <markdown :mdValuesP="content" :fullPageStatusP="false" :editStatusP="false"
                   :previewStatusP="true"
                   :navStatusP="false" :icoStatusP="false">
@@ -43,7 +31,7 @@
                     "Hello，我是凌霄。这是我的照片：\n" +
                     "![本人吴彦祖](http://omsaa4hdo.bkt.clouddn.com/wyz.jpeg)\n" +
                     "\n" +
-                    "请不要羡慕我，没办法，本人就是那么帅，可以靠颜值吃饭的我，偏偏要靠才华，真是佩服我自己。\n" +
+                    "可以靠颜值吃饭的我，偏偏要靠才华。\n" +
                     "\n" +
                     "#### 谈谈人生\n" +
                     "\n" +
@@ -61,7 +49,10 @@
                     "\n" +
                     "邮箱：lingxiaopua@gmail.com\n"
             }
-        }
+        },
+        components: {
+            markdown, // 声明mardown组件
+        },
     }
 </script>
 

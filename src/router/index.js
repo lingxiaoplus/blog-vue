@@ -3,6 +3,7 @@ import Router from 'vue-router'
 //import HelloWorld from '@/components/HelloWorld'
 import HomePage from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
+import FrontPage from '@/pages/front/index'
 Vue.use(Router)
 
 function route (path, file, name, children) {
@@ -16,13 +17,24 @@ function route (path, file, name, children) {
 }
 
 export default new Router({
-  mode:"history",
+  //mode:"history",
   routes: [
     route("/user/login",'/user/login',"Login"),
     route("/user/register",'/user/register',"register"),
-    route("/front/index",'/front/index',"index"),
-    route("/front/articleContent",'/front/articleContent',"articleContent"),
-    route("/front/about",'/front/about',"about"),
+
+
+    {
+      path: '/front',
+      name: 'FrontPage',
+      component: FrontPage,
+      redirect: "/front/articleList",
+      children: [
+        route("/front/articleList","/front/articleList","articleList"),
+        route("/front/articleContent",'/front/articleContent',"articleContent"),
+        route("/front/friendLink",'/front/friendLink',"friendLink"),
+        route("/front/about",'/front/about',"about"),
+      ]
+    },
     {
       path: '/',
       name: 'HomePage',
@@ -47,6 +59,7 @@ export default new Router({
         route("/operations/storageManage","/operations/storageManage","storageManage"),
       ]
     },
+
     {
       path:'*',
       name: 'HomePage',

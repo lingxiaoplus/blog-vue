@@ -6,7 +6,7 @@
         <v-layout row wrap>
           <v-col class="pa-2" cols="3" v-for="(item,index) in cardList" :key="item.name">
             <v-hover v-slot:default="{ hover }">
-              <v-card :elevation="hover?6:2">
+              <v-card :elevation="hover?6:2" tile>
                 <v-row style="align-items: center">
                   <v-col cols="6">
                     <v-img class="mx-4" :src="item.src" width="40px" height="40px">
@@ -128,7 +128,7 @@
 
                 lineData: {
                     title: {
-                        text: 'ip统计'
+                        text: 'ip流量统计/周'
                     },
                     xAxis: {
                         type: 'category',
@@ -216,12 +216,19 @@
                 try {
                     let resp = await this.$http.get("/statistics/article/week");
                     console.log(">>", resp.data.data);
-                    this.option.xAxis.data = resp.data.data.xAxis;
-                    this.option.yAxis.data = resp.data.data.yAxis;
-                    this.option.series[0].data = resp.data.data.series;
+                    this.option.xAxis.data = resp.data.data.articleIncreasedData.xAxis;
+                    this.option.yAxis.data = resp.data.data.articleIncreasedData.yAxis;
+                    this.option.series[0].data = resp.data.data.articleIncreasedData.series;
                     var sale = echarts.init(this.$refs.sale, this.theme);
                     // 使用刚指定的配置项和数据显示图表。
                     sale.setOption(this.option);
+
+                    this.cardList[0].number = resp.data.data.aggregationData.todayIncreased;
+                    this.cardList[1].number = resp.data.data.aggregationData.articleSize;
+                    this.cardList[2].number = resp.data.data.aggregationData.commentSize;
+                    this.cardList[3].number = resp.data.data.aggregationData.categorySize;
+                    this.cardList[4].number = resp.data.data.aggregationData.labelSize;
+                    this.cardList[5].number = resp.data.data.aggregationData.linkSize;
                 } catch (e) {
                     console.log("", e);
                 }

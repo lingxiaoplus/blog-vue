@@ -22,7 +22,7 @@
 
         <v-col cols="12" >
           <v-list dense>
-            <v-list-item v-for="item in drawerList" :key="item.name" no-action :prepend-icon="'mdi-'+item.icon" @click="onDrawerClick()">
+            <v-list-item v-for="item in drawerList" :key="item.name" no-action :prepend-icon="'mdi-'+item.icon" @click="onDrawerClick(item.path)">
               <v-list-item-icon>
                 <v-icon v-text="'mdi-'+item.icon"></v-icon>
               </v-list-item-icon>
@@ -38,20 +38,23 @@
 
     </v-navigation-drawer>
     <v-card class="overflow-hidden" tile>
-      <v-toolbar color="primary" dark  src="https://picsum.photos/1920/1080?random" shrink-on-scroll>
+     <!-- <v-toolbar color="primary" dark  src="https://picsum.photos/1920/1080?random"
+                 shrink-on-scroll
+                 fade-img-on-scroll scroll-target="#scrolling-techniques-2">
         <template v-slot:img="{ props }">
           <v-img v-bind="props" gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"></v-img>
         </template>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title>凌霄的博客</v-toolbar-title>
+        <v-spacer/>-->
+
+      <v-toolbar color="primary" dark
+                 shrink-on-scroll
+                 fade-img-on-scroll scroll-target="#scrolling-techniques-2">
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title>凌霄的博客</v-toolbar-title>
         <v-spacer/>
-        <template v-slot:extension>
-          <v-tabs v-model="currentItem" background-color="transparent" slider-color="white">
-            <v-tab v-for="item in items" :key="item.name" :href="'#tab-' + item.name" class="mx-8">
-              {{ item.name }}
-            </v-tab>
-          </v-tabs>
-        </template>
+
 
         <!-- <v-text-field
           flat
@@ -70,8 +73,7 @@
         </v-btn>
 
 
-        <!-- 换肤 -->
-        <v-menu offset-y>
+        <v-menu offset-y v-if="false">
           <template v-slot:activator="{ on }">
             <v-btn icon dark v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
@@ -90,49 +92,13 @@
         </v-menu>
 
       </v-toolbar>
+
     </v-card>
-    <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" min-height="600">
-      <v-container style="height: 100%;">
-        <v-tabs-items v-model="currentItem">
-          <v-tab-item v-for="item in items" :key="item.name" :value="'tab-' + item.name">
-            <v-container>
-              <!--文章内容-->
-              <v-layout row wrap>
-                <v-col cols="3" v-for="item in articleList" :key="item.id">
-                  <v-hover v-slot:default="{ hover }">
-                    <v-card :elevation="hover?12:2">
-                      <v-img :src="item.headImage" height="194">
-                        <v-card-title style="position: absolute;bottom: 0px;color: white">{{item.title}}</v-card-title>
-                      </v-img>
 
-                      <v-card-actions class="d-flex ">
-                        <el-link class="pa-2" style="color: #909399"><i class="el-icon-time el-icon--left">
-                          {{item.updateTime}}</i></el-link>
-                        <el-link class="pa-2" style="color: #909399"><i class="el-icon-view el-icon--left"> 阅读(0)</i>
-                        </el-link>
-                        <v-btn text color="deep-purple accent-4" class="ml-auto" @click="readArticle(item.id)">
-                          阅读
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-hover>
 
-                </v-col>
-              </v-layout>
-
-            </v-container>
-          </v-tab-item>
-        </v-tabs-items>
-        <v-layout class="pa-md-4" min-heigth="400px">
-          <v-fab-transition>
-            <v-btn key="keyboard_arrow_up" color="green" absolute fab large dark bottom right>
-              <v-icon>mdi-chevron-up</v-icon>
-            </v-btn>
-          </v-fab-transition>
-        </v-layout>
-
-      </v-container>
-    </v-sheet>
+    <div>
+      <router-view />
+    </div>
 
   </v-app>
 </template>
@@ -141,19 +107,25 @@
     export default {
         data() {
             return {
-                currentItem: 0,
-                items: [],
+
                 drawerList: [
+                    {
+                        name: "首页",
+                        icon: "home",
+                        path: "articleList"
+                    },
                     {
                         name: "友情链接",
                         icon: "link-variant",
+                        path: "friendLink"
                     },
                     {
                         name: "关于",
                         icon: "information-variant",
+                        path: "about"
                     }
                 ],
-                articleList: [],
+
                 showSearch: false,
                 menuList: [
                     {
@@ -174,56 +146,15 @@
             }
         },
         methods: {
-            async getCategory() {
-                try {
-                    let resp = await this.$http.get("/front/category");
-                    console.log("结果", resp.data.data);
-                    this.items = resp.data.data;
-                    this.items.splice(0, 0, {
-                        id: -1,
-                        name: '首页'
-                    });
-                    this.currentItem = `tab-${this.items[0]}`;
-                } catch (e) {
-                    console.log("异常", e);
-                } finally {
 
-                }
-            },
-            async getArticleList() {
-                try {
-                    let resp = await this.$http.get("/front/article");
-                    console.log("文章列表", resp.data.data);
-                    this.articleList = resp.data.data;
-                } catch (e) {
-                    debugger;
-                    console.log("异常", e);
-                } finally {
-
-                }
-            },
-            readArticle(id) {
-                const {
-                    href
-                } = this.$router.resolve({
-                    name: "articleContent",
-                    query: {
-                        id: id
-                    }
-                });
-                window.open(href, '_blank');
-            },
             menuClick(item) {
                 this.$router.push(item.url);
             },
-            onDrawerClick(){
-
+            onDrawerClick(path){
+                this.$router.push(path);
             }
         },
-        created() {
-            this.getCategory();
-            this.getArticleList();
-        }
+
     }
 </script>
 
