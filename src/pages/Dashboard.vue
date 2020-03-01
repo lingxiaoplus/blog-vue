@@ -79,7 +79,7 @@
                         url: ''
                     },
                     {
-                        name: '收到评论数',
+                        name: '评论数',
                         number: 22,
                         src: require("../assets/comment.png"),
                         url: ''
@@ -151,7 +151,7 @@
         },
         //html加载完成后执行
         mounted() {
-
+            this.getStatistics();
             this.$nextTick(() => {
                 const line = echarts.init(this.$refs.line, this.theme);
                 line.setOption(this.lineData);
@@ -234,9 +234,6 @@
                 }
             },
         },
-        created() {
-            this.getStatistics();
-        }
     }
 </script>
 

@@ -414,7 +414,7 @@
                 }, 500)
             },
         },
-        created() {
+        mounted() {
             this.getFileList();
             this.getOssProperties();
         }

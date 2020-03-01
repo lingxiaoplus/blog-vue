@@ -1,5 +1,10 @@
 <template>
   <v-app id="inspire">
+
+    <v-snackbar v-model="this.$store.getters.getSnackbarState.show" :color="this.$store.getters.getSnackbarState.color" :timeout="2000" :top="true">
+      {{ this.$store.getters.getSnackbarState.text }}
+    </v-snackbar>
+
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <v-navigation-drawer v-model="drawer" app>
       <v-list dense>
@@ -122,6 +127,11 @@
             ],
             user_name: 'admin',
             loading: false,
+
+            snackbar: false,
+            snackbarText: '',
+            snackbarColor: 'success',
+            colors: ['success','error','warning','info']
         }),
         computed: {
             items() {
@@ -190,6 +200,7 @@
 
         created() {
             console.log(">>>>>>>>>>>>", this.menuMap)
+
             let menu = menus.drawers[0];
             this.menuMap[0] = {
                 text: menu.title,
@@ -214,18 +225,6 @@
             this.getMenuData();
             //this.loading = this.$store.getters.getLoadingState;
             console.log("获取到状态>>>>>>>>> ", this.$store.getters.getLoadingState)
-            /* menus.drawers.forEach(m => {
-              const p1 = m.path.slice(1);
-              this.menuMap[p1] = {name:m.title};
-              m.items.forEach(i => {
-                this.menuMap[p1][i.path.slice(1)] = i.title;
-              })
-            }) */
-            /*let theme_style = JSON.parse(localStorage.getItem("theme_style"));
-            if (theme_style){
-                this.$vuetify.theme.themes.light.primary = theme_style.color;
-            }*/
-
         }
     }
 </script>
