@@ -71,7 +71,7 @@ var drawers = [{
     ]
   },
   {
-    action: "settings",
+    action: "database-edit",
     title: "系统监控",
     path: "/monitor",
     items: [

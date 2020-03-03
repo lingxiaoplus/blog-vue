@@ -130,6 +130,7 @@
                         text: '操作',
                         value: 'action',
                         sortable: false,
+                        align: 'center',
                     },
                 ],
                 desserts: [],
