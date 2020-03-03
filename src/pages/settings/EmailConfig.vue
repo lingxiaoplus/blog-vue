@@ -267,7 +267,7 @@
                 }
             },
         },
-        created() {
+        mounted() {
             this.$store.commit('setLoading', true);
             this.getEmails();
         },

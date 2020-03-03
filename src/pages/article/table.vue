@@ -6,58 +6,62 @@
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
 
+    <template>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>标签管理</v-toolbar-title>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <!-- loading条 -->
+        <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
+        </v-progress-linear>
+      </v-toolbar>
+    </template>
+
+    <v-dialog v-model="dialog" max-width="500px">
+      <template v-slot:activator="{ on }">
+        <v-row class="pa-4" style="background: white">
+          <v-btn v-on="on" @click="editedIndex = -1" color="primary" class="ma-2 white--text" tile>
+            <v-icon left small>mdi-plus</v-icon>
+            新增
+          </v-btn>
+        </v-row>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container>
+            <v-form
+              ref="form"
+              lazy-validation>
+              <v-col cols="12">
+                <v-text-field v-model="editedItem.name" label="标签名称" :rules="[rules.base,rules.content]"></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="editedItem.description" label="标签描述"
+                              :rules="[rules.base,rules.content]"></v-text-field>
+              </v-col>
+              <!-- <v-col cols="12" >
+                <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
+              </v-col> -->
+            </v-form>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
+          <v-btn color="blue darken-1" text @click="saveRole">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+
     <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
                   hide-default-footer class="elevation-1" @page-count="pageCount = $event">
-      <template v-slot:top>
-        <v-toolbar flat color="white">
-          <v-toolbar-title>标签管理</v-toolbar-title>
 
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
-
-          <!-- loading条 -->
-          <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
-          </v-progress-linear>
-
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
-              <v-btn class="ma-2" fab dark color="primary" v-on="on" @click="editedIndex = -1">
-                <v-icon dark>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-form
-                    ref="form"
-                    lazy-validation>
-                    <v-col cols="12">
-                      <v-text-field v-model="editedItem.name" label="标签名称" :rules="[rules.base,rules.content]"></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field v-model="editedItem.description" label="标签描述" :rules="[rules.base,rules.content]"></v-text-field>
-                    </v-col>
-                    <!-- <v-col cols="12" >
-                      <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
-                    </v-col> -->
-                  </v-form>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
-                <v-btn color="blue darken-1" text @click="saveRole">保存</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-        </v-toolbar>
-      </template>
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary" @click="editItem(item)">
           编辑
@@ -275,7 +279,7 @@
                 return time_str.substr(0, 10);
             }
         },
-        created() {
+        mounted() {
             this.getLabels();
         },
     }

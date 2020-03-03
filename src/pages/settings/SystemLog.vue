@@ -62,10 +62,6 @@
                 itemsPerPage: 10,
                 headers: [
                     {
-                        text: '#',
-                        value: 'id',
-                    },
-                    {
                         text: '日志内容',
                         value: 'operationContent',
                     },
@@ -88,6 +84,10 @@
                     {
                         text: '日志类型',
                         value: 'operationType'
+                    },
+                    {
+                        text: '浏览器',
+                        value: 'browser'
                     },
                     {
                         text: '操作时间',
@@ -153,7 +153,7 @@
             },
 
         },
-        created() {
+        mounted() {
             this.getLogList();
         }
     }

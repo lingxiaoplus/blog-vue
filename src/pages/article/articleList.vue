@@ -1,9 +1,5 @@
 <template>
   <div>
-    <v-snackbar v-model="snackbar" color="error" :timeout="3000" :top="true">
-      {{ snackbarText }}
-      <v-btn dark text @click="snackbar = false">确认</v-btn>
-    </v-snackbar>
 
     <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
                   hide-default-footer class="elevation-1" @page-count="pageCount = $event" >
@@ -113,8 +109,6 @@
                 selectDate: new Date().toISOString().substr(0, 10),
                 dateMenu: false,
                 loading: false,
-                snackbar: false,
-                snackbarText: '',
                 article_id: '',
                 on: false,
 
@@ -142,8 +136,10 @@
 			        this.pageCount =  resp.data.totalPage;
             }catch(e){
               console.log("文章列表失败", e.response);
-              this.snackbar = true;
-              this.snackbarText = e.response.data.message?e.response.data.message:"获取文章列表失败";
+              this.$store.commit('showSnackbar', {
+                  color: 'error',
+                  text: e.response.data.message ? e.response.data.message : "获取文章列表失败"
+              });
             }finally{
               this.loading = false;
                 this.$store.commit('setLoading', false);
@@ -168,16 +164,17 @@
               this.getArticles();
             }catch(e){
               console.log("删除文章失败",e.response.data);
-              this.snackbar = true;
-              this.snackbarText = e.response.data.message;
+              this.$store.commit('showSnackbar', {
+                  color: 'error',
+                  text: e.response.data.message ? e.response.data.message : "删除文章失败"
+              });
             }finally{
               this.loading = false;
             }
           },
         },
-        created() {
+        mounted() {
           this.getArticles();
-
         }
     }
 </script>

@@ -17,12 +17,11 @@ function route (path, file, name, children) {
 }
 
 export default new Router({
-  //mode:"history",
+  mode:"history",
   routes: [
     route("/user/login",'/user/login',"Login"),
     route("/user/register",'/user/register',"register"),
-
-
+    route("/front/articleContent",'/front/articleContent',"articleContent"),
     {
       path: '/front',
       name: 'FrontPage',
@@ -30,7 +29,7 @@ export default new Router({
       redirect: "/front/articleList",
       children: [
         route("/front/articleList","/front/articleList","articleList"),
-        route("/front/articleContent",'/front/articleContent',"articleContent"),
+
         route("/front/friendLink",'/front/friendLink',"friendLink"),
         route("/front/about",'/front/about',"about"),
       ]
@@ -43,9 +42,9 @@ export default new Router({
       children:[
         route("/index/dashboard","/Dashboard","Dashboard"),
         route("/items/normalLine","/items/NormalLine","NormalLine"),
-        route("/items/member","/items/Member","member"),
+        route("/user/member","/user/Member","member"),
         route("/items/order","/items/Order","order"),
-        route("/items/roleManage","/items/RoleManage","roleManage"),
+        route("/user/roleManage","/user/RoleManage","roleManage"),
         route("/settings/theme","/settings/theme","theme"),
         route("/settings/systemLog","/settings/SystemLog","systemLog"),
         route("/settings/EmailConfig","/settings/EmailConfig","emailConfig"),
@@ -59,7 +58,6 @@ export default new Router({
         route("/operations/storageManage","/operations/storageManage","storageManage"),
       ]
     },
-
     {
       path:'*',
       name: 'HomePage',

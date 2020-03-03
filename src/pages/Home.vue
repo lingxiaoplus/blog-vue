@@ -1,7 +1,8 @@
 <template>
   <v-app id="inspire">
 
-    <v-snackbar v-model="this.$store.getters.getSnackbarState.show" :color="this.$store.getters.getSnackbarState.color" :timeout="2000" :top="true">
+    <v-snackbar v-model="this.$store.getters.getSnackbarState.show" :color="this.$store.getters.getSnackbarState.color"
+                :timeout="2000" :top="true">
       {{ this.$store.getters.getSnackbarState.text }}
     </v-snackbar>
 
@@ -55,31 +56,19 @@
       <v-toolbar-title>后台管理系统</v-toolbar-title>
       <v-spacer/>
 
-
-      <!-- 换肤 -->
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
-          <!-- <v-btn icon dark v-on="on">
-            <v-icon>mdi-send</v-icon>
-          </v-btn> -->
-          <!-- 调色板 -->
           <v-btn icon dark v-on="on">
-            <v-icon>mdi-weather-fog</v-icon>
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
         <v-list>
           <v-list-item
-            v-for="(item, index) in themes"
+            v-for="(item, index) in menuList"
             :key="index"
-            @click="themeChanged(item)"
+            @click="menuClick(item)"
           >
-            <v-list-item-action>
-              <v-avatar :color="item.color" size="32">
-                <span class="white--text headline"></span>
-              </v-avatar>
-            </v-list-item-action>
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
-            <v-checkbox v-model="item.checked" :color="item.color"></v-checkbox>
+            <v-list-item-title class="px-4">{{ item.name }}</v-list-item-title>
           </v-list-item>
 
         </v-list>
@@ -127,11 +116,20 @@
             ],
             user_name: 'admin',
             loading: false,
-
             snackbar: false,
             snackbarText: '',
             snackbarColor: 'success',
-            colors: ['success','error','warning','info']
+            colors: ['success', 'error', 'warning', 'info'],
+            menuList: [
+                {
+                    name: "布局设置",
+                    action: "layout",
+                },
+                {
+                    name: "退出登录",
+                    action: "logout",
+                },
+            ]
         }),
         computed: {
             items() {
@@ -140,25 +138,17 @@
             themes() {
                 return menus.themes;
             },
-            /* item1(){
-              const arr = this.$route.path.split("/");
-              return this.menuMap[arr[1]].name;
-            },
-            item2(){
-              const arr = this.$route.path.split("/");
-              return this.menuMap[arr[1]][arr[2]];
-            } */
         },
         methods: {
-            themeChanged(item) {
-                // Light theme
-                /* if(item.dark){
-                  this.$vuetify.theme.themes.dark.primary = item.color
-                }else{
-                  this.$vuetify.theme.themes.light.primary = item.color
-                } */
-                item.checked = true;
-                this.$vuetify.theme.themes.light.primary = item.color
+            menuClick(item) {
+                switch (item.action) {
+                    case "logout":
+                        this.delCookie();
+                        this.$router.push("/user/login");
+                        break;
+                    default:
+                        break;
+                }
             },
             onPathChanged(item, subItem) {
                 var map = [];
@@ -196,11 +186,20 @@
 
                 }
             },
+            delCookie() {
+                var keys = document.cookie.match(/[^ =;]+(?==)/g)
+                if (keys) {
+                    for (var i = keys.length; i--;) {
+                        document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString(); // 清除当前域名下的,例如：m.ratingdog.cn
+                        document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString(); // 清除当前域名下的，例如 .m.ratingdog.cn
+                        document.cookie = keys[i] + '=0;path=/;domain=ratingdog.cn;expires=' + new Date(0).toUTCString(); // 清除一级域名下的或指定的，例如 .ratingdog.cn
+                    }
+                }
+            },
         },
 
-        created() {
+        mounted() {
             console.log(">>>>>>>>>>>>", this.menuMap)
-
             let menu = menus.drawers[0];
             this.menuMap[0] = {
                 text: menu.title,

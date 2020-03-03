@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-snackbar v-model="snackbar" color="error" :timeout="3000" :top="true">
-      {{ snackbarText }}
-      <v-btn dark text @click="snackbar = false">确认</v-btn>
-    </v-snackbar>
+
     <template>
       <v-toolbar flat color="white">
         <v-toolbar-title>评论管理</v-toolbar-title>
@@ -137,8 +134,6 @@
                 currentPage: 1,
                 totalPage: 0,
                 total: 0,
-                snackbar: false,
-                snackbarText: '',
                 loading: false,
                 selectList: [],
                 deleteDialog: false,
@@ -168,8 +163,10 @@
                     this.hidePagination = this.totalPage <= 1; //当页数小于等于1页的时候，就隐藏分页
                 } catch (e) {
                     console.log("获取评论异常", e);
-                    this.snackbar = true;
-                    this.snackbarText = e.response.data.message ? e.response.data.message : "网络异常，请稍后再试";
+                    this.$store.commit('showSnackbar', {
+                        color: 'error',
+                        text: e.response.data.message ? e.response.data.message : "网络异常，请稍后再试"
+                    });
                 } finally {
                     this.$store.commit('setLoading', false);
                 }
@@ -236,8 +233,10 @@
             },
             async onDelete(){
                 if (this.selectList.length < 1){
-                    this.snackbar = true;
-                    this.snackbarText = "请选择要删除的评论";
+                    this.$store.commit('showSnackbar', {
+                        color: 'error',
+                        text: "请选择要删除的评论"
+                    });
                     return ;
                 }
                 try {
@@ -258,8 +257,10 @@
             },
             async onPassOrReject(type){
                 if (this.selectList.length < 1){
-                    this.snackbar = true;
-                    this.snackbarText = "请至少选择一个评论";
+                    this.$store.commit('showSnackbar', {
+                        color: 'error',
+                        text: "请至少选择一个评论"
+                    });
                     return ;
                 }
                 try {
@@ -273,6 +274,10 @@
                     this.getComments();
                 }catch (e) {
                     console.log("失败", e);
+                    this.$store.commit('showSnackbar', {
+                        color: 'error',
+                        text: e.response.data.message ? e.response.data.message : "网络异常，请稍后再试"
+                    });
                 }finally {
                     this.loading = false;
                 }
@@ -293,14 +298,16 @@
                     this.getComments();
                 } catch (e) {
                     console.log("评论失败", e);
-                    this.snackbar = true;
-                    this.snackbarText = e.response.data.message ? e.response.data.message : "网络异常，请稍后再试";
+                    this.$store.commit('showSnackbar', {
+                        color: 'error',
+                        text: e.response.data.message ? e.response.data.message : "网络异常，请稍后再试"
+                    });
                 }finally {
                     this.replyDialog = false;
                 }
             }
         },
-        created() {
+        mounted() {
             this.getComments();
         }
     }

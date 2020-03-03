@@ -30,7 +30,7 @@
           <v-card-actions>
             <v-dialog v-model="updateInfoDialog" persistent max-width="600px">
               <template v-slot:activator="{ on }">
-                <v-btn text color="primary" dark v-on="on">更新个人信息</v-btn>
+                <v-btn text color="primary" dark v-on="on" v-show="false">更新个人信息</v-btn>
               </template>
               <v-card>
                 <v-card-title>
@@ -159,10 +159,6 @@
                 pageCount: 0,
                 headers: [
                     {
-                        text: '#',
-                        value: 'id',
-                    },
-                    {
                         text: '日志内容',
                         value: 'operationContent',
                     },
@@ -185,6 +181,10 @@
                     {
                         text: '日志类型',
                         value: 'operationType'
+                    },
+                    {
+                        text: '浏览器',
+                        value: 'browser'
                     },
                     {
                         text: '操作时间',

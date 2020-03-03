@@ -143,7 +143,7 @@
                 loader: null,
                 loadingDraft: false,
                 select: {name: '请选择分类', id: ''},
-                label: '',
+                label: [],
                 labelList: [],
                 selectList: [],
                 dialogImageUrl: '',
@@ -323,7 +323,7 @@
                 console.log("预览")
             },
         },
-        created() {
+        mounted() {
             this.getCategorys();
             this.getLabels();
             let articleId = this.$route.query.articleId;

@@ -114,7 +114,7 @@
                 window.open(href, '_blank');
             },
         },
-        created() {
+        mounted() {
             this.getCategory();
             this.getArticleList();
         }
