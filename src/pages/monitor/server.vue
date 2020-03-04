@@ -110,15 +110,21 @@
             </v-col>
           </v-flex>
         </v-card-actions>
-
-
       </v-card>
+      <v-flex class="pa-4" xs12 md12 style="width: 100%">
+        <v-card tile>
+          <v-card-text class="px2">
+            <div ref="line" style="width: 100%;height:350px"></div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
     </div>
 </template>
 
 <script>
     var echarts = require('echarts/lib/echarts');
     require('echarts/lib/chart/gauge');
+    require('echarts/lib/chart/line');
     require('echarts/theme/macarons');
     var interval = null;
     export default {
@@ -167,7 +173,7 @@
                             name: '业务指标',
                             type: 'gauge',
                             detail: {formatter: '{value}%'},
-                            data: [{value: 50, name: '完成率'}]
+                            data: [{value: 50, name: 'jvm使用率'}]
                         }
                     ]
                 },
@@ -180,7 +186,24 @@
                         name: 'java版本',
                         value: '1.8.0_161'
                     }
-                ]
+                ],
+                lineData: {
+                    title: {
+                        text: '流量实时统计'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: [820, 932, 901, 934, 1290, 1330, 1320],
+                        type: 'line',
+                        smooth: true
+                    }]
+                }
             }
         },
         methods:{
@@ -197,8 +220,28 @@
                     const gauge = echarts.init(this.$refs.gauge, this.theme);
                     this.jvmDrawable.series[0].data[0].value = this.jvmInfo.usageRate.replace("%","");
                     gauge.setOption(this.jvmDrawable);
+                    this.getNetworkState();
                 } catch (e) {
                     console.log("获取系统负载失败",e)
+                    if (interval){
+                        clearInterval(interval);
+                        console.log("取消定时轮询");
+                    }
+                } finally {
+                    this.$store.commit('setLoading', false);
+                }
+            },
+            async getNetworkState(){
+                try {
+                    let resp = await this.$http.get("/system/network");
+                    console.log("网络状态",resp.data.data);
+                    this.lineData.xAxis.data = resp.data.data.xaxis;
+                    this.lineData.series[0].data = resp.data.data.series;
+                    var line = echarts.init(this.$refs.line, this.theme);
+                    // 使用刚指定的配置项和数据显示图表。
+                    line.setOption(this.lineData);
+                } catch (e) {
+                    console.log("获取网络状态失败",e)
                     if (interval){
                         clearInterval(interval);
                         console.log("取消定时轮询");
@@ -213,7 +256,7 @@
             this.getSystemLoad();
             interval = setInterval(()=>{
                 this.getSystemLoad();
-            },3000);
+            },5000);
             /*setInterval(function () {
                 this.jvmDrawable.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
                 //myChart.setOption(option, true);

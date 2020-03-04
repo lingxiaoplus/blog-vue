@@ -19,6 +19,32 @@ axios.loadData = async function (url) {
   const resp = await axios.get(url);
   return resp.data;
 }
+
+axios.interceptors.request.use(function (config) {
+  // 在发送请求之前做些什么，例如加入token
+  return config;
+}, function (error) {
+  // 对请求错误做些什么
+  console.log("拦截器请求错误",error)
+  return Promise.reject(error);
+});
+axios.interceptors.response.use(function (response) {
+  // 在接收响应做些什么，例如跳转到登录页
+  if (response.data.code !== 200){
+    console.log("拦截器响应非200",response.data)
+  }
+  return response;
+}, function (error) {
+  // 对响应错误做点什么
+  if (error.response.data){
+    console.log("拦截器响应错误",error.response.data)
+    if (error.response.data.code === 401){
+      router.push("/user/login");
+    }
+  }
+  return Promise.reject(error);
+});
+
 Vue.prototype.$http = axios;// 将axios添加到 Vue的原型，这样一切vue实例都可以使用该对象
 Vue.config.productionTip = false
 

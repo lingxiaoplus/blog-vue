@@ -144,7 +144,7 @@
                     },{
                         data: [820, 932, 901, 934, 120, 1220, 1120],
                         type: 'line',
-                        smooth: true
+                        areaStyle: {}
                     }]
                 }
             }
