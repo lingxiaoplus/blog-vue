@@ -101,12 +101,7 @@
                 pageNum: 1,
                 pageCount: 0,
                 itemsPerPage: 10,
-                headers: [{
-                    text: '编号',
-                    align: 'left',
-                    sortable: false,
-                    value: 'id',
-                },
+                headers: [
                     {
                         text: '邮箱地址',
                         value: 'email'

@@ -56,6 +56,8 @@ export default new Router({
         route("/user/personal_info","/user/personal_info","personal_info"),
         route("/article/comments","/article/comments","comments"),
         route("/operations/storageManage","/operations/storageManage","storageManage"),
+        route("/monitor/errorlog","/monitor/errorlog","errorlog"),
+        route("/monitor/server","/monitor/server","server"),
       ]
     },
     {
