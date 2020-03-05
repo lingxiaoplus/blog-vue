@@ -82,6 +82,11 @@ import range from '../static/js/rangeFn.js'
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    document.title = el.dataset.title
+  }
+})
 new Vue({
   el: '#app',
   router,

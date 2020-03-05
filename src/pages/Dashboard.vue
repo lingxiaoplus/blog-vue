@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-title data-title="统计">
     <v-layout row wrap>
 
       <v-flex xs10 md12 class="pa-4">

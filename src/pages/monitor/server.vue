@@ -1,54 +1,68 @@
 <template>
     <div>
-      <v-card class="ma-4" tile>
-        <v-card-title>状态</v-card-title>
-        <v-card-actions>
-          <v-flex class="d-flex flex-row">
-            <v-flex class="d-flex flex-column align-center justify-center" style="max-width: 200px">
-              <p>cpu使用率</p>
-              <v-progress-circular
-                :rotate="-90"
-                :size="100"
-                :width="6"
-                :value="cpuInfo.usageRate"
-                color="primary"
-              >
-                {{ cpuInfo.usageRate }}
-              </v-progress-circular>
-              <p class="ma-2">{{cpuInfo.coreNum}}核心</p>
-            </v-flex>
+      <v-row>
 
-            <v-flex class="d-flex flex-column align-center justify-center" style="max-width: 200px">
-              <p>内存使用率</p>
-              <v-progress-circular
-                :rotate="-90"
-                :size="100"
-                :width="6"
-                :value="memoryInfo.usageRate"
-                color="primary"
-              >
-                {{ memoryInfo.usageRate }}
-              </v-progress-circular>
-              <p class="ma-2">{{memoryInfo.used}}/{{memoryInfo.total}}</p>
-            </v-flex>
+        <v-col cols="6">
+          <v-card class="ma-4" tile>
+            <v-card-text class="px2">
+              <div ref="line" style="width: 100%;height:350px"></div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="6">
+          <v-card class="ma-4" tile max-height="350px">
+            <v-card-title>状态</v-card-title>
+            <v-card-actions>
+              <v-flex class="d-flex flex-row">
+                <v-flex class="d-flex flex-column align-center justify-center" style="max-width: 200px">
+                  <p>cpu使用率</p>
+                  <v-progress-circular
+                    :rotate="-90"
+                    :size="100"
+                    :width="6"
+                    :value="cpuInfo.usageRate"
+                    color="primary"
+                  >
+                    {{ cpuInfo.usageRate }}
+                  </v-progress-circular>
+                  <p class="ma-2">{{cpuInfo.coreNum}}核心</p>
+                </v-flex>
 
-            <v-flex class="d-flex flex-column align-center justify-center" style="max-width: 200px">
-              <p>磁盘使用率</p>
-              <v-progress-circular
-                :rotate="-90"
-                :size="100"
-                :width="6"
-                :value="value"
-                color="primary"
-              >
-                {{ value }}%
-              </v-progress-circular>
-              <p class="ma-2">597/992(GB)</p>
-            </v-flex>
-          </v-flex>
+                <v-flex class="d-flex flex-column align-center justify-center" style="max-width: 200px">
+                  <p>内存使用率</p>
+                  <v-progress-circular
+                    :rotate="-90"
+                    :size="100"
+                    :width="6"
+                    :value="memoryInfo.usageRate"
+                    color="primary"
+                  >
+                    {{ memoryInfo.usageRate }}
+                  </v-progress-circular>
+                  <p class="ma-2">{{memoryInfo.used}}/{{memoryInfo.total}}</p>
+                </v-flex>
 
-        </v-card-actions>
-      </v-card>
+                <v-flex class="d-flex flex-column align-center justify-center" style="max-width: 200px">
+                  <p>磁盘使用率</p>
+                  <v-progress-circular
+                    :rotate="-90"
+                    :size="100"
+                    :width="6"
+                    :value="value"
+                    color="primary"
+                  >
+                    {{ value }}%
+                  </v-progress-circular>
+                  <p class="ma-2">597/992(GB)</p>
+                </v-flex>
+              </v-flex>
+
+            </v-card-actions>
+          </v-card>
+        </v-col>
+
+      </v-row>
+
 
       <v-card class="ma-4" tile>
         <v-card-title>jvm信息</v-card-title>
@@ -111,13 +125,7 @@
           </v-flex>
         </v-card-actions>
       </v-card>
-      <v-flex class="pa-4" xs12 md12 style="width: 100%">
-        <v-card tile>
-          <v-card-text class="px2">
-            <div ref="line" style="width: 100%;height:350px"></div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
+
     </div>
 </template>
 
@@ -189,7 +197,7 @@
                 ],
                 lineData: {
                     title: {
-                        text: '流量实时统计'
+                        text: '流量实时统计/KB'
                     },
                     xAxis: {
                         type: 'category',
@@ -201,7 +209,7 @@
                     series: [{
                         data: [820, 932, 901, 934, 1290, 1330, 1320],
                         type: 'line',
-                        smooth: true
+                        areaStyle: {}
                     }]
                 }
             }

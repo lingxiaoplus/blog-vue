@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="inspire"  v-title data-title="凌霄的博客">
 
     <v-snackbar v-model="this.$store.getters.getSnackbarState.show" :color="this.$store.getters.getSnackbarState.color"
                 :timeout="2000" :top="true">
