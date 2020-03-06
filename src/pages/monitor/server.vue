@@ -48,12 +48,12 @@
                     :rotate="-90"
                     :size="100"
                     :width="6"
-                    :value="value"
+                    :value="diskStore.usageRate"
                     color="primary"
                   >
-                    {{ value }}%
+                    {{ diskStore.usageRate }}
                   </v-progress-circular>
-                  <p class="ma-2">597/992(GB)</p>
+                  <p class="ma-2">{{diskStore.used}}/{{diskStore.total}}</p>
                 </v-flex>
               </v-flex>
 
@@ -161,6 +161,12 @@
                     usageRate: "43.28%",
                     version: "1.8.0_161",
                 },
+                diskStore:{
+                    total: "0.00GB",
+                    used: "0.00GB",
+                    acaliable: "0.00GB",
+                    usageRate: "0.00%",
+                },
                 osName: '',
                 osArch: '',
                 jvmDrawable: {
@@ -223,6 +229,7 @@
                     this.cpuInfo = resp.data.data.cpuInfo;
                     this.memoryInfo = resp.data.data.memoryInfo;
                     this.jvmInfo = resp.data.data.jvmInfo;
+                    this.diskStore = resp.data.data.diskStore;
                     this.osName = resp.data.data.osName;
                     this.osArch = resp.data.data.osArch;
                     const gauge = echarts.init(this.$refs.gauge, this.theme);
