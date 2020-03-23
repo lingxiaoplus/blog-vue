@@ -23,7 +23,7 @@ export default new Router({
     route("/user/register",'/user/register',"register"),
     route("/front/articleContent",'/front/articleContent',"articleContent"),
     {
-      path: '/front',
+      path: '/',
       name: 'FrontPage',
       component: FrontPage,
       redirect: "/front/articleList",
@@ -35,7 +35,7 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/admin',
       name: 'HomePage',
       component: HomePage,
       redirect: "/index/dashboard",

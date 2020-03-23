@@ -14,13 +14,13 @@
         </v-snackbar>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
-            <v-card elevation="2">
-              <v-toolbar dark color="primary" elevation="0">
-                <v-toolbar-title>个人博客登录</v-toolbar-title>
+            <v-card elevation="4">
+              <v-toolbar dark color="transparent" elevation="0" class="d-flex align-center justify-center ma-2">
+                <v-toolbar-title style="color: #000000">个人博客登录</v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
               <v-card-text>
-                <v-form>
+                <v-form class="mx-8">
                   <v-text-field prepend-inner-icon="mdi-account-arrow-right-outline" v-model="username"
                                 label="用户名" type="text"/>
                   <v-text-field prepend-inner-icon="mdi-lock-outline " v-model="password" label="密码"
@@ -30,8 +30,8 @@
                                 :type="e1 ? 'text' : 'password'" hint="至少6位密码"></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-card-actions>
-                <v-col cols="12" class="px-4">
+              <v-card-actions class="mx-8">
+                <v-col cols="12" >
                   <v-btn width="100%" tile :disabled="loading" :loading="loading" color="primary" @click="doLogin">登录</v-btn>
                 </v-col>
               </v-card-actions>

@@ -96,7 +96,6 @@
                     console.log("文章列表", resp.data.data);
                     this.articleList = resp.data.data;
                 } catch (e) {
-                    debugger;
                     console.log("异常", e);
                 } finally {
 
