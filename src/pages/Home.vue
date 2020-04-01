@@ -107,12 +107,6 @@
         data: () => ({
             drawer: null,
             menuMap: [
-                {
-                    text: 'Link1',
-                    disabled: false,
-                    href: 'breadcrumbs_link_1',
-                },
-
             ],
             user_name: 'admin',
             loading: false,
