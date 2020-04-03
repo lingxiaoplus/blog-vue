@@ -49,6 +49,8 @@ export default new Router({
         route("/settings/systemLog","/settings/SystemLog","systemLog"),
         route("/settings/EmailConfig","/settings/EmailConfig","emailConfig"),
         route("/settings/friend_link","/settings/LinkConfig","linkConfig"),
+        route("/settings/menu","/settings/Menu","menu"),
+
         route("/article/article_list","/article/articleList","article_list"),
         route("/article/edit_article","/article/editArticle","edit_article"),
 		    route("/article/category","/article/category","category"),

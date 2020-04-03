@@ -106,7 +106,7 @@
                 }).then(res => {
                     console.log("登录成功", res.data);
                     this.showSnackBar("登录成功", true);
-                    this.$router.push("Dashboard");
+                    this.$router.push("/index/dashboard");
                     this.loading = false;
                 }).catch(e => {
                     this.showSnackBar("登录失败，请检查用户名密码是否正确", false);

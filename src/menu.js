@@ -99,6 +99,10 @@ var drawers = [{
         path: "/theme"
       },
       {
+        title: "菜单管理",
+        path: "/menu"
+      },
+      {
         title: "邮箱管理",
         path: "/emailConfig"
       },

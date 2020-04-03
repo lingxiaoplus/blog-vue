@@ -29,7 +29,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="2" class="px-md-2">
+        <v-col cols="2" class="px-md-2" style="height: 700px;">
           <v-flex>
             <v-hover v-slot:default="{ hover }">
               <v-card class="pa-md-2" tile :elevation="hover?12:2">
