@@ -14,11 +14,11 @@
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ on }">
         <v-row class="pa-4" style="background: white">
-          <v-btn v-on="on" @click="editedIndex = -1" color="primary" class="ma-2 white--text" tile>
+          <v-btn v-on="on" @click="editedIndex = -1" small color="primary" class="ma-2 white--text" tile>
             <v-icon left small>mdi-plus</v-icon>
             新增
           </v-btn>
-          <v-btn @click="getMenu" class="ma-2 white--text" tile color="primary" :loading="loading"
+          <v-btn @click="getMenu" small class="ma-2 white--text" tile color="primary" :loading="loading"
                  :disabled="loading">
             <v-icon left small>mdi-refresh</v-icon>
             刷新
@@ -37,9 +37,30 @@
               lazy-validation
             >
 
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-text-field v-model="editedItem.name" label="菜单名称" :rules="[rules.base,rules.content]"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field v-model="editedItem.url" label="路由地址" required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
               <v-col cols="12">
-                <v-text-field v-model="editedItem.name" label="菜单名称" :rules="[rules.base,rules.content]"></v-text-field>
+                <v-select
+                  :items="items"
+                  label="上级类目"
+                ></v-select>
               </v-col>
+
+              <v-col cols="12">
+                <v-subheader class="pl-0">菜单排序</v-subheader>
+                <v-slider
+                  v-model="slider"
+                  thumb-label
+                ></v-slider>
+              </v-col>
+
                <v-col cols="12" >
                  <v-autocomplete
                    v-model="searchIconModel"
@@ -69,17 +90,6 @@
                    </v-list>
                  </v-expand-transition>
               </v-col>
-
-              <v-row>
-                <v-col cols="12" sm="6">
-                  <v-text-field v-model="editedItem.url" color="purple darken-2" label="路由地址" required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6">
-                  <v-text-field v-model="editedItem.url" color="purple darken-2" label="路由地址" required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
 
             </v-form>
           </v-container>

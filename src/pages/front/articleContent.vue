@@ -6,7 +6,7 @@
     </v-snackbar>
     <v-progress-linear :active="loading" indeterminate absolute top color="pink" height="5">
     </v-progress-linear>
-    <v-card class="overflow-hidden">
+    <v-card class="overflow-hidden" elevation="0">
       <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
       <v-app-bar color="primary" dark flat elevate-on-scroll elevation="6" shrink-on-scroll prominent
                  :src="article.headImage"
@@ -204,7 +204,7 @@
       </v-sheet>
 
       <v-fab-transition>
-        <v-btn key="keyboard_arrow_up" color="green" absolute fab large dark bottom right>
+        <v-btn key="keyboard_arrow_up" color="green" fixed fab large dark bottom right @click="backTop">
           <v-icon>mdi-chevron-up</v-icon>
         </v-btn>
       </v-fab-transition>
@@ -270,6 +270,7 @@
                 imageUrl: require("../../assets/website_logo.png"),
                 bgGifUrl: require("../../assets/dog.gif"),
                 qr_content: '',
+                isTop: false,
             }
         },
         components: {
@@ -282,6 +283,19 @@
             }
         },
         methods: {
+            backTop(){
+                if (this.isTop) return;
+                var timer = setInterval(function(){
+                    let osTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    let ispeed = Math.floor(-osTop / 5);
+                    document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed;
+                    console.log("距离",document.documentElement.scrollTop,"2",document.body.scrollTop);
+                    this.isTop = true;
+                    if(osTop === 0){
+                        clearInterval(timer);
+                    }
+                },30);
+            },
             test(dataUrl){
                 console.log("二维码",dataUrl)
             },

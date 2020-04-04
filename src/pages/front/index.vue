@@ -38,15 +38,6 @@
 
     </v-navigation-drawer>
     <v-card class="overflow-hidden" tile>
-     <!-- <v-toolbar color="primary" dark  src="https://picsum.photos/1920/1080?random"
-                 shrink-on-scroll
-                 fade-img-on-scroll scroll-target="#scrolling-techniques-2">
-        <template v-slot:img="{ props }">
-          <v-img v-bind="props" gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"></v-img>
-        </template>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>凌霄的博客</v-toolbar-title>
-        <v-spacer/>-->
 
       <v-toolbar color="primary" dark
                  shrink-on-scroll
@@ -55,15 +46,6 @@
         <v-toolbar-title>凌霄的博客</v-toolbar-title>
         <v-spacer/>
 
-
-        <!-- <v-text-field
-          flat
-          solo-inverted
-          hide-details
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          class="hidden-sm-and-down"
-        /> -->
         <v-row align="center" style="max-width: 400px" v-if="showSearch">
           <v-text-field :autofocus="showSearch" :append-icon-cb="() => {}" placeholder="搜索文章" single-line color="white"
                         hide-details/>

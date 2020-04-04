@@ -64,8 +64,8 @@ export default new Router({
     },
     {
       path:'*',
-      name: 'HomePage',
-      component: HomePage,
+      name: 'NotFound',
+      component: NotFound,
       redirect: "/index/notFound",
       children:[
         route("/index/notFound","/NotFound","NotFound"),

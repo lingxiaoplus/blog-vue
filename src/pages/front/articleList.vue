@@ -1,14 +1,6 @@
 <template>
   <div>
     <div>
-      <!--<v-toolbar color="primary" dark  src="https://picsum.photos/1920/1080?random" flat>
-        <template v-slot:img="{ props }">
-          <v-img v-bind="props" gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"></v-img>
-        </template>
-        <template v-slot:extension>
-
-        </template>
-      </v-toolbar>-->
       <v-tabs v-model="currentItem" background-color="primary" dark>
         <v-tab v-for="item in items" :key="item.name" :href="'#tab-' + item.name" class="mx-8">
           {{ item.name }}
@@ -17,48 +9,43 @@
 
 
 
-    <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" min-height="600">
-      <v-container style="height: 100%;">
+      <v-card elevation="0" class="mx-2" flat>
         <v-tabs-items v-model="currentItem">
           <v-tab-item v-for="item in items" :key="item.name" :value="'tab-' + item.name">
-            <v-container>
-              <!--文章内容-->
-              <v-layout row wrap>
-                <v-col cols="3" v-for="item in articleList" :key="item.id">
-                  <v-hover v-slot:default="{ hover }">
-                    <v-card :elevation="hover?12:2">
-                      <v-img :src="item.headImage" height="194">
-                        <v-card-title style="position: absolute;bottom: 0px;color: white">{{item.title}}</v-card-title>
-                      </v-img>
+            <!--文章内容-->
+            <v-layout row wrap>
+              <v-col cols="3" v-for="item in articleList" :key="item.id">
+                <v-hover v-slot:default="{ hover }">
+                  <v-card :elevation="hover?12:2">
+                    <v-img :src="item.headImage" height="194">
+                      <v-card-title style="position: absolute;bottom: 0px;color: white">{{item.title}}</v-card-title>
+                    </v-img>
 
-                      <v-card-actions class="d-flex ">
-                        <el-link class="pa-2" style="color: #909399"><i class="el-icon-time el-icon--left">
-                          {{item.updateTime}}</i></el-link>
-                        <el-link class="pa-2" style="color: #909399"><i class="el-icon-view el-icon--left"> 阅读({{item.watchCount}})</i>
-                        </el-link>
-                        <v-btn text color="deep-purple accent-4" class="ml-auto" @click="readArticle(item.id)">
-                          阅读
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-hover>
+                    <v-card-actions class="d-flex ">
+                      <el-link class="pa-2" style="color: #909399"><i class="el-icon-time el-icon--left">
+                        {{item.updateTime}}</i></el-link>
+                      <el-link class="pa-2" style="color: #909399"><i class="el-icon-view el-icon--left"> 阅读({{item.watchCount}})</i>
+                      </el-link>
+                      <v-btn text color="deep-purple accent-4" class="ml-auto" @click="readArticle(item.id)">
+                        阅读
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-hover>
 
-                </v-col>
-              </v-layout>
-
-            </v-container>
+              </v-col>
+            </v-layout>
           </v-tab-item>
         </v-tabs-items>
-        <v-layout class="pa-md-4" min-heigth="400px">
-          <v-fab-transition>
-            <v-btn key="keyboard_arrow_up" color="green" absolute fab large dark bottom right>
-              <v-icon>mdi-chevron-up</v-icon>
-            </v-btn>
-          </v-fab-transition>
-        </v-layout>
 
-      </v-container>
-    </v-sheet>
+        <v-fab-transition>
+          <v-btn key="keyboard_arrow_up" color="primary" fixed fab large dark right bottom>
+            <v-icon>mdi-chevron-up</v-icon>
+          </v-btn>
+        </v-fab-transition>
+
+
+      </v-card>
     </div>
     </div>
 </template>
