@@ -49,7 +49,7 @@
       </v-app-bar>
 
       <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" max-height="800">
-        <v-container class="pa-6">
+        <v-container class="pa-6" id="scrolling-container">
           <!--文章内容-->
           <v-layout row wrap>
             <v-hover v-slot:default="{ hover }">
@@ -203,7 +203,7 @@
         </v-container>
       </v-sheet>
 
-      <v-fab-transition>
+      <v-fab-transition class="mx-2">
         <v-btn key="keyboard_arrow_up" color="green" fixed fab large dark bottom right @click="backTop">
           <v-icon>mdi-chevron-up</v-icon>
         </v-btn>
@@ -285,11 +285,15 @@
         methods: {
             backTop(){
                 if (this.isTop) return;
+                var sheet = document.getElementById("scrolling-techniques-2");
                 var timer = setInterval(function(){
-                    let osTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    //let osTop = document.documentElement.scrollTop || document.body.scrollTop || sheet.scrollTop;
+                    let osTop = sheet.scrollTop;
                     let ispeed = Math.floor(-osTop / 5);
-                    document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed;
-                    console.log("距离",document.documentElement.scrollTop,"2",document.body.scrollTop);
+                    document.documentElement.scrollTop = 0;
+                    //document.documentElement.scrollTop = document.body.scrollTop = sheet.scrollTop = osTop + ispeed;
+                    sheet.scrollTop = osTop + ispeed;
+                    console.log("距离",sheet.scrollTop);
                     this.isTop = true;
                     if(osTop === 0){
                         clearInterval(timer);

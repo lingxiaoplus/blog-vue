@@ -48,8 +48,12 @@
               </v-row>
               <v-col cols="12">
                 <v-select
-                  :items="items"
+                  v-model="menuSelect"
+                  :items="menuSelectList"
+                  @change="onMenuChange"
                   label="上级类目"
+                  item-text="name"
+                  item-value="parentId"
                 ></v-select>
               </v-col>
 
@@ -62,33 +66,11 @@
               </v-col>
 
                <v-col cols="12" >
-                 <v-autocomplete
-                   v-model="searchIconModel"
-                   :items="items"
-                   :loading="searchLoading"
-                   :search-input.sync="searchIcon"
-                   color="primary"
-                   hide-selected
-                   item-text="Description"
-                   item-value="API"
+                 <v-text-field
                    label="选择图标"
-                   placeholder="搜索图标"
                    :prepend-icon="editedItem.icon"
-                   return-object
-                 >{{editedItem.icon}}</v-autocomplete>
-                 <v-expand-transition>
-                   <v-list v-if="searchIconModel" class="red lighten-3">
-                     <v-list-item
-                       v-for="(field, i) in fields"
-                       :key="i"
-                     >
-                       <v-list-item-content>
-                         <v-list-item-title v-text="field.value"></v-list-item-title>
-                         <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
-                       </v-list-item-content>
-                     </v-list-item>
-                   </v-list>
-                 </v-expand-transition>
+                   v-model="editedItem.icon"
+                 ></v-text-field>
               </v-col>
 
             </v-form>
@@ -98,7 +80,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
-          <v-btn color="blue darken-1" text @click="saveRole">保存</v-btn>
+          <v-btn color="blue darken-1" text @click="saveMenu">保存</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -218,6 +200,7 @@
                 editedItem: {
                     name: '',
                     description: '',
+                    parentId: 0,
                 },
                 dialog: false,
                 editedIndex: -1,
@@ -236,29 +219,19 @@
                 searchLoading: false,
                 searchIcon: null,
                 entries: [],
+                menuSelectList:[
+                    {
+                        parentId:"0",
+                        name: "顶级菜单"
+                    }
+                ],
+                menuSelect: {parentId:"0", name: "顶级菜单"},
+                slider: "",
             }
         },
         computed: {
             formTitle() {
                 return this.editedIndex === -1 ? '添加分类' : '编辑分类'
-            },
-            fields () {
-                if (!this.searchIconModel) return [];
-                return Object.keys(this.searchIconModel).map(key => {
-                    return {
-                        key,
-                        value: this.searchIconModel[key] || 'n/a',
-                    }
-                })
-            },
-            items () {
-                return this.entries.map(entry => {
-                    const Description = entry.Description.length > this.descriptionLimit
-                        ? entry.Description.slice(0, this.descriptionLimit) + '...'
-                        : entry.Description
-
-                    return Object.assign({}, entry, { Description })
-                })
             },
         },
         watch: {
@@ -267,28 +240,12 @@
                 this.pageNum = val;
                 this.getRoles();
             },
-            searchIcon (val) {
-                // Items have already been loaded
-                if (this.items.length > 0) return;
-                // Items have already been requested
-                if (this.searchLoading) return;
-                this.searchLoading = true;
-                // Lazily load input items
-                console.log("Lazily load input items");
-                this.$http.get("/entries")
-                .then(res=>{
-                    console.log("获取结果");
-                    const { count, entries } = res;
-                    this.count = count;
-                    this.entries = entries;
-                })
-                .catch(err => {
-                    console.log("异常",err)
-                })
-                .finally(() => (this.searchLoading = false))
-            },
         },
         methods: {
+            onMenuChange(e){
+                console.log("菜单改变",e);
+                this.editedItem.parentId = e;
+            },
             handleSelectionChange(val) {
                 this.selectList = val;
             },
@@ -301,6 +258,9 @@
                 this.editedItem.departureTime = e.dateFormat; //这里要注意一下
                 this.dialog = true;
                 console.log("点击", e);
+                if (e.parentId && e.parentId !== 0){
+                    //this.menuSelect;
+                }
             },
             deleteItem(e) {
                 this.deleteDialog = true;
@@ -322,6 +282,10 @@
                     //let page = parseInt(response.data.total / this.itemsPerPage) + 1;
                     //console.log("page:", page)
                     this.pageCount = response.data.totalPage;
+                    this.desserts.forEach((item)=>{
+                        this.menuSelectList.push({ parentId:item.id, name: item.name });
+                    });
+                    console.log("菜单列表",this.menuSelectList);
                 } catch (e) {
                     console.log("获取分类列表失败", e.response.data);
                     this.$store.commit('showSnackbar', {
@@ -334,7 +298,7 @@
                 }
 
             },
-            async saveRole() {
+            async saveMenu() {
                 if (!this.$refs.form.validate()) {
                     this.$store.commit('showSnackbar', {
                         color: 'error',
@@ -344,7 +308,8 @@
                 }
                 this.dialog = false;
                 this.loading = true;
-                console.log("分类", this.editedItem);
+                console.log("分类", this.editedItem,"上级菜单",this.menuSelect);
+                return ;
                 try {
                     let editData = Object.assign({}, this.editedItem);
                     if (this.editedIndex > 0) {
