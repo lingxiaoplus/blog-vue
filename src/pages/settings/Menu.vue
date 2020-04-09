@@ -60,7 +60,7 @@
               <v-col cols="12">
                 <v-subheader class="pl-0">菜单排序</v-subheader>
                 <v-slider
-                  v-model="slider"
+                  v-model="editedItem.sortIndex"
                   thumb-label
                 ></v-slider>
               </v-col>
@@ -79,8 +79,8 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
-          <v-btn color="blue darken-1" text @click="saveMenu">保存</v-btn>
+          <v-btn color="blue darken-1" text @click="()=>{ dialog = false; editedItem = {} }">取消</v-btn>
+          <v-btn color="blue darken-1" text @click="saveMenu()">保存</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -101,6 +101,14 @@
       <el-table-column prop="url" label="路由地址">
       </el-table-column>
       <el-table-column prop="keepAlive" label="状态">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.keepAlive===1"
+            @change="enableMenu(scope.row)"
+            active-color="#66BB6A"
+            inactive-color="#BDBDBD">
+          </el-switch>
+        </template>
       </el-table-column>
       <el-table-column prop="createAt" label="创建时间">
       </el-table-column>
@@ -178,11 +186,11 @@
                 itemsPerPage: 10,
                 headers: [
                     {
-                        text: '分类名称',
+                        text: '菜单名称',
                         value: 'name'
                     },
                     {
-                        text: '分类描述',
+                        text: '菜单描述',
                         value: 'description'
                     },
                     {
@@ -198,9 +206,8 @@
                 ],
                 desserts: [],
                 editedItem: {
-                    name: '',
-                    description: '',
                     parentId: 0,
+                    sortIndex: 0,
                 },
                 dialog: false,
                 editedIndex: -1,
@@ -212,7 +219,7 @@
                 on: false,
                 rules: {
                     base: value => value.length > 0 || '请填写内容',
-                    content: value => value.length < 10 || '分类过长',
+                    content: value => value.length < 10 || '菜单过长',
                 },
                 selectList: [],
                 searchIconModel: null,
@@ -231,7 +238,7 @@
         },
         computed: {
             formTitle() {
-                return this.editedIndex === -1 ? '添加分类' : '编辑分类'
+                return this.editedIndex === -1 ? '添加菜单' : '编辑菜单'
             },
         },
         watch: {
@@ -254,7 +261,7 @@
             },
             editItem(e) {
                 this.editedIndex = 1;
-                this.editedItem = e;
+                this.editedItem = Object.assign({}, e);
                 this.editedItem.departureTime = e.dateFormat; //这里要注意一下
                 this.dialog = true;
                 console.log("点击", e);
@@ -272,8 +279,23 @@
                 this.editedItem.departureTime = date;
                 console.log("选择时间", date);
             },
+            async enableMenu(row){
+                try {
+                    row.keepAlive = row.keepAlive === 1 ? 0 : 1;
+                    let response = await this.$http.put("/menu", row);
+                    console.log("更新菜单", response.data);
+                    this.$store.commit('showSnackbar', {
+                        color: 'success',
+                        text: "更新菜单成功, 刷新界面看到效果"
+                    });
+                    this.getMenu();
+                } catch (e) {
+                    console.log("更新菜单失败",e);
+                }
+            },
             async getMenu() {
                 try {
+                    this.menuSelectList = [{parentId:"0", name: "顶级菜单"}];
                     this.loading = true;
                     this.$store.commit('setLoading', true);
                     let response = await this.$http.get("/menu");
@@ -287,10 +309,10 @@
                     });
                     console.log("菜单列表",this.menuSelectList);
                 } catch (e) {
-                    console.log("获取分类列表失败", e.response.data);
+                    console.log("获取菜单列表失败", e.response.data);
                     this.$store.commit('showSnackbar', {
                         color: 'error',
-                        text: e.response.data.message ? e.response.data.message : "获取分类列表失败"
+                        text: e.response.data.message ? e.response.data.message : "获取菜单列表失败"
                     });
                 } finally {
                     this.loading = false;
@@ -308,33 +330,32 @@
                 }
                 this.dialog = false;
                 this.loading = true;
-                console.log("分类", this.editedItem,"上级菜单",this.menuSelect);
-                return ;
+                console.log("菜单", this.editedItem,"上级菜单",this.menuSelect);
                 try {
                     let editData = Object.assign({}, this.editedItem);
                     if (this.editedIndex > 0) {
                         //更新
-                        let response = await this.$http.put("/category", editData);
-                        console.log("更新分类", response.data);
+                        let response = await this.$http.put("/menu", editData);
+                        console.log("更新菜单", response.data);
                         this.$store.commit('showSnackbar', {
                             color: 'success',
-                            text: "更新分类成功"
+                            text: "更新菜单成功"
                         });
                     } else {
                         //新增
-                        let response = await this.$http.post("/category", editData);
-                        console.log("添加分类", response.data);
+                        let response = await this.$http.post("/menu", editData);
+                        console.log("添加菜单", response.data);
                         this.$store.commit('showSnackbar', {
                             color: 'success',
-                            text: "添加分类成功"
+                            text: "添加菜单成功"
                         });
                     }
                     this.getMenu();
                 } catch (e) {
-                    console.log("添加/更新分类失败", e);
+                    console.log("添加/更新菜单失败", e);
                     this.$store.commit('showSnackbar', {
                         color: 'error',
-                        text: e.response.data.message ? e.response.data.message : "添加/更新分类失败"
+                        text: e.response.data.message ? e.response.data.message : "添加/更新菜单失败"
                     });
                 } finally {
                     this.loading = false;
@@ -345,13 +366,13 @@
                 this.loading = true;
                 try {
                     let response = await this.$http.delete("/category/" + this.productId);
-                    console.log("删除分类", response.data);
+                    console.log("删除菜单", response.data);
                     this.getMenu();
                 } catch (e) {
-                    console.log("删除分类失败", e);
+                    console.log("删除菜单失败", e);
                     this.$store.commit('showSnackbar', {
                         color: 'error',
-                        text: "删除分类失败"
+                        text: "删除菜单失败"
                     });
                 } finally {
                     this.loading = false;

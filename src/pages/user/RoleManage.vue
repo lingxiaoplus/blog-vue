@@ -22,16 +22,17 @@
           <v-card-text>
             <v-container>
               <v-row>
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <v-text-field prepend-icon="mdi-account" v-model="editedItem.roleName" label="角色名称"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-text-field prepend-icon="mdi-cctv" v-model="editedItem.rolePermession" label="权限"></v-text-field>
+                  </v-col>
+                </v-row>
                 <v-col cols="12">
-                  <v-text-field v-model="editedItem.roleName" label="角色名称"></v-text-field>
+                  <v-textarea outlined clearable label="角色描述" v-model="editedItem.roleDesc"></v-textarea>
                 </v-col>
-                <v-col cols="12">
-                  <v-text-field v-model="editedItem.roleDesc" label="角色描述"></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field v-model="editedItem.rolePermession" label="权限"></v-text-field>
-                </v-col>
-
               </v-row>
             </v-container>
           </v-card-text>
@@ -124,6 +125,7 @@
               selected-color="primary"
               hoverable
               :items="menuTree"
+              item-key=""
             ></v-treeview>
           </v-card-actions>
         </v-card>
@@ -202,84 +204,12 @@
                 search: '',
                 loading:false,
                 selectList: [],
-
-                menuTree: [
-                    {
-                        id: 1,
-                        name: '文章管理',
-                        children: [
-                            { id: 2, name: '文章分类' },
-                            { id: 3, name: '标签管理' },
-                            { id: 4, name: '评论管理' },
-                        ],
-                    },
-                    {
-                        id: 5,
-                        name: '人员管理',
-                        children: [
-                            {
-                                id: 6,
-                                name: 'vuetify :',
-                                children: [
-                                    {
-                                        id: 7,
-                                        name: 'src :',
-                                        children: [
-                                            { id: 8, name: 'index : ts' },
-                                            { id: 9, name: 'bootstrap : ts' },
-                                        ],
-                                    },
-                                ],
-                            },
-                            {
-                                id: 10,
-                                name: 'material2 :',
-                                children: [
-                                    {
-                                        id: 11,
-                                        name: 'src :',
-                                        children: [
-                                            { id: 12, name: 'v-btn : ts' },
-                                            { id: 13, name: 'v-card : ts' },
-                                            { id: 14, name: 'v-window : ts' },
-                                        ],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        id: 15,
-                        name: '运维管理',
-                        children: [
-                            { id: 16, name: 'October : pdf' },
-                            { id: 17, name: 'November : pdf' },
-                            { id: 18, name: 'Tutorial : html' },
-                        ],
-                    },
-                    {
-                        id: 19,
-                        name: '系统管理',
-                        children: [
-                            {
-                                id: 20,
-                                name: 'Tutorials :',
-                                children: [
-                                    { id: 21, name: 'Basic layouts : mp4' },
-                                    { id: 22, name: 'Advanced techniques : mp4' },
-                                    { id: 23, name: 'All about app : dir' },
-                                ],
-                            },
-                            { id: 24, name: 'Intro : mov' },
-                            { id: 25, name: 'Conference introduction : avi' },
-                        ],
-                    },
-                ],
+                menuTree: [],
             }
         },
         computed: {
             formTitle() {
-                return this.editedIndex === -1 ? '添加线路' : '编辑线路'
+                return this.editedIndex === -1 ? '添加角色' : '编辑角色'
             },
         },
         watch: {
@@ -388,6 +318,8 @@
             }
         },
         mounted() {
+            let menu_info = JSON.parse(localStorage.getItem("menu_info"));
+            this.menuTree = menu_info;
             this.getRoles();
         },
     }

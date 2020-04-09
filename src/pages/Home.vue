@@ -21,21 +21,21 @@
       <v-divider/>
 
       <v-list dense>
-        <v-list-group v-for="item in items" :key="item.title" no-action :prepend-icon="'mdi-'+item.action">
+        <v-list-group v-for="item in items" :key="item.name" no-action :prepend-icon="item.icon" v-if="item.keepAlive === 1">
           <!--一级菜单 -->
           <template slot="activator">
             <!-- <v-list-item-action>
               <v-icon >mdi-{{item.action}}</v-icon>
             </v-list-item-action> -->
             <v-list-item-content>
-              <v-list-item-title>{{item.title}}</v-list-item-title>
+              <v-list-item-title>{{item.name}}</v-list-item-title>
             </v-list-item-content>
           </template>
           <!-- 二级菜单 -->
-          <v-list-item v-for="subItem in item.items" :key="subItem.title" :to="item.path + subItem.path"
-                       @click="onPathChanged(item,subItem)">
+          <v-list-item v-for="subItem in item.children" :key="subItem.name" :to="subItem.url"
+                       @click="onPathChanged(item,subItem)" v-if="subItem.keepAlive === 1">
             <v-list-item-content>
-              <v-list-item-title>{{ subItem.title }}</v-list-item-title>
+              <v-list-item-title>{{ subItem.name }}</v-list-item-title>
             </v-list-item-content>
             <!-- <v-list-item-action>
               <v-icon>mdi-{{subItem.action}}</v-icon>
@@ -123,12 +123,21 @@
                     name: "退出登录",
                     action: "logout",
                 },
-            ]
+            ],
+            defMenu: {
+                icon: "mdi-home", name: "首页", url: "/index",keepAlive:1,
+                children: [{
+                    name: "统计",
+                    url: "/index/dashboard",
+                    keepAlive:1,
+                }]
+            },
+            items: [],
         }),
         computed: {
-            items() {
+            /*items() {
                 return menus.drawers;
-            },
+            },*/
             themes() {
                 return menus.themes;
             },
@@ -147,21 +156,28 @@
             onPathChanged(item, subItem) {
                 var map = [];
                 map.push({
-                    text: item.title,
+                    text: item.name,
                     disabled: false,
-                    href: item.path,
+                    href: item.url,
                 });
                 map.push({
-                    text: subItem.title,
+                    text: subItem.name,
                     disabled: true,
-                    href: subItem.path,
+                    href: subItem.url,
                 });
                 this.menuMap = map;
                 console.log("menuMap: ", this.menuMap);
             },
             async getMenuData() {
-                let resp = await this.$http.get("/menu");
-                console.log("菜单", resp.data.data);
+                try {
+                    this.items = [this.defMenu];
+                    let resp = await this.$http.get("/menu");
+                    console.log("菜单", resp.data.data);
+                    this.items = this.items.concat(resp.data.data);
+                    localStorage.setItem("menu_info", JSON.stringify(resp.data.data));
+                } catch (e) {
+                    console.log("获取菜单失败",e);
+                }
             },
             setLoadingState(loading) {
                 console.log("设置状态>>>>>>>>>", loading);
@@ -193,17 +209,19 @@
         },
 
         mounted() {
-            console.log(">>>>>>>>>>>>", this.menuMap)
-            let menu = menus.drawers[0];
+            console.log(">>>>>>>>>>>>", this.menuMap);
+            //初始化面包屑
+            let menu = this.defMenu;
+            this.items.push(menu);
             this.menuMap[0] = {
-                text: menu.title,
+                text: menu.name,
                 disabled: false,
-                href: menu.path,
+                href: menu.url,
             };
             this.menuMap[1] = {
-                text: menu.items[0].title,
+                text: menu.children[0].name,
                 disabled: false,
-                href: menu.items[0].path,
+                href: menu.children[0].url,
             };
             this.$http.get("/user/verify")
                 .then(res => {
@@ -216,8 +234,6 @@
                 this.$router.push("/user/login");
             });
             this.getMenuData();
-            //this.loading = this.$store.getters.getLoadingState;
-            console.log("获取到状态>>>>>>>>> ", this.$store.getters.getLoadingState)
         }
     }
 </script>
