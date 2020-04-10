@@ -79,8 +79,8 @@
 
     export default {
         data: () => ({
-            username: "lingxiao",
-            password: "123456",
+            username: "lin123",
+            password: "Rml123456",
             e1: false,
             snackbar: false,
             snackbarText: '',
@@ -95,14 +95,27 @@
                 }
                 console.log(this.username + " ... " + this.password);
                 this.loading = true;
-                this.$http.post("/user/login", Qs.stringify({
+                /*this.$http.post("/user/login", Qs.stringify({
                     'account': this.username,
                     'password': this.password,
                     'loginType': 1
-                }), {
-                    /*headers:{
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }*/
+                })).then(res => {
+                    console.log("登录成功", res.data);
+                    this.showSnackBar("登录成功", true);
+                    this.$router.push("/index/dashboard");
+                    this.loading = false;
+                }).catch(e => {
+                    this.showSnackBar("登录失败，请检查用户名密码是否正确", false);
+                    this.loading = false;
+                    if (e.response) {
+                        console.log("登录失败，失败详情", e.response.data);
+                    }
+                })*/
+
+                this.$http.post("/user/login", {
+                    'account': this.username,
+                    'password': this.password,
+                    'loginType': 1
                 }).then(res => {
                     console.log("登录成功", res.data);
                     this.showSnackBar("登录成功", true);
