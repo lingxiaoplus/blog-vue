@@ -58,7 +58,7 @@
     </v-dialog>
 
     <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
-                  hide-default-footer class="elevation-1" @page-count="pageCount = $event">
+                  hide-default-footer class="elevation-1" @page-count="pageCount = $event" :loading="loading">
 
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary" @click="editItem(item)">

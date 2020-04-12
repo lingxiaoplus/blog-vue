@@ -37,8 +37,8 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // 对响应错误做点什么
   if (error.response.data){
-    console.log("拦截器响应错误",error.response.data)
-    if (error.response.data.code === 401){
+    console.log("拦截器响应错误",error.response.data);
+    if (error.response.data.code === 401 || error.response.status === 403){
       router.push("/user/login");
     }
   }

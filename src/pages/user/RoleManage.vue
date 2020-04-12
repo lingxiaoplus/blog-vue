@@ -27,11 +27,11 @@
                     <v-text-field prepend-icon="mdi-account" v-model="editedItem.roleName" label="角色名称"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field prepend-icon="mdi-cctv" v-model="editedItem.rolePermession" label="权限"></v-text-field>
+                    <v-text-field prepend-icon="mdi-cctv" v-model="editedItem.roleTag" label="权限"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-col cols="12">
-                  <v-textarea outlined clearable label="角色描述" v-model="editedItem.roleDesc"></v-textarea>
+                  <v-textarea outlined clearable label="角色描述" v-model="editedItem.roleDescription"></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
@@ -46,20 +46,13 @@
       </v-dialog>
 
 
-
-      <v-btn @click="" class="ma-2 white--text" small tile color="warning" :loading="loading"
-             :disabled="loading">
-        <v-icon left small>mdi-refresh</v-icon>
-        修改
-      </v-btn>
-
-      <v-btn @click="onDeleteClick()" class="ma-2 white--text" small tile color="error" :loading="loading"
+      <v-btn class="ma-2 white--text" small tile color="error" :loading="loading"
              :disabled="loading || (selectList.length < 1)">
         <v-icon left small>mdi-delete</v-icon>
         删除
       </v-btn>
 
-      <v-btn @click="exportExcelSelect" class="ma-2 white--text" small tile color="success" :loading="loading"
+      <v-btn class="ma-2 white--text" small tile color="success" :loading="loading"
              :disabled="loading">
         <v-icon left small>mdi-file-export-outline</v-icon>
         导出
@@ -77,14 +70,6 @@
 
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
-                <v-text-field
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="Search"
-                  single-line
-                  hide-details
-                ></v-text-field>
-                <v-spacer></v-spacer>
                 <!-- loading条 -->
                 <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="yellow darken-2">
                 </v-progress-linear>
@@ -92,25 +77,27 @@
               </v-toolbar>
             </template>
             <template v-slot:item.action="{ item }">
-              <v-btn class="ma-2 white--text" text color="primary" @click="editItem(item)">
-                编辑
-                <v-icon right dark small>
-                  mdi-pencil
-                </v-icon>
-              </v-btn>
-              <v-btn class="ma-2 white--text" text color="primary" @click="deleteItem(item)">
-                删除
-                <v-icon right dark small>
-                  mdi-delete
-                </v-icon>
-              </v-btn>
+
+              <v-icon
+                small
+                color="primary"
+                class="mr-2"
+                @click="editItem(item)"
+              >mdi-pencil
+              </v-icon>
+              <v-icon
+                small
+                color="primary"
+                @click="deleteItem(item)"
+              >mdi-delete
+              </v-icon>
 
             </template>
             <template v-slot:no-data>
-              <v-btn color="primary" @click="initialize">Reset</v-btn>
+              <v-btn color="primary" @click="getRoles" tile>刷新试试</v-btn>
             </template>
           </v-data-table>
-          <div class="text-center pt-2">
+          <div class="text-center pt-2"  v-if="pageCount>1">
             <v-pagination v-model="pageNum" :length="pageCount"></v-pagination>
           </div>
         </div>
@@ -138,7 +125,7 @@
       <v-dialog v-model="deleteDialog" max-width="290">
         <v-card>
           <v-card-title class="headline">确认要删除这一条记录吗?</v-card-title>
-          <v-card-text>删除之后数据就不存在了</v-card-text>
+          <!--<v-card-text>删除之后数据就不存在了</v-card-text>-->
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="green darken-1" text @click="deleteDialog = false">取消</v-btn>
@@ -158,23 +145,22 @@
                 pageNum: 1,
                 pageCount: 0,
                 itemsPerPage: 10,
-                headers: [{
-                    text: 'ID',
-                    align: 'left',
-                    sortable: false,
-                    value: 'id',
-                },
+                headers: [
                     {
                         text: '角色名称',
                         value: 'roleName'
                     },
                     {
                         text: '角色描述',
-                        value: 'roleDesc'
+                        value: 'roleDescription'
                     },
                     {
                         text: '角色权限',
-                        value: 'rolePermession'
+                        value: 'roleTag'
+                    },
+                    {
+                        text: '角色级别',
+                        value: 'roleLevel'
                     },
                     {
                         text: '操作',
@@ -182,16 +168,11 @@
                         sortable: false,
                     },
                 ],
-                desserts: [{
-                    id: 1,
-                    roleName: '159',
-                    roleDesc: 'Frozen Yogurt',
-                    rolePermession: '',
-                },],
+                desserts: [],
                 editedItem: {
                     roleName: '',
-                    roleDesc: '',
-                    rolePermession: '',
+                    roleDescription: '',
+                    roleTag: '',
                 },
                 dialog: false,
                 editedIndex: -1,
@@ -244,7 +225,7 @@
                 try {
                     this.loading = true;
                     let response = await this.$http.get("/role/all?pageNum=" + this.pageNum + "&pageSize=" + 5);
-                    console.log("product : ", response.data);
+                    console.log("角色 : ", response.data);
                     this.desserts = response.data.data;
                     //let page = parseInt(response.data.total / this.itemsPerPage) + 1;
                     //console.log("page:", page)
