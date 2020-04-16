@@ -85,7 +85,7 @@
       </v-breadcrumbs>
       <!-- 界面内容显示区域 -->
       <div>
-        <transition name="fade-enter-active">
+        <transition mode="out-in">
           <router-view/>
         </transition>
       </div>
@@ -239,20 +239,22 @@
 </script>
 
 <style>
-  .fade-enter {
-    opacity: 0;
-  }
-
-  .fade-leave {
-    opacity: 1;
-  }
-
-  .fade-enter-active {
-    transition: opacity .5s;
-  }
-
-  .fade-leave-active {
-    opacity: 0;
-    transition: opacity .5s;
-  }
+ .v-enter{
+  opacity: 0;
+ }
+ .v-enter-active{
+  transition: 0.5s;
+ }
+ .v-enter-to{
+  opacity: 1;
+ }
+ .v-leave{
+  opacity: 1;
+ }
+ .v-leave-to{
+  opacity:0;
+ }
+ .v-leave-active{
+  transition: 0.5s;
+ }
 </style>

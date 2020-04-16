@@ -117,16 +117,14 @@
                     'password': this.password,
                     'loginType': 1
                 }).then(res => {
-                    console.log("登录成功", res.data);
+                    console.log("登录成功", res);
                     this.showSnackBar("登录成功", true);
                     this.$router.push("/index/dashboard");
                     this.loading = false;
                 }).catch(e => {
                     this.showSnackBar("登录失败，请检查用户名密码是否正确", false);
                     this.loading = false;
-                    if (e.response) {
-                        console.log("登录失败，失败详情", e.response.data);
-                    }
+                    console.log("登录失败，失败详情", e);
                 })
 
             },

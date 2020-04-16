@@ -22,21 +22,29 @@ axios.loadData = async function (url) {
 
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么，例如加入token
+  let token = localStorage.getItem("blog_login_token");
+  if (token) {
+    console.log("获取到的token为",token);
+    config.headers['blog_login_token'] = token;
+  }
   return config;
 }, function (error) {
   // 对请求错误做些什么
-  console.log("拦截器请求错误",error)
+  console.log("拦截器请求错误",error);
   return Promise.reject(error);
 });
 axios.interceptors.response.use(function (response) {
   // 在接收响应做些什么，例如跳转到登录页
-  if (response.data.code !== 200){
-    console.log("拦截器响应非200",response.data)
+  let token = response.headers['blog_login_token'];
+  console.log("token为",token,"headers为",response.headers);
+  if (token){
+    console.log("设置token",token);
+    localStorage.setItem("blog_login_token",token);
   }
   return response;
 }, function (error) {
   // 对响应错误做点什么
-  if (error.response.data){
+  if (error.response){
     console.log("拦截器响应错误",error.response.data);
     if (error.response.data.code === 401 || error.response.status === 403){
       router.push("/user/login");

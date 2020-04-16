@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 //import createPersistedState from 'vuex-persistedstate'
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state:{
@@ -11,7 +11,7 @@ export default new Vuex.Store({
       show: false,
       color: 'success',
       text: ''
-    }
+    },
   },
   mutations:{
     //这里是set方法

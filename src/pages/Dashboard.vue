@@ -4,10 +4,15 @@
 
       <v-flex xs10 md12 class="pa-4">
         <v-layout row wrap>
-          <v-col class="pa-2" cols="3" v-for="(item,index) in cardList" :key="item.name">
-            <v-hover v-slot:default="{ hover }">
-              <v-card :elevation="hover?6:2" tile>
-                <v-row style="align-items: center">
+
+          <v-col class="pa-2" cols="3" v-for="(item,index) in cardList" :key="item.name" >
+             <v-scale-transition>
+               <div v-if="item.show">
+            <v-hover v-slot:default="{ hover }" >
+
+              <v-card :elevation="hover?6:2" tile >
+
+                <v-row style="align-items: center" >
                   <v-col cols="6">
                     <v-img class="mx-4" :src="item.src" width="40px" height="40px">
                     </v-img>
@@ -15,12 +20,16 @@
                   <v-col cols="6" class="text--secondary">
                     <v-card-title class="px-4">{{item.number}}</v-card-title>
                     <v-card-subtitle class="px-4">{{item.name}}</v-card-subtitle>
-
                   </v-col>
                 </v-row>
+
               </v-card>
+
             </v-hover>
+            </div>
+          </v-scale-transition>
           </v-col>
+
         </v-layout>
       </v-flex>
 
@@ -70,37 +79,43 @@
                         name: '新增用户',
                         number: 0,
                         src: require("../assets/cycling leaves.png"),
-                        url: ''
+                        url: '',
+                        show: false
                     },
                     {
                         name: '文章总数',
                         number: 12,
                         src: require("../assets/article_all.png"),
-                        url: ''
+                        url: '',
+                        show: false
                     },
                     {
                         name: '评论数',
                         number: 22,
                         src: require("../assets/comment.png"),
-                        url: ''
+                        url: '',
+                        show: false
                     },
                     {
                         name: '分类数量',
                         number: 1,
                         src: require("../assets/category.png"),
-                        url: ''
+                        url: '',
+                        show: false
                     },
                     {
                         name: '标签数量',
                         number: 1,
                         src: require("../assets/label.png"),
-                        url: ''
+                        url: '',
+                        show: false
                     },
                     {
                         name: '友情链接',
                         number: 1,
                         src: require("../assets/link.png"),
-                        url: ''
+                        url: '',
+                        show: false
                     },
 
                 ],
@@ -146,11 +161,17 @@
                         type: 'line',
                         areaStyle: {}
                     }]
-                }
+                },
+                first: false,
             }
         },
         //html加载完成后执行
         mounted() {
+          this.cardList.forEach((item,index)=>{
+            setTimeout(()=>{
+              item.show = true;
+            },(index + 1)*200)
+          })
             this.getStatistics();
             this.$nextTick(() => {
                 const line = echarts.init(this.$refs.line, this.theme);
