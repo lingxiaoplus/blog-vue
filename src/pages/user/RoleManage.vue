@@ -31,15 +31,25 @@
                   </v-col>
                 </v-row>
                 <v-col cols="12">
+                  <v-subheader class="pl-0">角色级别</v-subheader>
+                  <v-slider
+                    v-model="editedItem.roleLevel"
+                    thumb-label
+                  ></v-slider>
+                </v-col>
+                <v-col cols="12">
                   <v-textarea outlined clearable label="角色描述" v-model="editedItem.roleDescription"></v-textarea>
                 </v-col>
+
+
+
               </v-row>
             </v-container>
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
+            <v-btn color="blue darken-1" text @click="()=>{ dialog = false; editedItem = {} }">取消</v-btn>
             <v-btn color="blue darken-1" text @click="saveRole">保存</v-btn>
           </v-card-actions>
         </v-card>
@@ -63,7 +73,7 @@
       <v-col cols="8">
         <div>
           <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
-                        hide-default-footer class="elevation-1" @page-count="pageCount = $event">
+                        hide-default-footer class="elevation-1" @page-count="pageCount = $event" @click:row="clickTableRow">
             <template v-slot:top>
               <v-toolbar flat color="white">
                 <v-toolbar-title>角色管理</v-toolbar-title>
@@ -110,10 +120,19 @@
               style="width: 100%"
               selectable
               selected-color="primary"
+              open-on-click
               hoverable
+              @input="selectEvent"
               :items="menuTree"
-              item-key=""
+              item-key="id"
+              v-model="selectedMenu"
             ></v-treeview>
+          </v-card-actions>
+          <v-card-actions>
+            <v-row
+              align="center"
+              justify="end"
+            ><v-btn class="mr-2" color="primary" tile @click="updateRoleMenu()" :loading="loading">保存</v-btn></v-row>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -186,6 +205,8 @@
                 loading:false,
                 selectList: [],
                 menuTree: [],
+                selectedMenu: [],
+                role: '',
             }
         },
         computed: {
@@ -199,14 +220,25 @@
                 this.pageNum = val;
                 this.getRoles();
             },
+            menuTree(val){
+                console.log("选择", val);
+            }
         },
         methods: {
             itemClick(e) {
                 console.log("点击", e);
             },
+            clickTableRow(row){
+                console.log("点击列",row.menuList);
+                this.selectedMenu = row.menuList;
+                this.role = row;
+            },
+            selectEvent(e){
+                console.log("选择",this.selectedMenu)
+            },
             editItem(e) {
                 this.editedIndex = 1;
-                this.editedItem = e;
+                this.editedItem = Object.assign({}, e);
                 this.editedItem.departureTime = e.dateFormat; //这里要注意一下
                 this.dialog = true;
                 console.log("点击", e);
@@ -290,6 +322,23 @@
                     this.loading = false;
                 }
 
+            },
+            async updateRoleMenu(){
+                if(this.role){
+                    console.log("选择的角色",this.role,"选择的菜单",this.selectedMenu);
+                    try {
+                        this.loading = true;
+                        let response = await this.$http.put("/role/roleMenu?roleId=" + this.role.id + "&menuIds=" + this.selectedMenu);
+                        console.log("更新菜单 : ", response.data);
+                    } catch (e) {
+                        this.$store.commit('showSnackbar', {
+                            color: 'error',
+                            text: e.response.data.message ? e.response.data.message : "更新菜单失败"
+                        });
+                    } finally {
+                        this.loading = false;
+                    }
+                }
             },
             getUnixTime(dateStr) {
                 var newstr = dateStr.replace(/-/g, '/');

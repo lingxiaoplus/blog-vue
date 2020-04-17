@@ -25,7 +25,7 @@ axios.interceptors.request.use(function (config) {
   let token = localStorage.getItem("blog_login_token");
   if (token) {
     console.log("获取到的token为",token);
-    config.headers['blog_login_token'] = token;
+    config.headers['blog-login-token'] = token;
   }
   return config;
 }, function (error) {
@@ -35,8 +35,7 @@ axios.interceptors.request.use(function (config) {
 });
 axios.interceptors.response.use(function (response) {
   // 在接收响应做些什么，例如跳转到登录页
-  let token = response.headers['blog_login_token'];
-  console.log("token为",token,"headers为",response.headers);
+  let token = response.headers['blog-login-token'];
   if (token){
     console.log("设置token",token);
     localStorage.setItem("blog_login_token",token);
