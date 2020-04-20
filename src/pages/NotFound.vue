@@ -21,7 +21,7 @@ export default {
     },
     methods:{
         back(){
-            this.$router.go(-1);//返回上一层
+            this.$router.back(-1);//返回上一层
         },
     }
 }

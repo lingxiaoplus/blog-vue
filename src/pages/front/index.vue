@@ -41,7 +41,7 @@
 
       <v-toolbar color="primary" dark
                  shrink-on-scroll
-                 fade-img-on-scroll scroll-target="#scrolling-techniques-2">
+                 fade-img-on-scroll>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title>凌霄的博客</v-toolbar-title>
         <v-spacer/>

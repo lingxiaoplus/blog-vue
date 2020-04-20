@@ -15,7 +15,7 @@
     </v-toolbar>
 
           <v-data-table :headers="headers" :items="errorData" :page.sync="pageNum" :items-per-page="itemsPerPage"
-                        hide-default-footer class="elevation-1" @page-count="pageCount = $event">
+                        hide-default-footer class="elevation-1">
 
             <template v-slot:no-data>
               <v-btn color="primary">没有数据</v-btn>
@@ -39,7 +39,7 @@
             </template>
           </v-data-table>
 
-    <div class="text-center pt-2" v-if="pageCount > 1">
+    <div class="text-center pt-2" v-if="pageCount > 0">
       <v-pagination v-model="pageNum" :length="pageCount" :total-visible="7"></v-pagination>
     </div>
 
@@ -123,6 +123,7 @@
                     //this.desserts = resp.data.data;
                     //this.pageCount = resp.data.totalPage;
                     this.pageCount = resp.data.totalPage;
+                    console.log("log列表  pageCount: ", this.pageCount);
                 } catch (e) {
                     console.log("log列表失败", e.response);
                     this.snackbar = true;
