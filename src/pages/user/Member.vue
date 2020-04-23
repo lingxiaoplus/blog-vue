@@ -9,20 +9,29 @@
         <v-row>
           <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4" lg="3">
             <v-card>
-              <v-card-actions>
+              <v-list-item>
+                <v-list-item-avatar color="grey">
+                  <img :src="item.headPortrait" />
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="headline">{{ item.username }}</v-list-item-title>
+                  <!--<v-list-item-subtitle>by Kurt Wagner</v-list-item-subtitle>-->
+                </v-list-item-content>
+              </v-list-item>
+              <!--<v-card-actions>
                 <v-row>
-                  <v-col cols="6" sm="4" md="4">
+                  <v-col cols="6">
                     <v-avatar style="margin-left: 10px;">
-                      <img :src="item.headPortrait" alt="John">
+                      <img :src="item.headPortrait" />
                     </v-avatar>
                   </v-col>
-                  <v-row cols="6" sm="4" md="8">
+                  <v-col cols="6">
                     <v-card-title>
-                      <h5>{{ item.name }}</h5>
+                      {{ item.username }}
                     </v-card-title>
-                  </v-row>
+                  </v-col>
                 </v-row>
-              </v-card-actions>
+              </v-card-actions>-->
 
               <v-divider></v-divider>
               <v-list dense>
@@ -30,14 +39,37 @@
                   <v-list-item-content>昵称:</v-list-item-content>
                   <v-list-item-content class="align-end">{{ item.nickname }}</v-list-item-content>
                 </v-list-item>
+
                 <v-list-item>
                   <v-list-item-content>电话:</v-list-item-content>
                   <v-list-item-content class="align-end">{{ item.phoneNum }}</v-list-item-content>
                 </v-list-item>
+
                 <v-list-item>
                   <v-list-item-content>邮箱:</v-list-item-content>
                   <v-list-item-content class="align-end">{{ item.email }}</v-list-item-content>
                 </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-content>用户状态:</v-list-item-content>
+                  <v-list-item-content class="align-end">
+                    <v-switch class="ml-3" color="primary"></v-switch>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-content>用户角色:</v-list-item-content>
+                  <v-list-item-content class="align-end">
+                    <v-chip-group
+                      v-model="amenities"
+                      active-class="primary--text"
+                      mandatory
+                    >
+                      <v-chip v-for="role in item.roles" :key="role.id">{{role.roleName}}</v-chip>
+                    </v-chip-group>
+                  </v-list-item-content>
+                </v-list-item>
+
               </v-list>
             </v-card>
           </v-col>
@@ -75,7 +107,7 @@
                 <v-text-field label="密码" type="password" required v-model="editMember.password"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <div class="el-upload__text">点击上传头像</em></div>
+                <div class="el-upload__text"><em>点击上传头像</em></div>
                 <el-upload
                   action="http://api.lingxiaosuse.cn/upload/"
                   list-type="picture-card"
@@ -105,92 +137,95 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      itemsPerPageOptions: [4, 8, 12],
-      itemsPerPage: 4,
-      items: [],
-      editMember: {
-        email: "zs@163.com",
-        headPortrait: "",
-        id: "E61D65F673D54F68B0861025C69773DB",
-        name: "张三",
-        nickname: '',
-        phoneNum: "18888888888",
-        password: '',
-      },
-      loading: false,
-      openAddDialog: false,
-      dialogImageUrl: '',
-      dialogVisible: false,
-      snackbar: false,
-      snackbarText: '',
-      snackbarColor: 'primary',
-    }),
-    methods: {
-      async getMembers() {
-        this.loading = true;
-        try {
-          let response = await this.$http.get("/member/all", {
-            params:{
-              pageNum: 1,
-              pageSize: 5
-            }
-          });
-          console.log("获取人员列表", response.data);
-          this.items = response.data.data;
-        } catch (e) {
-          console.log("获取人员列表失败", e);
-        } finally {
-          this.loading = false;
+    export default {
+        data: () => ({
+            itemsPerPageOptions: [4, 8, 12],
+            itemsPerPage: 4,
+            items: [],
+            editMember: {
+                email: "zs@163.com",
+                headPortrait: "",
+                id: "E61D65F673D54F68B0861025C69773DB",
+                name: "张三",
+                nickname: '',
+                phoneNum: "18888888888",
+                password: '',
+            },
+            loading: false,
+            openAddDialog: false,
+            dialogImageUrl: '',
+            dialogVisible: false,
+            snackbar: false,
+            snackbarText: '',
+            snackbarColor: 'primary',
+            amenities: [],
+        }),
+        methods: {
+            async getMembers() {
+                let user_info = JSON.parse(localStorage.getItem("user_info"));
+                this.loading = true;
+                try {
+                    let response = await this.$http.get("/user/list", {
+                        params: {
+                            pageNum: 1,
+                            pageSize: 5,
+                            userId: user_info.userId,
+                        }
+                    });
+                    console.log("获取人员列表", response.data);
+                    this.items = response.data.data;
+                } catch (e) {
+                    console.log("获取人员列表失败", e);
+                } finally {
+                    this.loading = false;
+                }
+            },
+            async addMember() {
+                this.loading = true;
+                this.openAddDialog = false;
+                try {
+                    let response = await this.$http.post("/member", this.editMember);
+                    console.log("添加人员", response.data);
+                    this.showSnackBar("添加人员成功", true);
+                    this.getMembers();
+                } catch (e) {
+                    console.log("添加人员失败", e.response.data);
+                    this.showSnackBar("添加人员失败", false);
+                } finally {
+                    this.loading = false;
+                }
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            /**
+             * 图片预览
+             * @param {Object} file
+             */
+            handlePictureCardPreview(file) {
+                console.log("返回文件上传结果", file.response);
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+            handleSuccess(response, file, fileList) {
+                //文件上传成功时的钩子
+                console.log("文件上传成功时的钩子", response);
+                this.editMember.headPortrait = response;
+            },
+            handleError(err, file, fileList) {
+                console.log("文件上传失败时的钩子", err);
+                this.showSnackBar("文件上传失败", false);
+            },
+            showSnackBar(text, success) {
+                this.snackbar = true;
+                this.snackbarText = text;
+                this.snackbarColor = success ? "green" : "red";
+            },
+        },
+        created() {
+            this.getMembers();
         }
-      },
-      async addMember() {
-        this.loading = true;
-        this.openAddDialog = false;
-        try {
-          let response = await this.$http.post("/member", this.editMember);
-          console.log("添加人员", response.data);
-          this.showSnackBar("添加人员成功",true);
-          this.getMembers();
-        } catch (e) {
-          console.log("添加人员失败", e.response.data);
-          this.showSnackBar("添加人员失败",false);
-        } finally {
-          this.loading = false;
-        }
-      },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      /**
-       * 图片预览
-       * @param {Object} file
-       */
-      handlePictureCardPreview(file) {
-        console.log("返回文件上传结果",file.response);
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
-      handleSuccess(response, file, fileList){
-        //文件上传成功时的钩子
-        console.log("文件上传成功时的钩子",response);
-        this.editMember.headPortrait = response;
-      },
-      handleError(err, file, fileList){
-        console.log("文件上传失败时的钩子",err);
-        this.showSnackBar("文件上传失败",false);
-      },
-      showSnackBar(text,success){
-        this.snackbar = true;
-        this.snackbarText = text;
-        this.snackbarColor = success?"green":"red";
-      },
-    },
-    created() {
-      this.getMembers();
     }
-  }
 </script>
 
 <style>
