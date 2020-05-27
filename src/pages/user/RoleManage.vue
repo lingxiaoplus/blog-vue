@@ -338,6 +338,11 @@
                     } finally {
                         this.loading = false;
                     }
+                }else {
+                    this.$store.commit('showSnackbar', {
+                        color: 'info',
+                        text: "请选择角色"
+                    });
                 }
             },
             getUnixTime(dateStr) {

@@ -2,7 +2,7 @@
   <div>
 
     <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
-                  hide-default-footer class="elevation-1" @page-count="pageCount = $event" >
+                  hide-default-footer class="elevation-1"  >
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>文章管理</v-toolbar-title>

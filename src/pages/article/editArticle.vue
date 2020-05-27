@@ -69,7 +69,7 @@
                     tile
                     @click="saveArticleToDrafts"
                   >
-                    保存草稿
+                    保存
                   </v-btn>
                   <v-btn class="ma-2" tile @click="preview">
                     预览
