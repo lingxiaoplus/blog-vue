@@ -310,6 +310,9 @@
                         })
                         this.dialogImageUrl = response.data.data.headImage;
                     }
+                    this.label = response.data.data.labels.map((item)=>{
+                        return item.id;
+                    })
                 } catch (e) {
                     console.log("查询文章失败", e.response.data);
                     this.snackbar = true;

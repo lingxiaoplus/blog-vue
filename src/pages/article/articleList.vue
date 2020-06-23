@@ -25,6 +25,15 @@
 
         </v-toolbar>
       </template>
+
+      <template v-slot:item.labels="{ item }">
+        <v-chip-group
+          mandatory
+        >
+          <v-chip  v-for="label in item.labels" :key="label.id" color="primary">{{label.description}}</v-chip>
+        </v-chip-group>
+      </template>
+
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary"  @click="editItem(item)">
           编辑<v-icon right dark small>
@@ -85,7 +94,7 @@
                     },
                     {
                         text: '标签',
-                        value: 'tables'
+                        value: 'labels'
                     },
                     {
                         text: '更新时间',
