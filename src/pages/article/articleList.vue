@@ -28,9 +28,9 @@
 
       <template v-slot:item.labels="{ item }">
         <v-chip-group
-          mandatory
+          mandatory v-for="label in item.labels" :key="label.id"
         >
-          <v-chip  v-for="label in item.labels" :key="label.id" color="primary">{{label.description}}</v-chip>
+          <v-chip :color="getColor(label.id)" dark text-color="white">{{label.description}}</v-chip>
         </v-chip-group>
       </template>
 
@@ -182,6 +182,12 @@
               this.loading = false;
             }
           },
+            getColor (id) {
+                if (id === 0) return 'red';
+                else if (id === 1) return 'orange';
+                else if (id === 2) return 'blue';
+                else return 'green'
+            },
         },
         mounted() {
           this.getArticles();
