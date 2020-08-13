@@ -32,6 +32,8 @@ export default new Router({
 
         route("/front/friendLink",'/front/friendLink',"friendLink"),
         route("/front/about",'/front/about',"about"),
+        route("/front/tags",'/front/tags',"tags"),
+        route("/front/category",'/front/category',"category"),
       ]
     },
     {

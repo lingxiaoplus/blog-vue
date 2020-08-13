@@ -1,19 +1,57 @@
 <template>
   <v-app  id="inspire">
-    <v-card class="overflow-hidden" tile>
-      <v-card-actions >
-        <v-flex class="d-flex" style="align-items: center; justify-content: center">
-          <p class="font-weight-medium" style="font-size: 26px">关于</p>
-        </v-flex>
-      </v-card-actions>
-      <v-card-text>
-        <markdown :mdValuesP="content" :fullPageStatusP="false" :editStatusP="false"
-                  :previewStatusP="true"
-                  :navStatusP="false" :icoStatusP="false">
-        </markdown>
-      </v-card-text>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <v-sheet>
+      <v-flex class="d-flex flex-column align-center justify-center">
+        <v-avatar size="160">
+          <img src="../../assets/dog.gif">
+        </v-avatar>
+        <p class="font-weight-medium" style="font-size: 26px">凌霄</p>
+        <p class="font-weight-medium" style="font-size: 14px">java开发工程师</p>
+        <p class="font-weight-medium" style="font-size: 12px">习惯沉默而不停止思考，无力表达却不曾失去态度</p>
 
-    </v-card>
+        <v-flex class="d-flex align-center justify-center flex-row mt-4">
+          <span class="material-icons">card_giftcard</span>
+          <span class="font-weight-medium px-2" style="font-size: 26px">我的项目</span>
+        </v-flex>
+        <v-row no-gutters>
+          <v-col v-for="project in projectList" :key="project.id" cols="12" sm="4">
+            <v-flex class="d-flex flex-column align-center justify-center pa-6 ma-4">
+              <v-avatar size="160">
+                <img
+                  :src="project.icon"
+                />
+              </v-avatar>
+              <p class="font-weight-medium" style="font-size: 14px">{{project.name}}</p>
+              <p class="font-weight-medium" style="font-size: 14px">{{project.desc}}</p>
+            </v-flex>
+          </v-col>
+        </v-row>
+
+
+        <v-flex class="d-flex align-center justify-center flex-row mt-4">
+          <span class="material-icons">build</span>
+          <span class="font-weight-medium px-2" style="font-size: 26px">我的技能</span>
+        </v-flex>
+
+        <v-row no-gutters>
+          <v-col v-for="technology in technologyList" :key="technology.id" cols="12" sm="6">
+            <v-flex class="d-flex flex-column align-center justify-center pa-6 ma-4" style="min-width: 400px">
+              <v-progress-linear height="25" v-model="technology.value">
+                <strong>{{technology.name}}:{{ Math.ceil(technology.value) }}%</strong>
+              </v-progress-linear>
+            </v-flex>
+          </v-col>
+        </v-row>
+
+        <v-card-text>
+          <markdown :mdValuesP="content" :fullPageStatusP="false" :editStatusP="false"
+                    :previewStatusP="true"
+                    :navStatusP="false" :icoStatusP="false">
+          </markdown>
+        </v-card-text>
+      </v-flex>
+    </v-sheet>
 
 
   </v-app>
@@ -26,6 +64,44 @@
         name: "about",
         data() {
             return{
+                bgGifUrl: require("../../assets/dog.gif"),
+                projectList:[
+                    {
+                        id: 1,
+                        icon: '../../assets/logo.png',
+                        name: '个人博客系统',
+                        desc: '一个采用 Material Design 和响应式设计的 Hexo 博客主题。',
+                    },
+                    {
+                        id: 2,
+                        icon: '../../assets/logo.png',
+                        name: 'BiliBili',
+                        desc: '仿照B站设计的系统。',
+                    },
+                    {
+                        id: 3,
+                        icon: '../../assets/logo.png',
+                        name: '个人博客系统',
+                        desc: '一个采用 Material Design 和响应式设计的 Hexo 博客主题。',
+                    }
+                ],
+                technologyList:[
+                    {
+                        id: 1,
+                        name:'java',
+                        value:33.1
+                    },
+                    {
+                        id: 2,
+                        name:'javascript',
+                        value:13.1
+                    },
+                    {
+                        id: 3,
+                        name:'android',
+                        value:91.1
+                    }
+                ],
                 content: "#### 简介\n" +
                     "\n" +
                     "Hello，我是凌霄。这是我的照片：\n" +

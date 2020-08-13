@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
 
     <v-navigation-drawer v-model="drawer" app temporary>
       <v-row>
@@ -37,51 +36,154 @@
       </v-row>
 
     </v-navigation-drawer>
-    <v-card class="overflow-hidden" tile>
 
-      <v-toolbar color="primary" dark
-                 shrink-on-scroll
-                 fade-img-on-scroll>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>凌霄的博客</v-toolbar-title>
-        <v-spacer/>
+    <v-app-bar color="primary" dark app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>凌霄的博客</v-toolbar-title>
+      <v-spacer/>
 
-        <v-row align="center" style="max-width: 400px" v-if="showSearch">
-          <v-text-field :autofocus="showSearch" :append-icon-cb="() => {}" placeholder="搜索文章" single-line color="white"
-                        hide-details/>
-        </v-row>
-        <v-btn icon @click="showSearch = !showSearch">
-          <v-icon>mdi-magnify</v-icon>
+      <v-row align="center" style="max-width: 400px" v-if="showSearch">
+        <v-text-field :autofocus="showSearch" :append-icon-cb="() => {}" placeholder="搜索文章" single-line color="white"
+                      hide-details/>
+      </v-row>
+
+      <router-link to="articleList">
+        <v-btn
+          color="primary" large depressed
+          class="white--text"
+        >
+          <v-icon left dark>mdi-home</v-icon>
+          首页
         </v-btn>
+      </router-link>
+      <router-link to="tags">
+        <v-btn
+          color="primary" large depressed
+          class="white--text"
+        >
+          <v-icon left dark>mdi-cast</v-icon>
+          标签
+        </v-btn>
+      </router-link>
+      <router-link to="category">
+        <v-btn
+          color="primary" large depressed
+          class="white--text"
+        >
+          <v-icon left dark>mdi-memory</v-icon>
+          分类
+        </v-btn>
+      </router-link>
+
+      <router-link to="category">
+        <v-btn
+          color="primary" large depressed
+          class="white--text"
+        >
+          <v-icon left dark>mdi-folder-open</v-icon>
+          归档
+        </v-btn>
+      </router-link>
+
+      <router-link to="friendLink">
+        <v-btn
+          color="primary" large depressed
+          class="white--text"
+        >
+          <v-icon left dark>mdi-link-variant</v-icon>
+          友链
+        </v-btn>
+      </router-link>
+
+      <router-link to="about">
+        <v-btn
+          color="primary" large depressed
+          class="white--text"
+        >
+          <v-icon left dark>mdi-information-variant</v-icon>
+          关于
+        </v-btn>
+      </router-link>
+
+      <v-btn icon @click="showSearch = !showSearch">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
 
 
-        <v-menu offset-y v-if="false">
-          <template v-slot:activator="{ on }">
-            <v-btn icon dark v-on="on">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(item, index) in menuList"
-              :key="index"
-              @click="menuClick(item)"
-            >
-              <v-list-item-title class="px-4">{{ item.name }}</v-list-item-title>
-            </v-list-item>
+      <v-menu offset-y v-if="false">
+        <template v-slot:activator="{ on }">
+          <v-btn icon dark v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in menuList"
+            :key="index"
+            @click="menuClick(item)"
+          >
+            <v-list-item-title class="px-4">{{ item.name }}</v-list-item-title>
+          </v-list-item>
 
-          </v-list>
-        </v-menu>
+        </v-list>
+      </v-menu>
 
-      </v-toolbar>
+    </v-app-bar>
 
-    </v-card>
+    <v-main app>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
 
+    <v-footer app
+      dark
+      padless
+    >
+      <v-card
+        flat
+        tile
+        class="primary lighten-1 white--text text-center" style="width: 100%;"
+      >
+        <v-card-text>
+          <v-btn
+            v-for="icon in icons"
+            :key="icon"
+            class="mx-4 white--text"
+            icon
+          >
+            <v-icon size="24px">{{ icon }}</v-icon>
+          </v-btn>
+        </v-card-text>
 
-    <div>
-      <router-view />
-    </div>
+        <v-card-text class="white--text pt-0">
+          站点总字数: 194.7k 字 |  总访问量: 38509 次 |  总访问人数: 7317 人 本站已安全运行 1 年 329 天 15 小时 15 分钟 38 秒
+        </v-card-text>
 
+        <v-divider></v-divider>
+
+        <v-card-text class="white--text">
+          Copyright © 2018 -  {{ new Date().getFullYear() }} — <strong> lingxiao | Powered by vuetify</strong>
+        </v-card-text>
+      </v-card>
+    </v-footer>
+
+   <!-- <div style="position:absolute;width: 100%">
+      <vue-particles  :particleOpacity="0.7"
+                      linesColor="#ffffff"
+                      shapeType="circle"
+                      :particleSize="5"
+                      :linesWidth="2"
+                      :lineLinked="true"
+                      :lineOpacity="0.4"
+                      :linesDistance="150"
+                      :moveSpeed="3"
+                      :hoverEffect="true"
+                      hoverMode="grab"
+                      :clickEffect="true"
+                      clickMode="push"  color="#ef0078" style="z-index:0;" :particlesNumber="100">
+      </vue-particles>
+    </div>-->
   </v-app>
 </template>
 
@@ -89,7 +191,12 @@
     export default {
         data() {
             return {
-
+                icons: [
+                    'mdi-sina-weibo',
+                    'mdi-twitter',
+                    'mdi-qqchat',
+                    'mdi-wechat',
+                ],
                 drawerList: [
                     {
                         name: "首页",
