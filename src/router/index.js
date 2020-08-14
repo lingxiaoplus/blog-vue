@@ -34,6 +34,7 @@ export default new Router({
         route("/front/about",'/front/about',"about"),
         route("/front/tags",'/front/tags',"tags"),
         route("/front/category",'/front/category',"category"),
+        route("/front/timeline",'/front/timeline',"timeline"),
       ]
     },
     {

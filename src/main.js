@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import vuetify from '@/plugins/vuetify' // path to vuetify export
 import store from '@/store/index'
+import vuetimeline from "@growthbunker/vuetimeline";
 
 import axios from 'axios'
 import config from './config'
@@ -54,7 +55,7 @@ axios.interceptors.response.use(function (response) {
 
 Vue.prototype.$http = axios;// 将axios添加到 Vue的原型，这样一切vue实例都可以使用该对象
 Vue.config.productionTip = false
-
+Vue.use(vuetimeline);
 
 import { Upload, Dialog ,Table,
   TableColumn,Button,Pagination,Input,Message,Link,Popover,TimeSelect,Image,Switch} from 'element-ui'

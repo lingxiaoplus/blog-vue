@@ -34,6 +34,17 @@
           <span class="font-weight-medium px-2" style="font-size: 26px">我的技能</span>
         </v-flex>
 
+        <v-sheet class="v-sheet--offset ma-2" color="cyan" elevation="12" min-width="900px" max-width="calc(100% - 32px)"
+        >
+          <v-sparkline
+            :labels="labels"
+            :value="value"
+            color="white"
+            line-width="2"
+            padding="16"
+          ></v-sparkline>
+        </v-sheet>
+
         <v-row no-gutters>
           <v-col v-for="technology in technologyList" :key="technology.id" cols="12" sm="6">
             <v-flex class="d-flex flex-column align-center justify-center pa-6 ma-4" style="min-width: 400px">
@@ -102,6 +113,8 @@
                         value:91.1
                     }
                 ],
+                labels: ['javascript', 'java', 'android', 'html5', 'css', 'sql', '程序架构', 'vue',],
+                value: [200, 675, 410, 390, 310, 460, 250, 240,],
                 content: "#### 简介\n" +
                     "\n" +
                     "Hello，我是凌霄。这是我的照片：\n" +
@@ -133,5 +146,7 @@
 </script>
 
 <style scoped>
-
+  .v-sheet--offset {
+    position: relative;
+  }
 </style>

@@ -2,65 +2,36 @@
   <div class="ma-4">
     <v-card background-color="transparent" tile elevation="0" min-width="200px" class="d-flex pa-4" style="align-items: center; justify-content: center">
       <v-card-actions>
-        <v-flex class="d-flex" style="align-items: center; justify-content: center">
+        <v-flex class="d-flex align-center justify-center flex-row mt-4">
+          <!--<span class="material-icons">link_variant</span>-->
           <p class="font-weight-medium" style="font-size: 26px">友情链接</p>
         </v-flex>
       </v-card-actions>
     </v-card>
 
-    <v-list subheader>
-      <v-subheader>Recent chat</v-subheader>
+    <v-row no-gutters>
+      <v-col v-for="item in items" :key="item.title" cols="12" sm="3">
+        <v-card class="ma-2"  elevation="3">
+          <v-flex class="d-flex grow flex-row">
+            <v-sheet elevation="10" class="d-flex align-center justify-center" shaped style="margin-top: -20px;margin-left: 20px;">
+              <v-avatar size="60">
+                <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
+              </v-avatar>
+            </v-sheet>
+            <v-flex class="flex-column ma-2">
+              <div>{{item.name}}</div>
+              <div>{{item.description}}</div>
+            </v-flex>
 
-      <v-list-item
-        v-for="item in items"
-        :key="item.title"
-        @click=""
-      >
-        <v-list-item-content>
-          <v-list-item-title>
-            <el-link :href="item.link" type="primary">{{item.name}}</el-link>
-          </v-list-item-title>
+          </v-flex>
 
-        </v-list-item-content>
-
-        <v-list-item-content>
-          <v-list-item-title v-text="item.description"></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-
-    <v-card
-      class="mx-auto"
-      max-width="400"
-    >
-      <v-flex class="d-flex grow flex-wrap">
-        <v-card color="#385F73">
-
+          <v-card-actions>
+            <!--<el-link :href="item.link" type="primary">{{item.name}}</el-link>-->
+            <v-btn color="primary" text>传送门</v-btn>
+          </v-card-actions>
         </v-card>
-      </v-flex>
-      <v-card-text class="text--primary">
-        <div>Whitehaven Beach</div>
-
-        <div>Whitsunday Island, Whitsunday Islands</div>
-      </v-card-text>
-
-      <v-card-actions>
-        <v-btn
-          color="orange"
-          text
-        >
-          Share
-        </v-btn>
-
-        <v-btn
-          color="orange"
-          text
-        >
-          Explore
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-
+      </v-col>
+    </v-row>
 
     <v-card tile elevation="0">
       <v-card-title>交换要求</v-card-title>
@@ -80,6 +51,21 @@
         data() {
             return {
                 items: [
+                    {
+                        link: "",
+                        name: 'Jason Oner',
+                        description: 'https://cdn.vuetifyjs.com/images/lists/1.jpg'
+                    },
+                    {
+                        link: "",
+                        name: 'Jason Oner',
+                        description: 'https://cdn.vuetifyjs.com/images/lists/1.jpg'
+                    },
+                    {
+                        link: "",
+                        name: 'Jason Oner',
+                        description: 'https://cdn.vuetifyjs.com/images/lists/1.jpg'
+                    },
                     {
                         link: "",
                         name: 'Jason Oner',

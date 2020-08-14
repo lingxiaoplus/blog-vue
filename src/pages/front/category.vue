@@ -1,7 +1,5 @@
 <template>
   <div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <v-card :elevation="0">
       <v-card-actions >
         <v-flex class="d-flex" style="align-items: center; justify-content: center;flex-direction: row">

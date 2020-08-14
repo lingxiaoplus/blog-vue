@@ -5,29 +5,29 @@
       <v-flex xs10 md12 class="pa-4">
         <v-layout row wrap>
 
-          <v-col class="pa-2" cols="3" v-for="(item,index) in cardList" :key="item.name" >
-             <v-scale-transition>
-               <div v-if="item.show">
-            <v-hover v-slot:default="{ hover }" >
+          <v-col class="pa-2" cols="3" v-for="(item,index) in cardList" :key="item.name">
+            <v-scale-transition>
+              <div v-if="item.show">
+                <v-hover v-slot:default="{ hover }">
 
-              <v-card :elevation="hover?6:2" tile >
+                  <v-card :elevation="hover?6:2" tile>
 
-                <v-row style="align-items: center" >
-                  <v-col cols="6">
-                    <v-img class="mx-4" :src="item.src" width="40px" height="40px">
-                    </v-img>
-                  </v-col>
-                  <v-col cols="6" class="text--secondary">
-                    <v-card-title class="px-4">{{item.number}}</v-card-title>
-                    <v-card-subtitle class="px-4">{{item.name}}</v-card-subtitle>
-                  </v-col>
-                </v-row>
+                    <v-row style="align-items: center">
+                      <v-col cols="6">
+                        <v-img class="mx-4" :src="item.src" width="40px" height="40px">
+                        </v-img>
+                      </v-col>
+                      <v-col cols="6" class="text--secondary">
+                        <v-card-title class="px-4">{{item.number}}</v-card-title>
+                        <v-card-subtitle class="px-4">{{item.name}}</v-card-subtitle>
+                      </v-col>
+                    </v-row>
 
-              </v-card>
+                  </v-card>
 
-            </v-hover>
-            </div>
-          </v-scale-transition>
+                </v-hover>
+              </div>
+            </v-scale-transition>
           </v-col>
 
         </v-layout>
@@ -156,7 +156,7 @@
                         data: [820, 932, 901, 934, 1290, 1330, 1320],
                         type: 'line',
                         smooth: true
-                    },{
+                    }, {
                         data: [820, 932, 901, 934, 120, 1220, 1120],
                         type: 'line',
                         areaStyle: {}
@@ -167,11 +167,11 @@
         },
         //html加载完成后执行
         mounted() {
-          this.cardList.forEach((item,index)=>{
-            setTimeout(()=>{
-              item.show = true;
-            },(index + 1)*200)
-          })
+            this.cardList.forEach((item, index) => {
+                setTimeout(() => {
+                    item.show = true;
+                }, (index + 1) * 200)
+            });
             this.getStatistics();
             this.$nextTick(() => {
                 const line = echarts.init(this.$refs.line, this.theme);
@@ -232,8 +232,8 @@
 
             })
         },
-        methods:{
-            async getStatistics(){
+        methods: {
+            async getStatistics() {
                 try {
                     let resp = await this.$http.get("/statistics/article/week");
                     console.log(">>", resp.data.data);

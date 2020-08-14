@@ -1,6 +1,7 @@
 <template>
   <v-app id="inspire">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <v-navigation-drawer v-model="drawer" app temporary>
       <v-row>
         <v-card tile elevation="4">
@@ -75,7 +76,7 @@
         </v-btn>
       </router-link>
 
-      <router-link to="category">
+      <router-link to="timeline">
         <v-btn
           color="primary" large depressed
           class="white--text"
@@ -131,15 +132,12 @@
     </v-app-bar>
 
     <v-main app>
-      <v-container fluid>
+      <v-container fluid @click="onOuterClick">
         <router-view></router-view>
       </v-container>
     </v-main>
 
-    <v-footer app
-      dark
-      padless
-    >
+    <v-footer app dark fixed padless absolute>
       <v-card
         flat
         tile
@@ -157,7 +155,7 @@
         </v-card-text>
 
         <v-card-text class="white--text pt-0">
-          站点总字数: 194.7k 字 |  总访问量: 38509 次 |  总访问人数: 7317 人 本站已安全运行 1 年 329 天 15 小时 15 分钟 38 秒
+          站点总字数: 194.7k 字 |  总访问量: 38509 次 |  总访问人数: 7317 人 本站已安全运行 {{runningTime}}
         </v-card-text>
 
         <v-divider></v-divider>
@@ -188,6 +186,7 @@
 </template>
 
 <script>
+    import colorFul from '@/plugins/click-colorful'
     export default {
         data() {
             return {
@@ -227,6 +226,7 @@
                     }
                     ],
                 drawer: null,
+                runningTime: ''
             }
         },
         watch: {
@@ -241,9 +241,45 @@
             },
             onDrawerClick(path){
                 this.$router.push(path);
-            }
+            },
+            initClickColorful(x,y){
+                var params = {
+                    colors: ["#EC407A", "#66BB6A", "#FFEE58", "#26C6DA"], // 自定义颜色
+                    size: 30, // 小球大小
+                    maxCount: 30, // 点击一次出现多少个球
+                }
+                //params不传，则走默认配置
+                var color = new colorBall(params);
+                // 绽放一次
+                color.fly(x, y)
+                // 绽放5次,间隔300ms
+                //color.fly(x, y, 2, 200)
+            },
+            onOuterClick(e){
+                console.log(">>>>>>>>>>>>",e);
+                this.initClickColorful(e.clientX,e.clientY)
+            },
+            show_date_time(){
+                window.setTimeout(()=>{ this.show_date_time() }, 1000);
+                let BirthDay = new Date("08-14-2020 12:12:24");//建站日期
+                let today= new Date();
+                let timeold = (today.getTime()-BirthDay.getTime());
+                let sectimeold=timeold/1000
+                let secondsold = Math.floor(sectimeold);
+                const msPerDay=24*60*60*1000
+                let e_daysold=timeold/msPerDay
+                let daysold=Math.floor(e_daysold);
+                let e_hrsold=(daysold-e_daysold)*-24;
+                let hrsold=Math.floor(e_hrsold);
+                let e_minsold=(hrsold-e_hrsold)*-60;
+                let minsold=Math.floor((hrsold-e_hrsold)*-60);
+                let seconds=Math.floor((minsold-e_minsold)*-60);
+                this.runningTime = daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒" ;
+          },
         },
-
+        mounted() {
+            this.show_date_time();
+        }
     }
 </script>
 
