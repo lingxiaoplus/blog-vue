@@ -1,35 +1,34 @@
 <template>
   <div class="ma-4">
-    <v-card background-color="transparent" tile elevation="0" min-width="200px" class="d-flex pa-4" style="align-items: center; justify-content: center">
+    <!--<v-card background-color="transparent" tile elevation="0" min-width="200px" class="d-flex pa-4" style="align-items: center; justify-content: center">
       <v-card-actions>
         <v-flex class="d-flex align-center justify-center flex-row mt-4">
-          <!--<span class="material-icons">link_variant</span>-->
-          <p class="font-weight-medium" style="font-size: 26px">友情链接</p>
+          &lt;!&ndash;<span class="material-icons">link_variant</span>&ndash;&gt;
+          <v-icon medium>mdi-link</v-icon>
+          <p class="font-weight-medium">友情链接</p>
         </v-flex>
       </v-card-actions>
-    </v-card>
+    </v-card>-->
+    <v-flex class="d-flex align-center justify-center flex-row mt-4">
+      <!--<v-icon medium>mdi-lightbulb-on-outline</v-icon>-->
+      <p class="font-weight-medium px-2" style="font-size: 26px">友情链接</p>
+    </v-flex>
 
     <v-row no-gutters>
-      <v-col v-for="item in items" :key="item.title" cols="12" sm="3">
-        <v-card class="ma-2"  elevation="3">
-          <v-flex class="d-flex grow flex-row">
-            <v-sheet elevation="10" class="d-flex align-center justify-center" shaped style="margin-top: -20px;margin-left: 20px;">
-              <v-avatar size="60">
-                <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
-              </v-avatar>
-            </v-sheet>
-            <v-flex class="flex-column ma-2">
-              <div>{{item.name}}</div>
-              <div>{{item.description}}</div>
-            </v-flex>
-
-          </v-flex>
-
-          <v-card-actions>
-            <!--<el-link :href="item.link" type="primary">{{item.name}}</el-link>-->
-            <v-btn color="primary" text>传送门</v-btn>
-          </v-card-actions>
+      <v-col v-for="(item,index) in items" :key="item.title" cols="12" sm="3">
+        <v-card class="ma-2" elevation="4" dark :color="colorList[index]">
+          <div class="d-flex flex-no-wrap justify-space-between">
+            <div>
+              <v-card-title class="headline" v-text="item.name"></v-card-title>
+              <v-card-subtitle v-text="item.description"></v-card-subtitle>
+              <v-btn color="white" text>传送门</v-btn>
+            </div>
+            <v-avatar class="ma-3" size="125" tile>
+              <v-img :src="item.src"></v-img>
+            </v-avatar>
+          </div>
         </v-card>
+
       </v-col>
     </v-row>
 
@@ -72,6 +71,7 @@
                         description: 'https://cdn.vuetifyjs.com/images/lists/1.jpg'
                     }
                 ],
+                colorList: this.$uiUtil.colorList,
             }
         },
         methods:{

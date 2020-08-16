@@ -151,7 +151,7 @@
                 on: false,
                 rules: {
                     base: value => value.length > 0 || '请填写内容',
-                    content: value => value.length < 10 || '标签过长',
+                    content: value => value.length < 20 || '标签过长',
                 }
             }
         },
@@ -191,7 +191,7 @@
             async getLabels() {
                 try {
                     this.loading = true;
-                    let response = await this.$http.get("/label");
+                    let response = await this.$http.get("/label?pageNum=" + this.pageNum);
                     console.log("response : ", response.data);
                     this.desserts = response.data.data;
                     //let page = parseInt(response.data.total / this.itemsPerPage) + 1;

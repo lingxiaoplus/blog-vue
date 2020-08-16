@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <v-navigation-drawer v-model="drawer" app temporary>
+    <!--<v-navigation-drawer v-model="drawer" app temporary>
       <v-row>
         <v-card tile elevation="4">
           <v-img src="https://source.unsplash.com/random/600x400" height="194" class="header">
@@ -12,8 +12,8 @@
                   <img src="https://cdn.vuetifyjs.com/images/john.jpg"
                        alt="John">
                 </v-avatar>
-                <v-list-item-title class="headline white--text">haha</v-list-item-title>
-                <v-list-item-subtitle class="white--text">习惯沉默而不停止思考，无力表达却不曾失去态度</v-list-item-subtitle>
+                <v-list-item-title class="headline white&#45;&#45;text">haha</v-list-item-title>
+                <v-list-item-subtitle class="white&#45;&#45;text">习惯沉默而不停止思考，无力表达却不曾失去态度</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-img>
@@ -36,10 +36,14 @@
 
       </v-row>
 
-    </v-navigation-drawer>
+    </v-navigation-drawer>-->
 
     <v-app-bar color="primary" dark app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon class="ml-2">
+        <v-avatar size="36">
+          <img src="../../assets/ic_launcher_round.png" alt="John">
+        </v-avatar>
+      </v-app-bar-nav-icon>
       <v-toolbar-title>凌霄的博客</v-toolbar-title>
       <v-spacer/>
 
@@ -48,68 +52,22 @@
                       hide-details/>
       </v-row>
 
-      <router-link to="articleList">
+      <router-link v-for="item in drawerList" :key="item.path" :to="item.path">
         <v-btn
           color="primary" large depressed
           class="white--text"
         >
-          <v-icon left dark>mdi-home</v-icon>
-          首页
-        </v-btn>
-      </router-link>
-      <router-link to="tags">
-        <v-btn
-          color="primary" large depressed
-          class="white--text"
-        >
-          <v-icon left dark>mdi-cast</v-icon>
-          标签
-        </v-btn>
-      </router-link>
-      <router-link to="category">
-        <v-btn
-          color="primary" large depressed
-          class="white--text"
-        >
-          <v-icon left dark>mdi-memory</v-icon>
-          分类
-        </v-btn>
-      </router-link>
-
-      <router-link to="timeline">
-        <v-btn
-          color="primary" large depressed
-          class="white--text"
-        >
-          <v-icon left dark>mdi-folder-open</v-icon>
-          归档
-        </v-btn>
-      </router-link>
-
-      <router-link to="friendLink">
-        <v-btn
-          color="primary" large depressed
-          class="white--text"
-        >
-          <v-icon left dark>mdi-link-variant</v-icon>
-          友链
-        </v-btn>
-      </router-link>
-
-      <router-link to="about">
-        <v-btn
-          color="primary" large depressed
-          class="white--text"
-        >
-          <v-icon left dark>mdi-information-variant</v-icon>
-          关于
+          <v-icon left dark>{{item.icon}}</v-icon>
+          {{item.name}}
         </v-btn>
       </router-link>
 
       <v-btn icon @click="showSearch = !showSearch">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-
+      <v-btn icon dark @click="change2LightOrDark">
+        <v-icon>{{lightOrDarkIcon}}</v-icon>
+      </v-btn>
 
       <v-menu offset-y v-if="false">
         <template v-slot:activator="{ on }">
@@ -144,13 +102,8 @@
         class="primary lighten-1 white--text text-center" style="width: 100%;"
       >
         <v-card-text>
-          <v-btn
-            v-for="icon in icons"
-            :key="icon"
-            class="mx-4 white--text"
-            icon
-          >
-            <v-icon size="24px">{{ icon }}</v-icon>
+          <v-btn v-for="icon in footerIcon" :key="icon.path" class="mx-4 white--text" icon @click="onFooterClick(icon.path,icon.param)">
+            <v-icon size="24px">{{ icon.icon }}</v-icon>
           </v-btn>
         </v-card-text>
 
@@ -190,30 +143,60 @@
     export default {
         data() {
             return {
-                icons: [
-                    'mdi-sina-weibo',
-                    'mdi-twitter',
-                    'mdi-qqchat',
-                    'mdi-wechat',
+                footerIcon:[
+                    {
+                        path: 'https://weibo.com/lingxiao123/',
+                        icon: 'mdi-sina-weibo',
+                        param: ''
+                    },
+                    {
+                        path: 'http://',
+                        icon: 'mdi-twitter',
+                        param: ''
+                    },
+                    {
+                        path: 'http://b.qq.com/webc.htm?new=0&sid=1083514716&o=凌霄的博客&q=7',
+                        icon: 'mdi-qqchat',
+                        param: 'height=502, width=644,toolbar=no,scrollbars=no,menubar=no,status=no'
+                    },
+                    {
+                        path: '',
+                        icon: 'mdi-wechat',
+                        param: ''
+                    }
                 ],
                 drawerList: [
                     {
                         name: "首页",
-                        icon: "home",
+                        icon: "mdi-home",
                         path: "articleList"
                     },
                     {
-                        name: "友情链接",
-                        icon: "link-variant",
+                        name: "标签",
+                        icon: "mdi-label-multiple",
+                        path: "tags"
+                    },
+                    {
+                        name: "分类",
+                        icon: "mdi-shape",
+                        path: "category"
+                    },
+                    {
+                        name: "归档",
+                        icon: "mdi-folder-open",
+                        path: "timeline"
+                    },
+                    {
+                        name: "友链",
+                        icon: "mdi-link-variant",
                         path: "friendLink"
                     },
                     {
                         name: "关于",
-                        icon: "information-variant",
+                        icon: "mdi-information-variant",
                         path: "about"
                     }
                 ],
-
                 showSearch: false,
                 menuList: [
                     {
@@ -226,7 +209,8 @@
                     }
                     ],
                 drawer: null,
-                runningTime: ''
+                runningTime: '',
+                lightOrDarkIcon: 'mdi-brightness-6',
             }
         },
         watch: {
@@ -235,7 +219,22 @@
             }
         },
         methods: {
+            onFooterClick(path,param){
+                window.open(path,"_blank",param)
+            },
+            change2LightOrDark(){
+                if(this.lightOrDarkIcon === 'mdi-brightness-6'){
+                    this.lightOrDarkIcon = 'mdi-brightness-4';
+                    this.$vuetify.theme.dark = true;
+                }else {
+                    this.lightOrDarkIcon = 'mdi-brightness-6';
+                    let themeCache = localStorage.getItem("theme_style");
+                    let themeStyle = JSON.parse(themeCache);
+                    this.$vuetify.theme.dark = false;
+                    this.$vuetify.theme.themes.light.primary = themeStyle.color;
+                }
 
+            },
             menuClick(item) {
                 this.$router.push(item.url);
             },
@@ -261,7 +260,7 @@
             },
             show_date_time(){
                 window.setTimeout(()=>{ this.show_date_time() }, 1000);
-                let BirthDay = new Date("08-14-2020 12:12:24");//建站日期
+                let BirthDay = new Date("08-14-2018 12:12:24");//建站日期
                 let today= new Date();
                 let timeold = (today.getTime()-BirthDay.getTime());
                 let sectimeold=timeold/1000
@@ -276,9 +275,31 @@
                 let seconds=Math.floor((minsold-e_minsold)*-60);
                 this.runningTime = daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒" ;
           },
+            async getTheme() {
+                try {
+                    let resp = await this.$http.get(`/theme/1`);
+                    let themeStyle = resp.data.data;
+                    this.$vuetify.theme.themes.light.primary = themeStyle.color;
+                    localStorage.setItem("theme_style", JSON.stringify(themeStyle));
+                    console.log("获取主题信息", themeStyle);
+                } catch (e) {
+                    console.log("获取主题信息失败", e);
+                } finally {
+
+                }
+            },
         },
         mounted() {
+            let date = new Date();
+            let hours = date.getHours();
+            if(hours > 19){
+                this.lightOrDarkIcon = 'mdi-brightness-4';
+                this.$vuetify.theme.dark = true;
+            }else {
+                this.getTheme()
+            }
             this.show_date_time();
+
         }
     }
 </script>

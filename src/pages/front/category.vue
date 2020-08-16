@@ -3,7 +3,7 @@
     <v-card :elevation="0">
       <v-card-actions >
         <v-flex class="d-flex" style="align-items: center; justify-content: center;flex-direction: row">
-          <span class="material-icons">loyalty</span>
+          <v-icon medium>mdi-shape</v-icon>
           <span class="font-weight-medium" style="font-size: 26px">文章分类</span>
         </v-flex>
       </v-card-actions>
@@ -15,8 +15,8 @@
                 column
                 active-class="primary--text"
               >
-                <v-chip v-for="(tag,index) in tags" :key="tag" dark :color="colorList[index]" label class="ma-2">
-                  {{ tag }}
+                <v-chip v-for="(tag,index) in tags" :key="tag.id" dark :color="colorList[index]" label class="ma-2">
+                  {{ tag.name }}
                 </v-chip>
               </v-chip-group>
             </v-sheet>
@@ -44,22 +44,12 @@
         data() {
             return{
                 theme: "macarons",
-                tags: [
-                    '前端',
-                    '数据库','信息技术','软件工程','docker'
-                ],
+                tags: [],
                 colorList:['primary','secondary','green','red','orange','indigo',
                     'blue','cyan','teal','lime','yellow','purple','light-blue'
                     ,'secondary','green','cyan','teal','lime',',blue','cyan','teal','lime','yellow','purple'
-                ]
-            }
-        },
-        mounted(){
-            this.popcloud()
-        },
-        methods:{
-            popcloud(){
-                let option = {
+                ],
+                option : {
                     title: {
                         text: '基础雷达图'
                     },
@@ -101,10 +91,43 @@
                             }
                         ]
                     }]
-                };
+                },
+                radar: '',
+            }
+        },
+        mounted(){
+            this.radar = echarts.init(this.$refs.radar, this.theme);
+            this.getCategory();
+        },
+        methods:{
+            randomNum(minNum, maxNum) {
+                switch (arguments.length) {
+                    case 1:
+                        return parseInt(Math.random() * minNum + 1, 10);
+                        break;
+                    case 2:
+                        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                        break;
+                    default:
+                        return 0;
+                        break;
+                }
+            },
+            async getCategory() {
+                try {
+                    let resp = await this.$http.get("/front/category");
+                    console.log("结果", resp.data.data);
+                    this.tags = resp.data.data;
+                    let cloudList = this.tags.map((item) => {
+                        return { name:item.name,max: this.randomNum(16000,52000)  }
+                    });
+                    this.option.radar.indicator =  cloudList;
+                    this.radar.setOption(this.option);
+                } catch (e) {
+                    console.log("异常", e);
+                } finally {
 
-                const radar = echarts.init(this.$refs.radar, this.theme);
-                radar.setOption(option);
+                }
             }
         }
     }

@@ -58,7 +58,7 @@
     </v-dialog>
 
     <v-data-table :headers="headers" :items="desserts" :page.sync="pageNum" :items-per-page="itemsPerPage"
-                  hide-default-footer class="elevation-1" @page-count="pageCount = $event" :loading="loading">
+                  hide-default-footer class="elevation-1"  :loading="loading">
 
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary" @click="editItem(item)">
@@ -143,7 +143,7 @@
                 on: false,
                 rules: {
                     base: value => value.length > 0 || '请填写内容',
-                    content: value => value.length < 10 || '分类过长',
+                    content: value => value.length < 50 || '分类过长',
                 }
 
             }
@@ -185,7 +185,7 @@
                 try {
                     this.loading = true;
                     this.$store.commit('setLoading', true);
-                    let response = await this.$http.get("/category");
+                    let response = await this.$http.get("/category?pageNum=" + this.pageNum);
                     console.log("response : ", response.data);
                     this.desserts = response.data.data;
                     //let page = parseInt(response.data.total / this.itemsPerPage) + 1;

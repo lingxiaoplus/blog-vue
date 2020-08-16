@@ -91,6 +91,15 @@ import range from '../static/js/rangeFn.js'
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
+
+
+import uiUtil from './utils/UiUtil'
+Vue.prototype.$uiUtil = uiUtil;
+
 Vue.directive('title', {
   inserted: function (el, binding) {
     document.title = el.dataset.title

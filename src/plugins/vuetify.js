@@ -22,8 +22,11 @@ export default new Vuetify({
               accent: colors.shades.black,
               error: colors.red.accent3,
       },
-      dark: {
-        primary: colors.blue.lighten3,
+      dark:{
+        primary: colors.grey.darken3
+      },
+      options: {
+        customProperties: true,
       },
     },
   },

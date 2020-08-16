@@ -2,9 +2,9 @@
   <div>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <v-card :elevation="0">
-      <v-card-actions >
+      <v-card-actions>
         <v-flex class="d-flex" style="align-items: center; justify-content: center;flex-direction: row">
-          <span class="material-icons">loyalty</span>
+          <v-icon medium>mdi-label-multiple</v-icon>
           <span class="font-weight-medium" style="font-size: 26px">文章标签</span>
         </v-flex>
       </v-card-actions>
@@ -16,8 +16,8 @@
                 column
                 active-class="primary--text"
               >
-                <v-chip v-for="(tag,index) in tags" :key="tag" dark :color="colorList[index]" label class="ma-2">
-                  {{ tag }}
+                <v-chip v-for="(tag,index) in tags" :key="tag.id" dark :color="colorList[index]" label class="ma-2">
+                  {{ tag.name }}
                 </v-chip>
               </v-chip-group>
             </v-sheet>
@@ -43,36 +43,19 @@
     export default {
         name: "tags",
         data() {
-            return{
+            return {
                 theme: "macarons",
-                tags: [
-                    'Work',
-                    'Home Improvement',
-                    'Vacation',
-                    'Food',
-                    'Drawers',
-                    'Shopping',
-                    'Art',
-                    'Tech',
-                    'java','安卓','技术'
+                tags: [],
+                colorList: ['primary', 'secondary', 'green', 'red', 'orange', 'indigo',
+                    'blue', 'cyan', 'teal', 'lime', 'yellow', 'purple', 'light-blue'
+                    , 'secondary', 'green', 'cyan', 'teal', 'lime', ',blue', 'cyan', 'teal', 'lime', 'yellow', 'purple'
                 ],
-                colorList:['primary','secondary','green','red','orange','indigo',
-                    'blue','cyan','teal','lime','yellow','purple','light-blue'
-                    ,'secondary','green','cyan','teal','lime',',blue','cyan','teal','lime','yellow','purple'
-                ]
-            }
-        },
-        mounted(){
-            this.popcloud()
-        },
-        methods:{
-            popcloud(){
-                let option = {
-                    title:{
-                        text:"词云图",
-                        link:'https://github.com/ecomfe/echarts-wordcloud',
+                option: {
+                    title: {
+                        text: "词云图",
+                        link: 'https://github.com/ecomfe/echarts-wordcloud',
                         subtext: 'data-visual.cn',
-                        sublink:'http://data-visual.cn',
+                        sublink: 'http://data-visual.cn',
                     },
                     tooltip: {},
                     series: [{
@@ -83,7 +66,7 @@
                         shape: 'circle',
                         textStyle: {
                             normal: {
-                                color: function() {
+                                color: function () {
                                     return 'rgb(' + [
                                         Math.round(Math.random() * 160),
                                         Math.round(Math.random() * 160),
@@ -107,70 +90,47 @@
                                     color: 'red'
                                 }
                             }
-                        }, {
-                            name: 'Macys',
-                            value: 6181
-                        }, {
-                            name: 'Amy Schumer',
-                            value: 4386
-                        }, {
-                            name: 'Jurassic World',
-                            value: 4055
-                        }, {
-                            name: 'Charter Communications',
-                            value: 2467
-                        }, {
-                            name: 'Chick Fil A',
-                            value: 2244
-                        }, {
-                            name: 'Planet Fitness',
-                            value: 1898
-                        }, {
-                            name: 'Pitch Perfect',
-                            value: 1484
-                        }, {
-                            name: 'Express',
-                            value: 1112
-                        }, {
-                            name: 'Home',
-                            value: 965
-                        }, {
-                            name: 'Johnny Depp',
-                            value: 847
-                        }, {
-                            name: 'Lena Dunham',
-                            value: 582
-                        }, {
-                            name: 'Lewis Hamilton',
-                            value: 555
-                        }, {
-                            name: 'KXAN',
-                            value: 550
-                        }, {
-                            name: 'Mary Ellen Mark',
-                            value: 462
-                        }, {
-                            name: 'Farrah Abraham',
-                            value: 366
-                        }, {
-                            name: 'Rita Ora',
-                            value: 360
-                        }, {
-                            name: 'Serena Williams',
-                            value: 282
-                        }, {
-                            name: 'NCAA baseball tournament',
-                            value: 273
-                        }, {
-                            name: 'Point Break',
-                            value: 265
                         }]
                     }]
-                };
-
-                const cloud = echarts.init(this.$refs.cloud, this.theme);
-                cloud.setOption(option);
+                },
+                cloud: '',
             }
+        },
+        mounted() {
+            this.cloud = echarts.init(this.$refs.cloud, this.theme);
+            this.getLabels()
+        },
+        methods: {
+            //生成从minNum到maxNum的随机数
+            randomNum(minNum, maxNum) {
+                switch (arguments.length) {
+                    case 1:
+                        return parseInt(Math.random() * minNum + 1, 10);
+                        break;
+                    case 2:
+                        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                        break;
+                    default:
+                        return 0;
+                        break;
+                }
+            },
+            async getLabels() {
+                try {
+                    let resp = await this.$http.get("/front/labels");
+                    console.log("结果", resp.data.data);
+                    this.tags = resp.data.data;
+                    let cloudList = this.tags.map((item) => {
+                        return { name:item.name,value: this.randomNum(200,6000)  }
+                    });
+                    this.option.series[0].data =  cloudList;
+                    this.cloud.setOption(this.option);
+                } catch (e) {
+                    console.log("异常", e);
+                } finally {
+
+                }
+            },
         }
     }
 </script>

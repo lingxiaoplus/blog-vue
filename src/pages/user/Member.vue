@@ -53,20 +53,20 @@
                 <v-list-item>
                   <v-list-item-content>用户状态:</v-list-item-content>
                   <v-list-item-content class="align-end">
-                    <v-switch class="ml-3" color="primary"></v-switch>
+                    <v-switch v-model="!item.status" @change="enableUser(item)" class="ml-3" color="primary" dense></v-switch>
                   </v-list-item-content>
                 </v-list-item>
 
                 <v-list-item>
                   <v-list-item-content>用户角色:</v-list-item-content>
                   <v-list-item-content class="align-end">
-                    <v-chip-group
-                      v-model="amenities"
-                      active-class="primary--text"
-                      mandatory
-                    >
-                      <v-chip v-for="role in item.roles" :key="role.id">{{role.roleName}}</v-chip>
-                    </v-chip-group>
+                    <v-select
+                      v-model="item.roles"
+                      :items="roleList"
+                      item-text="roleName" item-value="id" dense
+                      label="角色"
+                      multiple
+                    ></v-select>
                   </v-list-item-content>
                 </v-list-item>
 
@@ -158,7 +158,7 @@
             snackbar: false,
             snackbarText: '',
             snackbarColor: 'primary',
-            amenities: [],
+            roleList: [],
         }),
         methods: {
             async getMembers() {
@@ -195,6 +195,30 @@
                     this.loading = false;
                 }
             },
+
+
+            async getRoles() {
+                try {
+                    this.loading = true;
+                    let response = await this.$http.get("/role/all?pageNum=1&pageSize=5");
+                    console.log("角色 : ", response.data);
+                    this.roleList = response.data.data;
+                } catch (e) {
+                    console.log("获取角色列表失败", e.response.data);
+                    this.$store.commit('showSnackbar', {
+                        color: 'error',
+                        text: e.response.data.message ? e.response.data.message : "获取角色列表失败"
+                    });
+                } finally {
+                    this.loading = false;
+                }
+
+            },
+
+            async enableUser(item){
+                console.log("修改用户状态",item);
+            },
+
             handleRemove(file, fileList) {
                 console.log(file, fileList);
             },
@@ -222,8 +246,9 @@
                 this.snackbarColor = success ? "green" : "red";
             },
         },
-        created() {
+        mounted() {
             this.getMembers();
+            this.getRoles();
         }
     }
 </script>

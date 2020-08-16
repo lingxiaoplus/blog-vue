@@ -49,22 +49,27 @@
       </v-app-bar>
 
       <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" max-height="800">
+
         <v-container class="pa-6" id="scrolling-container">
           <!--文章内容-->
           <v-layout row wrap>
             <v-hover v-slot:default="{ hover }">
-              <v-card :elevation="hover?12:2">
+              <v-card :elevation="hover?12:2" style="width: 100%;">
                 <!-- <v-img :src="article.headImage" >
                 <v-card-title style="position: absolute;bottom: 0px;color: white">{{article.title}}</v-card-title>
               </v-img> -->
                 <v-card-text>
                   <!--编辑器组件，嵌入到任意父组件中-->
-                  <markdown :mdValuesP="article.content" :fullPageStatusP="false" :editStatusP="false"
+                  <!--<markdown :mdValuesP="article.content" :fullPageStatusP="false" :editStatusP="false"
                             :previewStatusP="true"
                             :navStatusP="false" :icoStatusP="false" @childevent="childEventHandler">
-                  </markdown>
+                  </markdown>-->
+                  <mavon-editor v-model="article.content"
+                                :toolbarsFlag="false" defaultOpen="preview" :subfield="false"
+                                :editable="false" :navigation="false" :previewBackground="primaryColor"
+                  ></mavon-editor>
                 </v-card-text>
-                <v-card-actions class="d-flex ">
+                <v-card-actions class="d-flex">
                   <el-link class="pa-2" style="color: #909399"><i class="el-icon-time el-icon--left">
                     {{article.createAt}}</i></el-link>
 
@@ -200,9 +205,10 @@
 
           </v-layout>
 
-        </v-container>
-      </v-sheet>
 
+        </v-container>
+
+      </v-sheet>
       <v-fab-transition class="mx-2">
         <v-btn key="keyboard_arrow_up" color="green" fixed fab large dark bottom right @click="backTop">
           <v-icon>mdi-chevron-up</v-icon>
@@ -217,7 +223,8 @@
 
 <script>
     // 引入markdown组件
-    import markdown from '../../components/markdown';
+    //import markdown from '../../components/markdown';
+    import colors from 'vuetify/lib/util/colors'
     import vueQr from 'vue-qr';
     export default {
         data() {
@@ -271,10 +278,10 @@
                 bgGifUrl: require("../../assets/dog.gif"),
                 qr_content: '',
                 isTop: false,
+                primaryColor: '#fbfbfb'
             }
         },
         components: {
-            markdown, // 声明mardown组件
             vueQr
         },
         watch: {
@@ -385,7 +392,15 @@
 
             }
         },
-        created() {
+        mounted() {
+            let date = new Date();
+            let hours = date.getHours();
+            if(hours > 19){
+                //this.lightOrDarkIcon = 'mdi-brightness-4';
+                this.$vuetify.theme.dark = true;
+                //this.primaryColor = colors.grey.darken1
+            }
+
             let href = window.location.href;
             console.log("链接",href);
             this.qr_content = href;
@@ -414,10 +429,5 @@
 </script>
 
 <style>
-  /*引入reset文件*/
-  @import "../../../static/css/reset.scss";
-  /*引入github的markdown样式文件*/
-  @import "../../../static/css/github-markdown.css";
-  /*引入atom的代码高亮样式文件*/
-  @import "../../../static/css/atom-one-dark.min.css";
+
 </style>

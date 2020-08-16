@@ -15,9 +15,9 @@
       </v-layout>
       <v-layout row>
         <v-col cols="10">
-          <v-card style="height: 700px;">
+          <v-card elevation="0">
             <!--编辑器组件，嵌入到任意父组件中-->
-            <markdown
+            <!--<markdown
               :mdValuesP="editContent"
               :fullPageStatusP="false"
               :editStatusP="false"
@@ -25,7 +25,11 @@
               :navStatusP="true"
               :icoStatusP="true"
               @childevent="childEventHandler">
-            </markdown>
+            </markdown>-->
+            <mavon-editor v-model="editContent" style="min-height: 600px;max-height: 700px;z-index: 1;"
+                          :navigation="false"
+                          @change="childEventHandler"
+            ></mavon-editor>
           </v-card>
         </v-col>
 
@@ -41,24 +45,20 @@
                   文章状态
                 </v-card-title>
                 <v-card-subtitle>
-                  状态：草稿
+                  <v-flex class="d-flex flex-column mt-2">
+                    <div>状态：草稿</div>
+                    <div>公开度：公开</div>
+                  </v-flex>
                 </v-card-subtitle>
-                <v-card-subtitle>
-                  公开度：公开
-                </v-card-subtitle>
-                <v-card-actions>
-                  <v-col>
-                    <v-select v-model="select" :items="selectList" item-text="name" item-value="id"
-                              label="请选择分类" persistent-hint return-object single-line></v-select>
-                  </v-col>
-                </v-card-actions>
 
-                <v-card-actions>
-                  <v-col cols="12">
-                    <v-select v-model="label" :items="labelList" item-text="name" item-value="id"
-                              label="请选择标签" attach chips multiple></v-select>
-                  </v-col>
-                </v-card-actions>
+                <v-flex class="mx-2">
+                  <v-select v-model="select" :items="selectList" item-text="name" item-value="id"
+                            label="请选择分类" persistent-hint return-object single-line></v-select>
+                </v-flex>
+                <v-flex class="mx-2">
+                  <v-select v-model="label" :items="labelList" item-text="name" item-value="id"
+                            label="请选择标签" attach chips multiple></v-select>
+                </v-flex>
 
                 <v-card-actions>
                   <v-btn
@@ -85,30 +85,60 @@
                   <v-card-title style="padding-bottom: 10px">
                     封面图片
                   </v-card-title>
-                  <v-card-actions>
-                    <v-col cols="12" align="center">
-                      <el-upload
-                        action="http://api.lingxiaomz.top/upload/"
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-success="handleSuccess"
-                        :on-error="handleError"
-                        :on-remove="handleRemove"
-                        :file-list="image_list"
-                        :limit="1"
-                      >
-                        <i class="el-icon-plus"></i>
-                      </el-upload>
-                      <el-dialog :visible.sync="dialogVisible" size="tiny">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                      </el-dialog>
-                    </v-col>
+                  <v-flex class="mx-2">
+                    <v-select v-model="imageType" :items="imageTypes" item-text="name" item-value="value"
+                              label="请选择图片类型" persistent-hint return-object single-line></v-select>
+                  </v-flex>
+                  <v-card-actions v-if="imageType.value==='local'" class="d-flex align-center justify-center">
+                    <v-sheet width="200" height="200" elevation="2" class="d-flex align-center justify-center">
+                      <v-flex >
+                        <el-upload action="http://api.lingxiaomz.top/upload/" list-type="picture-card"
+                                   :on-preview="handlePictureCardPreview" :on-success="handleSuccess"
+                                   :on-error="handleError" :on-remove="handleRemove"
+                                   :file-list="image_list" :limit="1">
+                          <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <el-dialog :visible.sync="dialogVisible" size="tiny">
+                          <img width="100%" :src="dialogImageUrl" alt="">
+                        </el-dialog>
+                      </v-flex>
+                    </v-sheet>
                   </v-card-actions>
 
+                  <v-card-actions v-else class="d-flex align-center justify-center">
+                    <v-sheet @click="chooseWebDialog" width="200" height="200" elevation="2" class="d-flex align-center justify-center">
+                      <v-img v-if="dialogImageUrl" :src="dialogImageUrl" aspect-ratio="1"></v-img>
+                      <v-icon medium v-else>mdi-camera-enhance-outline</v-icon>
+
+                    </v-sheet>
+                  </v-card-actions>
                 </v-card>
               </v-hover>
 
             </v-flex>
+
+
+            <v-dialog v-model="web_dialog" max-width="500px">
+              <v-card>
+                <v-card-title>
+                  <span class="headline">网络图片</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-form ref="form" lazy-validation>
+                      <v-col cols="12">
+                        <v-text-field v-model="webDialogImageUrl" label="图片地址"></v-text-field>
+                      </v-col>
+                    </v-form>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="web_dialog = false">取消</v-btn>
+                  <v-btn color="primary" text @click="saveWebImage">保存</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
 
           </v-flex>
 
@@ -133,7 +163,7 @@
 
 <script>
     // 引入markdown组件
-    import markdown from '../../components/markdown'
+    //import markdown from '../../components/markdown'
 
     export default {
         name: "editArticle",
@@ -146,6 +176,17 @@
                 label: [],
                 labelList: [],
                 selectList: [],
+                imageType:{ name: '本地图片',value: 'local'},
+                imageTypes:[
+                    {
+                        name: '本地图片',
+                        value: 'local'
+                    },
+                    {
+                        name: '网络图片',
+                        value: 'web'
+                    }
+                ],
                 dialogImageUrl: '',
                 dialogVisible: false,
                 title: '',
@@ -155,10 +196,9 @@
                 snackbar: false,
                 articleId: '',
                 articleStatus: 0,
+                web_dialog: false,
+                webDialogImageUrl: ""
             }
-        },
-        components: {
-            markdown // 声明mardown组件
         },
         watch: {
             /*loader () {
@@ -182,9 +222,21 @@
         methods: {
             childEventHandler: function (res) {
                 // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
-                this.editContent = res;
+                //console.log(">>",res)
+                //this.editContent = res;
 
                 //console.log("获取到输入的值",res.mdValue);
+            },
+            chooseWebDialog(){
+                console.log("aaaaaaaa");
+                this.web_dialog = true;
+                this.webDialogImageUrl = this.headPortrait;
+            },
+            saveWebImage(){
+                this.web_dialog = false;
+                this.dialogImageUrl = this.webDialogImageUrl;
+                this.headPortrait = this.webDialogImageUrl;
+                this.image_list[0] = { name: 'headPortrait',url: this.headPortrait}
             },
             async getCategorys() {
                 try {
@@ -254,7 +306,12 @@
             },
             handleError(err, file, fileList) {
                 console.log("文件上传失败时的钩子", err);
-                this.showSnackBar("文件上传失败", false);
+                this.showSnackBar("文件上传失败:" + err, false);
+            },
+            showSnackBar(text, success) {
+                this.snackbar = true;
+                this.snackbarText = text;
+                this.snackbarColor = success ? "green" : "red";
             },
 
             async saveArticleToDrafts() {
@@ -263,7 +320,7 @@
                     this.loadingDraft = true;
                     let resp = await this.$http.post("/article", {
                         "categoryId": this.select.id,
-                        "content": this.editContent.mdValue,
+                        "content": this.editContent,
                         "headImage": this.headPortrait,
                         "status": this.articleStatus,  //草稿箱 0  发布 1
                         "title": this.title,
@@ -339,14 +396,6 @@
 </script>
 
 <style scoped>
-  /*根据项目修改引入文件的路径（所需文件放在了static目录下）*/
-  /*引入reset文件*/
-  @import "../../../static/css/reset.scss";
-  /*引入github的markdown样式文件*/
-  @import "../../../static/css/github-markdown.css";
-  /*引入atom的代码高亮样式文件*/
-  @import "../../../static/css/atom-one-dark.min.css";
-
 
   .custom-loader {
     animation: loader 1s infinite;
@@ -388,5 +437,8 @@
       transform: rotate(360deg);
     }
   }
-
+  .mavonEditor {
+    width: 100%;
+    min-height: 400px;
+  }
 </style>

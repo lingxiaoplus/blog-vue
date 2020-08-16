@@ -2,27 +2,37 @@
   <div >
     <v-sheet>
       <v-flex class="d-flex flex-column align-center justify-center">
-        <v-carousel cycle interval="4000">
-          <v-carousel-item v-for="(item,i) in banners" :key="i" :src="item.src">
-            <v-flex class="d-flex align-center justify-center mt-8">
-              <span class="font-weight-medium px-2" style="font-size: 26px">一个极简的 Java ASCII 表格生成库</span>
+        <v-carousel cycle interval="4000" height="600px">
+          <v-carousel-item v-for="(item,i) in banners" :key="i" :src="item.headImage" @click="readArticle(item.id)">
+            <v-flex class="d-flex align-center justify-center" style="width: 100%;height: 100%">
+              <v-flex class="d-flex align-center justify-center flex-column">
+                <span class="font-weight-medium px-2" style="font-size: 26px">{{item.title}}</span>
+                <p class="text-subtitle-1 font-weight-light px-2" style="max-width: 500px">
+                  {{item.content}}...
+                </p>
+              </v-flex>
             </v-flex>
           </v-carousel-item>
         </v-carousel>
         <v-flex class="d-flex align-center justify-center flex-row mt-4">
-          <span class="material-icons">card_giftcard</span>
+          <v-icon medium>mdi-lightbulb-on-outline</v-icon>
           <span class="font-weight-medium px-2" style="font-size: 26px">每日一句</span>
         </v-flex>
         <v-card elevation="0" max-width="800px" class="ma-2">
           <v-card-text>
             <span class="font-weight-medium px-2" style="font-size: 20px">
-              不是每个人都应该像我这样去建造一座水晶大教堂，但是每个人都应该拥有自己的梦想，设计自己的梦想，追求自己的梦想，实现自己的梦想。梦想是生命的灵魂，是心灵的灯塔，是引导人走向成功的信仰。有了崇高的梦想，只要矢志不渝地追求，梦想就会成为现实，奋斗就会变成壮举，生命就会创造奇迹。——罗伯·舒乐
+              {{hitokoto.hitokoto}}
             </span>
           </v-card-text>
+          <v-card-actions>
+            <v-btn text color="primary" class="ml-auto" @click="readArticle(item.id)">
+              --{{hitokoto.from}}
+            </v-btn>
+          </v-card-actions>
         </v-card>
 
         <v-flex class="d-flex align-center justify-center flex-row mt-4">
-          <span class="material-icons">card_giftcard</span>
+          <v-icon medium>mdi-gift-outline </v-icon>
           <span class="font-weight-medium px-2" style="font-size: 26px">我的文章</span>
         </v-flex>
         <v-flex>
@@ -31,12 +41,14 @@
             <v-col v-for="item in articleList" :key="item.id" cols="4" sm="4">
               <v-hover v-slot:default="{ hover }">
                 <v-card class="ma-4"  :elevation="hover?10:2">
-                  <v-img :src="item.headImage" height="194">
+                  <v-img :src="item.headImage" height="194" @click="readArticle(item.id)">
                     <v-card-title style="position: absolute;bottom: 0px;color: white">{{item.title}}</v-card-title>
 
                   </v-img>
                   <v-flex class="mx-2" style="color: #909399;max-height: 100px">
-                    {{item.content}}...
+                    <p class="text-subtitle-1 font-weight-light">
+                      {{item.content}}...
+                    </p>
                   </v-flex>
 
                   <v-card-actions>
@@ -49,12 +61,12 @@
                       <v-icon left dark>mdi-memory</v-icon>{{item.categoryName}}
                     </v-btn>
 
-                    <v-btn text color="deep-purple accent-4" class="ml-auto" @click="readArticle(item.id)">
+                    <v-btn text color="green" class="ml-auto" @click="readArticle(item.id)">
                       阅读
                     </v-btn>
                   </v-card-actions>
                   <v-divider></v-divider>
-                  <v-card-actions>
+                  <v-card-actions v-if="item.labels">
                     <v-chip-group column>
                       <v-chip color="primary" v-for="label in item.labels" :key="label.id">
                         {{ label.name }}
@@ -102,6 +114,7 @@
                 pageNum: 1,
                 pageCount: 0,
                 itemsPerPage: 10,
+                hitokoto: '',
             }
         },
         watch: {
@@ -111,6 +124,18 @@
             },
         },
         methods:{
+            async getBanner() {
+                try {
+                    let resp = await this.$http.get("/front/banner");
+                    console.log("结果", resp.data.data);
+                    this.banners = resp.data.data.banners;
+                    this.hitokoto = resp.data.data.hitokoto;
+                } catch (e) {
+                    console.log("异常", e);
+                } finally {
+
+                }
+            },
             async getCategory() {
                 try {
                     let resp = await this.$http.get("/front/category");
@@ -153,7 +178,8 @@
             },
         },
         mounted() {
-            this.getCategory();
+            this.getBanner();
+            //this.getCategory();
             this.getArticleList();
         }
     }

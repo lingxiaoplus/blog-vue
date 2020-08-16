@@ -54,7 +54,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.enabled="{ item }">
-        <v-switch v-model="item.enabled" @change="enableEmail(item)" color="primary"></v-switch>
+        <v-switch dense v-model="item.enabled" @change="enableEmail(item)" color="primary"></v-switch>
       </template>
       <template v-slot:item.action="{ item }">
         <v-btn class="ma-2 white--text" text color="primary"  @click="editItem(item)">

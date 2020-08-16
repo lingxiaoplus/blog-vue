@@ -122,7 +122,11 @@
                     this.$router.push("/index/dashboard");
                     this.loading = false;
                 }).catch(e => {
-                    this.showSnackBar("登录失败，请检查用户名密码是否正确", false);
+                    if(e.response){
+                        this.showSnackBar("登录失败，请检查用户名密码是否正确", false);
+                    }else {
+                        this.showSnackBar("登录失败，服务器响应错误", false);
+                    }
                     this.loading = false;
                     console.log("登录失败，失败详情", e);
                 })

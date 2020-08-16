@@ -1,4 +1,4 @@
-const baseUrl = 'http://api.lingxiaomz.top'
+const baseUrl = 'http://api.lingxiaomz.top';
 const product = "/product";
 const member = "/member";
 const config = {

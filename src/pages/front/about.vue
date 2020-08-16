@@ -1,29 +1,26 @@
 <template>
   <v-app  id="inspire">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <v-sheet>
       <v-flex class="d-flex flex-column align-center justify-center">
         <v-avatar size="160">
           <img src="../../assets/dog.gif">
         </v-avatar>
-        <p class="font-weight-medium" style="font-size: 26px">凌霄</p>
-        <p class="font-weight-medium" style="font-size: 14px">java开发工程师</p>
-        <p class="font-weight-medium" style="font-size: 12px">习惯沉默而不停止思考，无力表达却不曾失去态度</p>
+        <p class="text-h4 font-weight-medium ma-2">凌霄</p>
+        <p class="text-h6 font-weight-medium">java开发工程师</p>
+        <p class="text-subtitle-1 font-weight-light">习惯沉默而不停止思考，无力表达却不曾失去态度</p>
 
         <v-flex class="d-flex align-center justify-center flex-row mt-4">
-          <span class="material-icons">card_giftcard</span>
+          <v-icon medium>mdi-sprout-outline</v-icon>
           <span class="font-weight-medium px-2" style="font-size: 26px">我的项目</span>
         </v-flex>
         <v-row no-gutters>
-          <v-col v-for="project in projectList" :key="project.id" cols="12" sm="4">
+          <v-col v-for="(project,index) in projectList" :key="project.id" cols="12" sm="4">
             <v-flex class="d-flex flex-column align-center justify-center pa-6 ma-4">
-              <v-avatar size="160">
-                <img
-                  :src="project.icon"
-                />
-              </v-avatar>
-              <p class="font-weight-medium" style="font-size: 14px">{{project.name}}</p>
-              <p class="font-weight-medium" style="font-size: 14px">{{project.desc}}</p>
+              <div class="project-icon ma-2" :style="[{'background-color': colorList[index]}]">
+                <v-icon large dark>{{project.icon}}</v-icon>
+              </div>
+              <p class="text-h6 font-weight-medium">{{project.name}}</p>
+              <p class="text-subtitle-1 font-weight-medium">{{project.desc}}</p>
             </v-flex>
           </v-col>
         </v-row>
@@ -48,18 +45,28 @@
         <v-row no-gutters>
           <v-col v-for="technology in technologyList" :key="technology.id" cols="12" sm="6">
             <v-flex class="d-flex flex-column align-center justify-center pa-6 ma-4" style="min-width: 400px">
-              <v-progress-linear height="25" v-model="technology.value">
+
+              <v-progress-linear color="primary" height="25" v-model="technology.value" buffer-value="60" value="40" stream>
                 <strong>{{technology.name}}:{{ Math.ceil(technology.value) }}%</strong>
               </v-progress-linear>
             </v-flex>
           </v-col>
         </v-row>
 
+        <v-flex class="d-flex align-center justify-center flex-row mt-4">
+          <v-icon medium>mdi-sprout-outline</v-icon>
+          <span class="font-weight-medium px-2" style="font-size: 26px">其他</span>
+        </v-flex>
+
         <v-card-text>
-          <markdown :mdValuesP="content" :fullPageStatusP="false" :editStatusP="false"
+          <!--<markdown :mdValuesP="content" :fullPageStatusP="false" :editStatusP="false"
                     :previewStatusP="true"
                     :navStatusP="false" :icoStatusP="false">
-          </markdown>
+          </markdown>-->
+          <mavon-editor v-model="content"
+                        :toolbarsFlag="false" defaultOpen="preview" :subfield="false"
+                        :editable="false" :navigation="false" previewBackground="#fff"
+          ></mavon-editor>
         </v-card-text>
       </v-flex>
     </v-sheet>
@@ -79,19 +86,19 @@
                 projectList:[
                     {
                         id: 1,
-                        icon: '../../assets/logo.png',
+                        icon: 'mdi-bacteria-outline',
                         name: '个人博客系统',
                         desc: '一个采用 Material Design 和响应式设计的 Hexo 博客主题。',
                     },
                     {
                         id: 2,
-                        icon: '../../assets/logo.png',
+                        icon: 'mdi-asterisk',
                         name: 'BiliBili',
                         desc: '仿照B站设计的系统。',
                     },
                     {
                         id: 3,
-                        icon: '../../assets/logo.png',
+                        icon: 'mdi-bug',
                         name: '个人博客系统',
                         desc: '一个采用 Material Design 和响应式设计的 Hexo 博客主题。',
                     }
@@ -115,13 +122,7 @@
                 ],
                 labels: ['javascript', 'java', 'android', 'html5', 'css', 'sql', '程序架构', 'vue',],
                 value: [200, 675, 410, 390, 310, 460, 250, 240,],
-                content: "#### 简介\n" +
-                    "\n" +
-                    "Hello，我是凌霄。这是我的照片：\n" +
-                    "![本人吴彦祖](http://omsaa4hdo.bkt.clouddn.com/wyz.jpeg)\n" +
-                    "\n" +
-                    "可以靠颜值吃饭的我，偏偏要靠才华。\n" +
-                    "\n" +
+                content:
                     "#### 谈谈人生\n" +
                     "\n" +
                     "爱梦想，爱生活。平时喜欢发发呆，胡思乱想。爱音乐，目前自学吉他，希望能学会。爱宠物，老家有一只狗。想养只猫，不过现在单身，合租，养活自己都是问题。总结：我是一只有趣的程序猿。\n" +
@@ -136,7 +137,8 @@
                     "\n" +
                     "[微博](https://weibo.com/p/1005053866839538/home?from=page_100505&mod=TAB&is_all=1#place)\n" +
                     "\n" +
-                    "邮箱：lingxiaopua@gmail.com\n"
+                    "邮箱：lingxiaopua@gmail.com\n",
+                colorList: this.$uiUtil.colorList,
             }
         },
         components: {
@@ -148,5 +150,15 @@
 <style scoped>
   .v-sheet--offset {
     position: relative;
+  }
+  .project-icon {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    background-color: #42A5F5;
+    font-size: 1.75rem;
+    border-radius: 50%;
   }
 </style>

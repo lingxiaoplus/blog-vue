@@ -5,13 +5,11 @@
       <v-btn dark text @click="snackbar = false">确认</v-btn>
     </v-snackbar>
 
-    <template>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>存储管理</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-      </v-toolbar>
-    </template>
+    <v-toolbar flat color="white">
+      <v-toolbar-title>存储管理</v-toolbar-title>
+      <v-divider class="mx-4" inset vertical></v-divider>
+      <v-spacer></v-spacer>
+    </v-toolbar>
 
     <v-dialog v-model="configDialog" persistent max-width="600px">
       <v-card>
@@ -151,17 +149,26 @@
 
       <el-table-column prop="path" label="文件预览">
         <template slot-scope="scope">
-          <el-image style="width: 80px;height: 40px" :src="scope.row.path+suffix" aspect-ratio="2" :preview-src-list="[scope.row.path]">
-            <template v-slot:placeholder>
-              <v-row
-                class="fill-height ma-0"
-                align="center"
-                justify="center"
-              >
-                <v-progress-circular indeterminate color="primary lighten-5"></v-progress-circular>
-              </v-row>
-            </template>
-          </el-image>
+          <el-popover
+            placement="top-start"
+            title="图片链接"
+            width="240"
+            trigger="hover"
+            :content="scope.row.path+suffix_720p">
+
+            <el-image slot="reference" style="width: 80px;height: 40px" :src="scope.row.path+suffix" aspect-ratio="2" :preview-src-list="[scope.row.path+suffix_1080p]">
+              <template v-slot:placeholder>
+                <v-row
+                  class="fill-height ma-0"
+                  align="center"
+                  justify="center"
+                >
+                  <v-progress-circular indeterminate color="primary lighten-5"></v-progress-circular>
+                </v-row>
+              </template>
+            </el-image>
+          </el-popover>
+
           <!--<v-img width="80" height="40" :src="scope.row.path+suffix" aspect-ratio="2">
 
           </v-img>-->
@@ -238,6 +245,8 @@
                 endTime: '',
                 fileList: [],
                 suffix: '?imageView2/2/w/240/h/120/format/jpg/q/75|imageslim',
+                suffix_720p: '?imageView2/1/w/1280/h/720/format/jpg/q/75',
+                suffix_1080p: '?imageView2/1/w/1920/h/1080/format/jpg/q/75',
                 loading: false,
                 uploadDialog: false,
                 configDialog: false,

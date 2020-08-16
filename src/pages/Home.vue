@@ -46,7 +46,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="primary" dark :style="[{'background-color': primaryColor}]">
       <!-- loading条 -->
       <v-progress-linear @setLoading="setLoadingState" :active="this.$store.getters.getLoadingState"
                          :indeterminate="this.$store.getters.getLoadingState" absolute bottom background-color="white"
@@ -55,6 +55,10 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>后台管理系统</v-toolbar-title>
       <v-spacer/>
+
+      <v-btn icon dark @click="change2LightOrDark">
+        <v-icon>{{lightOrDarkIcon}}</v-icon>
+      </v-btn>
 
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
@@ -98,7 +102,6 @@
 
 <script>
     import menus from '../menu.js';
-
     export default {
         props: {
             source: String,
@@ -133,6 +136,8 @@
                 }]
             },
             items: [],
+            lightOrDarkIcon: 'mdi-brightness-6',
+            primaryColor: '',
         }),
         computed: {
             /*items() {
@@ -143,6 +148,21 @@
             },
         },
         methods: {
+            change2LightOrDark(){
+                if(this.lightOrDarkIcon === 'mdi-brightness-6'){
+                    this.lightOrDarkIcon = 'mdi-brightness-4';
+                    this.$vuetify.theme.dark = true;
+                    this.primaryColor = "#424242";
+                }else {
+                    this.lightOrDarkIcon = 'mdi-brightness-6';
+                    let themeCache = localStorage.getItem("theme_style");
+                    let themeStyle = JSON.parse(themeCache);
+                    this.$vuetify.theme.dark = false;
+                    this.$vuetify.theme.themes.light.primary = themeStyle.color;
+                    this.primaryColor = themeStyle.color;
+                }
+
+            },
             menuClick(item) {
                 switch (item.action) {
                     case "logout":
