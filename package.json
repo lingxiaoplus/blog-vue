@@ -21,7 +21,7 @@
     "marked": "^0.7.0",
     "material-design-icons": "^3.0.1",
     "mavon-editor": "^2.9.0",
-    "qs": "^6.9.1",
+    "qs": "^6.9.7",
     "vue": "^2.5.2",
     "vue-particles": "^1.0.9",
     "vue-qr": "^2.2.1",
